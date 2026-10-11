@@ -1,0 +1,198 @@
+[
+  {
+    "id": "1d32df8c-242c-4035-ad34-c871d2764764",
+    "parent_id": null,
+    "level": 1,
+    "name": "Beauty & Health",
+    "slug": "beauty-health"
+  },
+  {
+    "id": "5beb5fb6-b458-463c-9c29-4ecf13ed56a7",
+    "parent_id": null,
+    "level": 1,
+    "name": "Electronics",
+    "slug": "electronics"
+  },
+  {
+    "id": "ce551c01-672a-4d2a-93f7-1830354cc82d",
+    "parent_id": null,
+    "level": 1,
+    "name": "Fashion & Apparel",
+    "slug": "fashion"
+  },
+  {
+    "id": "a217d873-bc6c-48b2-bf37-efea19af3f6d",
+    "parent_id": null,
+    "level": 1,
+    "name": "Home & Kitchen",
+    "slug": "home-kitchen"
+  },
+  {
+    "id": "78d9cfa3-b9c2-4bc5-b1a4-63d018f14791",
+    "parent_id": null,
+    "level": 1,
+    "name": "Sports & Fitness",
+    "slug": "sports-fitness"
+  },
+  {
+    "id": "d2bf7459-4609-4334-81d2-78f828fe5418",
+    "parent_id": "5beb5fb6-b458-463c-9c29-4ecf13ed56a7",
+    "level": 2,
+    "name": "Audio & Headphones",
+    "slug": "audio-headphones"
+  },
+  {
+    "id": "7fe9327d-23bf-4f27-9a2d-a0e947ca84af",
+    "parent_id": "a217d873-bc6c-48b2-bf37-efea19af3f6d",
+    "level": 2,
+    "name": "Home Decor & Lighting",
+    "slug": "home-decor"
+  },
+  {
+    "id": "bc09dff4-2624-4f28-a163-399671b2797f",
+    "parent_id": "a217d873-bc6c-48b2-bf37-efea19af3f6d",
+    "level": 2,
+    "name": "Kitchen Appliances",
+    "slug": "kitchen-appliances"
+  },
+  {
+    "id": "bce259e2-9b2a-48ab-b327-424a3cb264f1",
+    "parent_id": "5beb5fb6-b458-463c-9c29-4ecf13ed56a7",
+    "level": 2,
+    "name": "Laptops & Computers",
+    "slug": "laptops-computers"
+  },
+  {
+    "id": "5ed1ddf1-4559-4a0d-ba87-0b56b7e5b167",
+    "parent_id": "ce551c01-672a-4d2a-93f7-1830354cc82d",
+    "level": 2,
+    "name": "Men's Fashion",
+    "slug": "mens-fashion"
+  },
+  {
+    "id": "31c5f6bd-4aa8-4b9f-bcb1-4c28d739565b",
+    "parent_id": "1d32df8c-242c-4035-ad34-c871d2764764",
+    "level": 2,
+    "name": "Skincare Essentials",
+    "slug": "skincare"
+  },
+  {
+    "id": "7c209aed-b8d4-44d5-bfa6-588bba4c9e2e",
+    "parent_id": "5beb5fb6-b458-463c-9c29-4ecf13ed56a7",
+    "level": 2,
+    "name": "Smartphones & Wearables",
+    "slug": "smartphones-wearables"
+  },
+  {
+    "id": "5eb56edd-48e3-4eda-b3dd-630b86249b47",
+    "parent_id": "ce551c01-672a-4d2a-93f7-1830354cc82d",
+    "level": 2,
+    "name": "Watches & Accessories",
+    "slug": "watches-accessories"
+  },
+  {
+    "id": "bcea04b5-75b7-4f16-8244-552ebff10628",
+    "parent_id": "ce551c01-672a-4d2a-93f7-1830354cc82d",
+    "level": 2,
+    "name": "Women's Fashion",
+    "slug": "womens-fashion"
+  },
+  {
+    "id": "e40aaccf-c204-49aa-87b1-1282db01b374",
+    "parent_id": "78d9cfa3-b9c2-4bc5-b1a4-63d018f14791",
+    "level": 2,
+    "name": "Workout Equipment",
+    "slug": "workout-equipment"
+  },
+  {
+    "id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "parent_id": "e40aaccf-c204-49aa-87b1-1282db01b374",
+    "level": 3,
+    "name": "Adjustable Dumbbells & Mats",
+    "slug": "dumbbells-mats"
+  },
+  {
+    "id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "parent_id": "bc09dff4-2624-4f28-a163-399671b2797f",
+    "level": 3,
+    "name": "Air Fryers & Blenders",
+    "slug": "air-fryers-blenders"
+  },
+  {
+    "id": "12d11d7d-257f-4014-b0f7-477c279daed2",
+    "parent_id": "5eb56edd-48e3-4eda-b3dd-630b86249b47",
+    "level": 3,
+    "name": "Chronograph Watches",
+    "slug": "chronograph-watches"
+  },
+  {
+    "id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "parent_id": "5ed1ddf1-4559-4a0d-ba87-0b56b7e5b167",
+    "level": 3,
+    "name": "Cotton Casual Shirts",
+    "slug": "mens-casual-shirts"
+  },
+  {
+    "id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "parent_id": "bcea04b5-75b7-4f16-8244-552ebff10628",
+    "level": 3,
+    "name": "Ethnic Kurta Sets",
+    "slug": "womens-kurta-sets"
+  },
+  {
+    "id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "parent_id": "7c209aed-b8d4-44d5-bfa6-588bba4c9e2e",
+    "level": 3,
+    "name": "Flagship Smartphones",
+    "slug": "flagship-smartphones"
+  },
+  {
+    "id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "parent_id": "31c5f6bd-4aa8-4b9f-bcb1-4c28d739565b",
+    "level": 3,
+    "name": "Hydrating Face Serums",
+    "slug": "face-serums"
+  },
+  {
+    "id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "parent_id": "bce259e2-9b2a-48ab-b327-424a3cb264f1",
+    "level": 3,
+    "name": "Mechanical Keyboards & Mice",
+    "slug": "keyboards-mice"
+  },
+  {
+    "id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "parent_id": "7fe9327d-23bf-4f27-9a2d-a0e947ca84af",
+    "level": 3,
+    "name": "Minimalist Floor Lamps",
+    "slug": "floor-lamps"
+  },
+  {
+    "id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "parent_id": "7c209aed-b8d4-44d5-bfa6-588bba4c9e2e",
+    "level": 3,
+    "name": "Smartwatches & Fitness Bands",
+    "slug": "smartwatches"
+  },
+  {
+    "id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "parent_id": "d2bf7459-4609-4334-81d2-78f828fe5418",
+    "level": 3,
+    "name": "True Wireless Earbuds",
+    "slug": "tws-earbuds"
+  },
+  {
+    "id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "parent_id": "bce259e2-9b2a-48ab-b327-424a3cb264f1",
+    "level": 3,
+    "name": "Ultrabooks & Workstations",
+    "slug": "ultrabooks"
+  },
+  {
+    "id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "parent_id": "d2bf7459-4609-4334-81d2-78f828fe5418",
+    "level": 3,
+    "name": "Wireless Over-Ear Headphones",
+    "slug": "wireless-headphones"
+  }
+]

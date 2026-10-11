@@ -3,6 +3,19 @@
  * bundled directly in public/photos/
  */
 export function getProductImage(title = '', category = ''): string {
+  const kind = category.toLowerCase();
+  if (kind.includes('headphone')) return '/photos/products/sony-headphones-black.webp';
+  if (kind.includes('earbud')) return '/photos/products/bose-earbuds-gold.webp';
+  if (kind.includes('smartphone') || kind.includes('mobile')) return '/photos/products/smartphone-generated.png';
+  if (kind.includes('smartwatch') || kind.includes('watch')) return '/photos/products/apple-watch-titanium.webp';
+  if (kind.includes('keyboard')) return '/photos/products/mechanical-keyboard.webp';
+  if (kind.includes('ultrabook') || kind.includes('laptop') || kind.includes('workstation')) return '/photos/banner2.webp';
+  if (kind.includes('fryer') || kind.includes('blender')) return '/photos/products/air-fryer-generated.png';
+  if (kind.includes('shirt')) return '/photos/products/shirt-generated.png';
+  if (kind.includes('kurta')) return '/photos/products/kurta-generated.png';
+  if (kind.includes('serum') || kind.includes('skin')) return '/photos/products/serum-generated.png';
+  if (kind.includes('lamp') || kind.includes('lighting')) return '/photos/products/lamp-generated.png';
+  if (kind.includes('dumbbell') || kind.includes('mat')) return '/photos/products/dumbbells-generated.png';
   const t = title.toLowerCase();
   if (t.includes('headphone') || t.includes('audio') || t.includes('sound')) {
     return '/photos/products/sony-headphones-black.webp';
@@ -17,7 +30,7 @@ export function getProductImage(title = '', category = ''): string {
     return '/photos/products/mechanical-keyboard.webp';
   }
   if (t.includes('fryer') || t.includes('cooker') || t.includes('blender') || t.includes('appliance')) {
-    return '/photos/products/air-fryer-compact.webp';
+    return '/photos/products/air-fryer-generated.png';
   }
   if (t.includes('shoe') || t.includes('sneaker') || t.includes('boot')) {
     return '/photos/products/nike-running-shoes.webp';

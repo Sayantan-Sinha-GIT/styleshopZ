@@ -2,15 +2,18 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "styleshopz",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2024-12-30",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
   "vars": {
-    "NODE_VERSION": "20.18.0",
-    "GEMINI_MODEL": "gemini-2.5-flash",
-    "GROQ_MODEL": "llama-3.3-70b-versatile"
+    "DEMO_MODE": "true",
+    "NEXT_PUBLIC_APP_URL": "https://styleshopz.srimantasutapa123.workers.dev",
+    "GEMINI_MODEL": "gemini-flash-lite-latest",
+    "GROQ_MODEL": "openai/gpt-oss-20b"
   }
 }

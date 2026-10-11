@@ -1,71 +1,78 @@
-import { describe, it, expect } from 'vitest';
-import { signToken, verifyToken } from '../lib/auth';
-
-describe('styleshopZ Hard Rules Verification', () => {
-  it('Rule 1: HMAC token signs and verifies session integrity correctly', () => {
-    const payload = { sub: 'usr_123', email: 'user@shop.test', role: 'customer' };
-    const token = signToken(payload);
-    expect(token).toBeDefined();
-
-    const decoded = verifyToken(token);
-    expect(decoded).not.toBeNull();
-    expect(decoded?.sub).toBe('usr_123');
-    expect(decoded?.role).toBe('customer');
-
-    // Tampered token must fail verification
-    const tampered = token.slice(0, -4) + 'abcd';
-    const tamperedDecoded = verifyToken(tampered);
-    expect(tamperedDecoded).toBeNull();
-  });
-
-  it('Rule 2: Server calculates exact delivery fee and order total from line items', () => {
-    // Under ₹499 (49,900 paise) pays ₹40 (4,000 paise) simulated delivery fee
-    const subtotalLow = 29900;
-    const feeLow = subtotalLow >= 49900 ? 0 : 4000;
-    expect(feeLow).toBe(4000);
-
-    // ₹499 and above gets FREE delivery
-    const subtotalHigh = 149900;
-    const feeHigh = subtotalHigh >= 49900 ? 0 : 4000;
-    expect(feeHigh).toBe(0);
-  });
-
-  it('Rule 3: Cash on Delivery ceiling strictly caps at ₹50,000 (5,000,000 paise)', () => {
-    const orderTotalNormal = 4500000; // ₹45,000
-    const isCodEligibleNormal = orderTotalNormal <= 5000000;
-    expect(isCodEligibleNormal).toBe(true);
-
-    const orderTotalOverLimit = 5500000; // ₹55,000
-    const isCodEligibleOver = orderTotalOverLimit <= 5000000;
-    expect(isCodEligibleOver).toBe(false);
-  });
-
-  it('Rule 4: Coupon calculation enforces minimum cart and discount math in paise', () => {
-    const couponPercent = { discount_type: 'percent', discount_value: 10, min_cart_paise: 50000 };
-    const cartPaise = 100000; // ₹1,000
-    let discount = 0;
-    if (cartPaise >= couponPercent.min_cart_paise) {
-      discount = Math.round((cartPaise * couponPercent.discount_value) / 100);
-    }
-    expect(discount).toBe(10000); // ₹100
-
-    const couponFlat = { discount_type: 'flat', discount_value: 50000, min_cart_paise: 200000 };
-    const cartSmall = 150000; // ₹1,500 < ₹2,000 min cart
-    let discountFlat = 0;
-    if (cartSmall >= couponFlat.min_cart_paise) {
-      discountFlat = couponFlat.discount_value;
-    }
-    expect(discountFlat).toBe(0); // Rejected due to minimum cart threshold
-  });
-
-  it('Rule 5: 7-day return policy verifies delivered window', () => {
-    const now = Date.now();
-    const delivered3DaysAgo = now - 3 * 24 * 60 * 60 * 1000;
-    const isEligible3Days = (now - delivered3DaysAgo) / (1000 * 60 * 60 * 24) <= 7;
-    expect(isEligible3Days).toBe(true);
-
-    const delivered9DaysAgo = now - 9 * 24 * 60 * 60 * 1000;
-    const isEligible9Days = (now - delivered9DaysAgo) / (1000 * 60 * 60 * 24) <= 7;
-    expect(isEligible9Days).toBe(false);
-  });
+import { it, expect } from "vitest";
+import { createHmac } from "node:crypto";
+import { signToken, verifyToken } from "../lib/auth";
+import {
+  totals,
+  discountFor,
+  lineItems,
+  canReturn,
+  address,
+} from "../lib/server/rules";
+import { hmacValid } from "../lib/server/commerce";
+it("server totals use threshold, express fee and rounded capped coupons", () => {
+  expect(totals(49899).totalPaise).toBe(53899);
+  expect(totals(49900).deliveryFeePaise).toBe(0);
+  expect(totals(50000, 1000, "express").totalPaise).toBe(58900);
+  expect(
+    discountFor({ discount_type: "percent", discount_value: 15 }, 9999),
+  ).toBe(1500);
+  expect(
+    discountFor({ discount_type: "flat", discount_value: 99999 }, 100),
+  ).toBe(100);
+});
+it("rejects duplicate, fractional and excessive quantities", () => {
+  const id = "11111111-1111-4111-8111-111111111111";
+  for (const items of [
+    [],
+    [{ variantId: id, quantity: 1.5 }],
+    [{ variantId: id, quantity: 11 }],
+    [
+      { variantId: id, quantity: 1 },
+      { variantId: id, quantity: 2 },
+    ],
+  ])
+    expect(() => lineItems(items)).toThrow();
+  expect(lineItems([{ variantId: id, quantity: 10 }])[0].quantity).toBe(10);
+});
+it("validates Indian addresses", () => {
+  const a = {
+    name: "Test Customer",
+    phone: "9876543210",
+    line1: "10 Test Road",
+    city: "Kolkata",
+    state: "West Bengal",
+    pincode: "700001",
+  };
+  expect(address(a).pincode).toBe("700001");
+  expect(() => address({ ...a, pincode: "000000" })).toThrow();
+  expect(() => address({ ...a, phone: "1234567890" })).toThrow();
+});
+it("limits returns to delivered items within seven days", () => {
+  const now = 1800000000000;
+  expect(
+    canReturn("delivered", new Date(now - 7 * 86400000).toISOString(), now),
+  ).toBe(true);
+  expect(
+    canReturn("delivered", new Date(now - 7 * 86400000 - 1).toISOString(), now),
+  ).toBe(false);
+  expect(canReturn("shipped", new Date(now).toISOString(), now)).toBe(false);
+  expect(canReturn("delivered", new Date(now + 1).toISOString(), now)).toBe(
+    false,
+  );
+});
+it("rejects session tampering and expiry", () => {
+  const token = signToken({ sub: "test" });
+  expect(verifyToken(token)?.sub).toBe("test");
+  expect(verifyToken(token.slice(0, -5) + "aaaaa")).toBeNull();
+  expect(verifyToken(signToken({ sub: "test" }, -1))).toBeNull();
+  expect(verifyToken("invalid")).toBeNull();
+});
+it("validates exact webhook bytes and complete HMAC", () => {
+  const body = '{"amount":1234}',
+    secret = "test-secret",
+    signature = createHmac("sha256", secret).update(body).digest("hex");
+  expect(hmacValid(body, signature, secret)).toBe(true);
+  expect(hmacValid(body + " ", signature, secret)).toBe(false);
+  expect(hmacValid(body, signature.slice(0, 32), secret)).toBe(false);
+  expect(hmacValid(body, signature, undefined)).toBe(false);
 });

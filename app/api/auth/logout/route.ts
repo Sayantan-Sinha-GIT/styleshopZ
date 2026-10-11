@@ -1,7 +1,5 @@
-import { NextResponse } from 'next/server';
-
-export async function POST() {
-  const response = NextResponse.json({ ok: true });
-  response.cookies.delete('styleshopz_session');
-  return response;
-}
+import { handle } from "@/lib/server/api";
+export const GET = handle;
+export const POST = handle;
+export const PATCH = handle;
+export const DELETE = handle;

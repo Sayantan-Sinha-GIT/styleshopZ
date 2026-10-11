@@ -1,110 +1,218 @@
-'use client';
-
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import { BrandLogo } from './Logo';
-import { ThemeToggle } from './ThemeToggle';
-
-const NAV_LINKS = [
-  { href: '/#loop', label: 'The loop' },
-  { href: '/deals', label: 'Deals' },
-  { href: '/categories', label: 'Categories' },
-  { href: '/assistant', label: 'Assistant' },
-  { href: '/seller', label: 'Seller' },
-  { href: '/admin', label: 'Admin' },
-];
-
-export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
-  const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
+"use client";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  MagnifyingGlass,
+  ShoppingBag,
+  Heart,
+  UserCircle,
+  Sun,
+  Moon,
+  Package,
+  House,
+  ArrowRight,
+} from "@phosphor-icons/react";
+import { useStore, api } from "@/components/shop/Store";
+export function SiteHeader() {
+  const { user, cart, language, switchLanguage } = useStore(),
+    router = useRouter(),
+    pathname = usePathname(),
+    params = useSearchParams();
+  const activeQuery = params.get("q") || "";
+  const [search, setSearch] = useState(""),
+    [suggestions, setSuggestions] = useState<any[]>([]),
+    [theme, setTheme] = useState("dark");
+  const [searchFocused, setSearchFocused] = useState(false);
+  useEffect(() => {
+    setSearch(pathname === "/search" ? activeQuery : "");
+  }, [pathname, activeQuery]);
+  useEffect(
+    () => setTheme(document.documentElement.dataset.theme || "dark"),
+    [],
+  );
+  useEffect(() => {
+    if (search.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    let alive = true;
+    const timer = setTimeout(
+      () =>
+        api("suggest?q=" + encodeURIComponent(search))
+          .then((d) => {
+            if (alive) setSuggestions(d.suggestions);
+          })
+          .catch(() => {}),
+      300,
+    );
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [search]);
+  const count = cart.items
+    .filter((i: any) => !i.saved_for_later)
+    .reduce((s: number, i: any) => s + i.quantity, 0);
+  const toggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next;
+    localStorage.setItem("styleshopz-theme", next);
+  };
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = search.trim().slice(0, 100);
+    if (q) {
+      try {
+        const recent = JSON.parse(
+          localStorage.getItem("shop.recent-searches") || "[]",
+        );
+        localStorage.setItem(
+          "shop.recent-searches",
+          JSON.stringify(
+            [q, ...recent.filter((v: string) => v !== q)].slice(0, 6),
+          ),
+        );
+      } catch {}
+    }
+    setSuggestions([]);
+    router.push("/search?q=" + encodeURIComponent(q));
+  };
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3.5 bg-gradient-to-b from-bg via-bg/90 to-transparent backdrop-blur-sm transition-colors duration-300">
-        <BrandLogo />
-
-        <nav className="hidden md:flex items-center gap-7 text-sm font-mono tracking-wide text-dim">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`transition-colors hover:text-text ${isActive ? 'text-brand font-semibold' : ''}`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-
-          <Link
-            href="/cart"
-            id="cart"
-            className="ib relative"
-            aria-label={`Cart with ${cartCount} items`}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0" />
-            </svg>
-            <b id="bd">{cartCount}</b>
+      <div className="demo-strip">
+        {language === "hi"
+          ? "डेमो स्टोर · असली पैसे या डिलीवरी नहीं"
+          : "A demonstration shop. No real payments or deliveries."}
+        <Link href="/help">
+          {language === "hi" ? "कैसे काम करता है" : "How it works"}
+          <ArrowRight size={12} />
+        </Link>
+      </div>
+      <header className="shop-header">
+        <div className="header-inner">
+          <Link href="/" className="brand" aria-label="styleshopZ home">
+            <span className="brand-mark">
+              s<span>z</span>
+            </span>
+            <span>
+              styleshop<span>Z</span>
+            </span>
           </Link>
-
-          <Link
-            href="/orders"
-            className="hidden sm:inline-flex items-center justify-center h-10 px-4 rounded-full text-xs font-mono tracking-wider border border-line text-text hover:border-line-strong transition-colors"
-          >
-            Track Order
-          </Link>
-
-          <button
-            type="button"
-            className="ib md:hidden"
-            aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {mobileOpen ? (
-                <path d="M18 6L6 18M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-bg/95 backdrop-blur-lg flex flex-col justify-between p-8 pt-28 md:hidden">
-          <nav className="flex flex-col gap-6 font-display text-4xl font-black uppercase">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-brand transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href="/orders"
-              onClick={() => setMobileOpen(false)}
-              className="text-dim hover:text-brand transition-colors text-2xl font-mono lowercase"
+          <form className="search-bar" onSubmit={submit} role="search">
+            <MagnifyingGlass size={21} />
+            <input
+              aria-label="Search products"
+              placeholder={
+                language === "hi"
+                  ? "आप क्या ढूंढ रहे हैं?"
+                  : "What are you looking for?"
+              }
+              maxLength={100}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 180)}
+            />
+            <button aria-label="Search" type="submit">
+              <ArrowRight size={20} />
+            </button>
+            {searchFocused && suggestions.length > 0 && (
+              <div className="suggestions">
+                {suggestions.map((s) => (
+                  <Link
+                    key={s.id}
+                    href={"/products/" + s.id}
+                    onClick={() => {
+                      setSearch("");
+                      setSuggestions([]);
+                    }}
+                  >
+                    {s.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </form>
+          <div className="header-actions">
+            <button
+              className="icon-button"
+              onClick={toggle}
+              aria-label={
+                "Switch to " + (theme === "dark" ? "light" : "dark") + " theme"
+              }
             >
-              /orders
+              {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
+            </button>
+            <Link
+              className="header-account"
+              href={user ? "/customer" : "/login"}
+            >
+              <UserCircle size={25} />
+              <span>
+                <small>
+                  {user
+                    ? "Hello, " + user.name.split(" ")[0]
+                    : language === "hi"
+                      ? "नमस्ते"
+                      : "Hello there"}
+                </small>
+                <b>{language === "hi" ? "आपका खाता" : "Your account"}</b>
+              </span>
             </Link>
-          </nav>
-          <div className="pt-8 border-t border-line text-xs font-mono text-dim">
-            styleshopZ · mobile marketplace
+            <Link
+              className="bag-link"
+              href="/cart"
+              aria-label={`Bag with ${count} items`}
+            >
+              <ShoppingBag size={25} />
+              <span className="bag-count">{count}</span>
+            </Link>
           </div>
         </div>
-      )}
+        <nav className="shop-nav" aria-label="Shop navigation">
+          <Link href="/categories">
+            {language === "hi" ? "सभी विभाग" : "All departments"}
+          </Link>
+          <Link href="/deals">
+            {language === "hi" ? "आज के ऑफर" : "Today’s deals"}
+          </Link>
+          <Link href="/search?category=electronics">Electronics</Link>
+          <Link href="/search?category=fashion">Fashion</Link>
+          <Link href="/search?category=home-kitchen">Home & kitchen</Link>
+          <Link href="/assistant">Shopping assistant</Link>
+          <Link href="/orders" className="nav-orders">
+            <Package size={16} />
+            {language === "hi" ? "आपके ऑर्डर" : "Your orders"}
+          </Link>
+          <button
+            className="language-button"
+            onClick={() => switchLanguage(language === "hi" ? "en" : "hi")}
+          >
+            {language === "hi" ? "English" : "हिन्दी"}
+          </button>
+        </nav>
+      </header>
+      <nav className="mobile-nav" aria-label="Mobile navigation">
+        {[
+          { href: "/", icon: House, label: "Home" },
+          { href: "/search", icon: MagnifyingGlass, label: "Search" },
+          { href: "/wishlists", icon: Heart, label: "Saved" },
+          { href: "/orders", icon: Package, label: "Orders" },
+          { href: "/customer", icon: UserCircle, label: "You" },
+        ].map(({ href, icon: Icon, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className={pathname === href ? "active" : ""}
+          >
+            <Icon size={23} weight={pathname === href ? "fill" : "regular"} />
+            <span>{label}</span>
+          </Link>
+        ))}
+      </nav>
     </>
   );
 }

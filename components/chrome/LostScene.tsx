@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 
 export function LostScene({ code }: { code: string }) {
   return (
-    <div className="relative mx-auto h-56 w-full max-w-xl sm:h-72 flex items-center justify-center select-none" aria-hidden="true">
-      <svg viewBox="0 0 100 60" className="absolute inset-0 h-full w-full pointer-events-none opacity-40">
+    <div
+      className="relative mx-auto h-56 w-full max-w-xl sm:h-72 flex items-center justify-center select-none"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 100 60"
+        className="absolute inset-0 h-full w-full pointer-events-none opacity-40"
+      >
         <circle cx="20" cy="18" r="1.5" fill="var(--brand)" />
         <circle cx="80" cy="40" r="1.2" fill="var(--brand)" />
         <circle cx="50" cy="10" r="1.8" fill="var(--brand)" />

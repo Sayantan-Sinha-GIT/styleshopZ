@@ -1,29 +1,82 @@
-# styleshopZ Image Prompts & Asset Catalog (Finalized)
-# All primary assets have been generated and packaged directly into public/photos/
-# No manual generation is required from the owner.
+# styleshopZ asset catalogue
 
-## 1. Hero Promotional Banners (Location: public/photos/)
-- banner1.webp: Flagship matte-black wireless over-ear headphones floating against dark cinematic minimalist background, warm amber rim lighting.
-- banner2.webp: Minimalist aluminum ultrabook half-open on dark slate desk with warm ambient lamp glow.
-- banner3.webp: Premium titanium smartwatch with glowing OLED interface display over dark carbon texture.
+All required raster assets are bundled. No images need to be supplied by the owner.
+Product photographs are illustrative demonstration assets, not verified manufacturer imagery.
 
-## 2. Category Covers (Location: public/photos/categories/)
-- electronics.webp: Sleek circuit board with microchips and precision copper traces, cinematic lighting.
-- fashion.webp: Textured dark woven apparel fabric folded cleanly, warm golden lighting.
-- home-kitchen.webp: Minimalist espresso maker and kitchen appliances on dark granite countertop.
-- beauty-health.webp: Amber glass dropper bottle on wet slate with clean ripple reflections.
-- sports-fitness.webp: Hexagonal rubber dumbbell on dark gym floor with dramatic rim lighting.
+public/photos/products/air-fryer-generated.png
+Photorealistic ecommerce catalogue photograph of a compact matte charcoal air fryer, front three-quarter view, subtle amber-gold dial detail, closed drawer, clean studio pale cool gray seamless background, realistic industrial design and controls, soft grounded shadow, diffuse side light, centered full appliance with generous margins, square composition. No food, no coffee, no people, no brand logo, no letters or text. This is a generic demonstration product photo for a shopping catalogue.
 
-## 3. Product Photography (Location: public/photos/products/)
-- sony-headphones-black.webp: Premium noise-cancelling headphones in matte midnight black.
-- bose-earbuds-gold.webp: True wireless earbuds with compact charging case.
-- apple-watch-titanium.webp: Smartwatch with active OLED fitness display and magnetic loop.
-- mechanical-keyboard.webp: Tenkeyless mechanical keyboard with subtle warm backlight.
-- air-fryer-compact.webp: Digital touchscreen compact air fryer on minimalist counter.
-- urban-backpack.webp: Weather-resistant modern commuter backpack.
-- nike-running-shoes.webp: Aerodynamic athletic running shoes with responsive cushioning.
-- designer-sunglasses.webp: Polarized matte frame sunglasses with anti-glare reflection.
-- return_proof_1.webp: Inspection photograph of unopened retail packaging with official seal.
+public/photos/products/smartphone-generated.png
+Photorealistic ecommerce catalogue image: a modern unbranded graphite smartphone, front and back together, clean neutral slate background, centered full objects, soft studio shadow. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
 
-## 4. Automatic Catalog Fallback
-- All 525 seeded products automatically resolve to their matching category or product photography via /photos/products/ and /photos/categories/.
+public/photos/products/shirt-generated.png
+Photorealistic ecommerce catalogue image: a single pale sage cotton casual men's shirt, neatly laid flat with sleeves relaxed, pale cool gray seamless studio background, centered garment. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
+
+public/photos/products/kurta-generated.png
+Photorealistic ecommerce catalogue image: a muted dusty rose Indian women's kurta and matching straight trousers neatly laid flat, pale cool gray studio background, full garments visible. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
+
+public/photos/products/serum-generated.png
+Photorealistic ecommerce catalogue image: an unbranded minimalist amber glass skincare serum bottle with black dropper, pale cool gray background, single bottle centered, no label or writing. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
+
+public/photos/products/lamp-generated.png
+Photorealistic ecommerce catalogue image: an elegant minimalist matte charcoal floor lamp, full height visible, cream linen shade, pale cool gray seamless background, realistic studio lighting. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
+
+public/photos/products/dumbbells-generated.png
+Photorealistic ecommerce catalogue image: a pair of compact black adjustable dumbbells with metal grip, three-quarter view, pale cool gray seamless background, soft grounded studio shadow. Square composition. High quality material detail, generous clear margins. Generic illustrative demonstration product. No brand names, no text, no logos, no people, no decorations.
+
+public/photos/banner1.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/banner1.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/banner2.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/banner2.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/banner3.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/banner3.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/categories/beauty-health.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/categories/beauty-health.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/categories/electronics.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/categories/electronics.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/categories/fashion.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/categories/fashion.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/categories/home-kitchen.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/categories/home-kitchen.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/categories/sports-fitness.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/categories/sports-fitness.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/air-fryer-compact.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/air-fryer-compact.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/apple-watch-titanium.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/apple-watch-titanium.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/bose-earbuds-gold.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/bose-earbuds-gold.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/designer-sunglasses.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/designer-sunglasses.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/mechanical-keyboard.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/mechanical-keyboard.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/nike-running-shoes.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/nike-running-shoes.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/return_proof_1.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/return_proof_1.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/sony-headphones-black.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/sony-headphones-black.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/photos/products/urban-backpack.webp
+Origin: pre-existing bundled repository asset at commit 6590c65, public/photos/products/urban-backpack.webp. Original source was not recorded by the previous implementation; retained for the demonstration catalogue.
+
+public/app-icon-192.png
+Origin: hand-authored styleshopZ amber monogram, rendered from SVG using Sharp for release 1.1.0.
+
+public/app-icon-512.png
+Origin: hand-authored styleshopZ amber monogram, rendered from SVG using Sharp for release 1.1.0.

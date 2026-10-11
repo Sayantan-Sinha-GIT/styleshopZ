@@ -1,16 +1,15 @@
 {
   "appId": "com.styleshopz.app",
   "appName": "styleshopZ",
-  "webDir": "public",
+  "webDir": "native-web",
   "bundledWebRuntime": false,
   "server": {
     "url": "https://styleshopz.srimantasutapa123.workers.dev",
     "cleartext": false,
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "errorPath": "offline.html"
   },
   "android": {
-    "minSdkVersion": 26,
-    "targetSdkVersion": 34,
     "allowMixedContent": false,
     "captureInput": true,
     "webContentsDebuggingEnabled": false

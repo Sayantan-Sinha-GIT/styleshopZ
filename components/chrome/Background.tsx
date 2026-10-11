@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { useTheme } from '@/lib/client/theme';
+import { useEffect, useRef } from "react";
+import { useTheme } from "@/lib/client/theme";
 
 /**
  * Living canvas background from my-design/home.html:
@@ -15,7 +15,7 @@ export function Background() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let w = 0;
@@ -23,7 +23,9 @@ export function Background() {
     let raf = 0;
     let vel = 0;
     let lastScroll = window.scrollY;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     interface Particle {
       x: number;
@@ -37,13 +39,15 @@ export function Background() {
 
     const getRgb = () => {
       const hHex = getComputedStyle(document.documentElement)
-        .getPropertyValue('--tx')
+        .getPropertyValue("--tx")
         .trim()
-        .replace('#', '');
+        .replace("#", "");
       if (hHex.length === 6) {
-        return [0, 2, 4].map((i) => parseInt(hHex.substring(i, i + 2), 16)).join(',');
+        return [0, 2, 4]
+          .map((i) => parseInt(hHex.substring(i, i + 2), 16))
+          .join(",");
       }
-      return theme === 'dark' ? '241,239,233' : '16,18,22';
+      return theme === "dark" ? "241,239,233" : "16,18,22";
     };
 
     let tc = getRgb();
@@ -119,7 +123,7 @@ export function Background() {
       raf = requestAnimationFrame(loop);
     };
 
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     resize();
 
     if (!reduce) {
@@ -127,10 +131,16 @@ export function Background() {
     }
 
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
       cancelAnimationFrame(raf);
     };
   }, [theme]);
 
-  return <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 h-full w-full" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-0 h-full w-full"
+    />
+  );
 }

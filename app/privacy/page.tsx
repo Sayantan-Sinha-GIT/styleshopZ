@@ -1,58 +1,51 @@
-import type { Metadata } from 'next';
-import { SiteHeader } from '@/components/chrome/SiteHeader';
-import { SiteFooter } from '@/components/chrome/SiteFooter';
-
-export const metadata: Metadata = {
-  title: 'Privacy Policy · styleshopZ',
-  description: 'Our commitment to data minimization, cookie encryption, and zero payment credential retention.',
-};
-
-export default function PrivacyPage() {
+export default function Page() {
   return (
-    <>
-      <SiteHeader />
-      <main className="min-h-screen pt-28 pb-20 bg-bg text-text">
-        <div className="w max-w-4xl mx-auto">
-          <div className="mb-12">
-            <p className="m text-xs font-mono text-dim uppercase tracking-wider mb-2">Privacy &amp; Data Security</p>
-            <h1 className="d text-5xl sm:text-7xl font-black uppercase tracking-tight">Privacy Policy</h1>
-            <p className="text-dim text-base sm:text-lg mt-3 max-w-2xl">
-              We practice strict data minimization. Here is exactly what data styleshopZ collects, how it is secured, and your rights as a customer.
-            </p>
-          </div>
-
-          <div className="space-y-10 text-dim leading-relaxed text-sm sm:text-base">
-            <section className="p-7 rounded-2xl bg-surface border border-line">
-              <h2 className="d text-2xl font-bold uppercase text-text mb-3">1. Zero Card Data Retention</h2>
-              <p>
-                styleshopZ does not store, log, or transmit raw credit card numbers, CVVs, or Netbanking passwords. All payment transactions in test mode communicate directly with Razorpay through client-side SDK integration and server-side HMAC-SHA256 signature verification.
-              </p>
-            </section>
-
-            <section className="p-7 rounded-2xl bg-surface border border-line">
-              <h2 className="d text-2xl font-bold uppercase text-text mb-3">2. Authentication &amp; Cookie Security</h2>
-              <p>
-                Customer and merchant sessions are authenticated using cryptographic session tokens stored in <code className="px-1.5 py-0.5 rounded bg-bg text-[var(--ax)] font-mono text-xs">HttpOnly</code>, <code className="px-1.5 py-0.5 rounded bg-bg text-[var(--ax)] font-mono text-xs">SameSite=Lax</code>, and <code className="px-1.5 py-0.5 rounded bg-bg text-[var(--ax)] font-mono text-xs">Secure</code> cookies. Client scripts cannot access authentication tokens, protecting against cross-site scripting (XSS) attacks.
-              </p>
-            </section>
-
-            <section className="p-7 rounded-2xl bg-surface border border-line">
-              <h2 className="d text-2xl font-bold uppercase text-text mb-3">3. AI Assistant Privacy Boundaries</h2>
-              <p>
-                Queries submitted to the AI Shopping Assistant are used solely to generate in-session shopping guidance (catalogue search, deals lookups, return filing assistance). Shopping queries are never sold to external data brokers or used to build third-party advertising profiles.
-              </p>
-            </section>
-
-            <section className="p-7 rounded-2xl bg-surface border border-line">
-              <h2 className="d text-2xl font-bold uppercase text-text mb-3">4. Customer Rights &amp; Data Deletion</h2>
-              <p>
-                You retain complete rights to inspect your order history, modify delivery addresses, or request full account erasure at any time by contacting our support desk at <span className="font-mono text-text">support@styleshopz.test</span>.
-              </p>
-            </section>
-          </div>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
+    <article className="page narrow legal">
+      <div className="page-title">
+        <h1>Your privacy in the shop</h1>
+        <p>Updated 11 October 2026 · Demonstration environment</p>
+      </div>
+      <h2>What this app stores</h2>
+      <p>
+        When you create an account, the app stores your name, email and a
+        password hash. Delivery addresses, phone numbers, carts, wishlists,
+        orders, support messages, reviews, uploaded images and assistant
+        conversations are stored when you use those features. Do not submit real
+        identity or financial documents to this demonstration.
+      </p>
+      <h2>Where your data goes</h2>
+      <p>
+        The website runs on Cloudflare, and application data is stored in Neon
+        PostgreSQL. Uploaded demo images are stored in the same database. If the
+        owner enables Gemini or Groq, your assistant message and the relevant
+        shop results are sent to that provider. If Razorpay test payments are
+        enabled, its checkout handles test payment details directly. The app
+        does not store card numbers.
+      </p>
+      <h2>Cookies and device storage</h2>
+      <p>
+        An HTTP-only session cookie keeps you signed in. Your theme, navigation
+        language, recent searches, recently viewed product IDs and guest bag are
+        saved on your device. The offline cache stores public images and an
+        offline page. Authenticated pages, orders and API responses are excluded
+        from that cache. Optional analytics, push and email providers are
+        currently disabled.
+      </p>
+      <h2>Your controls</h2>
+      <p>
+        Settings lets you clear browsing history and cache, download your
+        account data, and delete a customer account. Deletion removes saved
+        addresses and assistant messages and anonymises retained order records.
+        Seller or administrator accounts require a support request because they
+        are attached to operational records. Uploaded images and immutable
+        operational audit entries may remain attached to retained records.
+      </p>
+      <h2>Questions</h2>
+      <p>
+        Open an in-app support ticket to ask about your data. This portfolio app
+        is provided as a demonstration; use dummy personal details whenever
+        possible.
+      </p>
+    </article>
   );
 }

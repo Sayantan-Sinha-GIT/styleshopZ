@@ -1,6 +1,6 @@
 {
   "name": "styleshopz",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -13,8 +13,10 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "seed": "tsx scripts/seed.ts",
-    "migrate": "tsx scripts/migrate.ts",
-    "postinstall": "node scripts/patch-opennext.mjs"
+    "migrate": "tsx scripts/migrate.ts && node scripts/apply-migrations.mjs",
+    "postinstall": "node scripts/patch-opennext.mjs",
+    "test:integration": "node scripts/integration.mjs",
+    "db:upgrade": "node scripts/apply-migrations.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
@@ -23,11 +25,13 @@
     "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^1.2.0",
     "@opennextjs/cloudflare": "^1.20.10",
+    "@phosphor-icons/react": "^2.1.10",
     "bcryptjs": "^3.0.3",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
     "motion": "^14.1.0",
     "next": "16.4.0",
+    "pdf-lib": "^1.17.1",
     "postgres": "^3.4.9",
     "react": "19.3.0",
     "react-dom": "19.3.0"
@@ -38,12 +42,17 @@
     "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.4.0",
     "playwright-core": "^1.64.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.3"
+  },
+  "overrides": {
+    "glob": "^10.5.0",
+    "xcode": {
+      "uuid": "^11.1.1"
+    },
+    "uuid": "^11.1.1"
   }
 }

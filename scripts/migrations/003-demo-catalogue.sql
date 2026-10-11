@@ -1,0 +1,8 @@
+-- Repair only the original generated sample catalogue; preserve owner additions.
+UPDATE reviews SET is_sample=TRUE WHERE user_id IN(SELECT id FROM users WHERE email LIKE '%@shop.test');
+UPDATE product_qa SET is_sample=TRUE WHERE user_id IN(SELECT id FROM users WHERE email LIKE '%@shop.test');
+UPDATE products p SET title=CASE WHEN c.name ILIKE '%headphone%' THEN 'Soundcraft ' WHEN c.name ILIKE '%earbud%' THEN 'Soundcraft ' WHEN c.name ILIKE '%shirt%' OR c.name ILIKE '%kurta%' THEN 'Threadline ' WHEN c.name ILIKE '%serum%' THEN 'Botanic ' ELSE 'Everyday ' END || c.name || ' · ' || SUBSTRING(p.title FROM 'Series ([0-9]+)'),brand=CASE WHEN c.name ILIKE '%headphone%' OR c.name ILIKE '%earbud%' THEN 'Soundcraft' WHEN c.name ILIKE '%shirt%' OR c.name ILIKE '%kurta%' THEN 'Threadline' WHEN c.name ILIKE '%serum%' THEN 'Botanic' ELSE 'Everyday' END,description='Sample '||LOWER(c.name)||' for exploring the styleshopZ marketplace. Choose an available option and try the demonstration checkout. Product photography is illustrative. Prices, specifications, delivery and returns belong to this demonstration; no real sale or manufacturer warranty is offered.' FROM categories c WHERE p.category_id=c.id AND p.title LIKE '%Series % Premium Edition';
+
+UPDATE variants SET options=(options#>>'{}')::jsonb WHERE jsonb_typeof(options)='string' AND (options#>>'{}') LIKE '{%';
+UPDATE "orders" SET "address_snapshot"=("address_snapshot"#>>'{}')::jsonb WHERE jsonb_typeof("address_snapshot")='string' AND LEFT("address_snapshot"#>>'{}',1) IN('{','[');
+UPDATE "order_items" SET "variant_snapshot"=("variant_snapshot"#>>'{}')::jsonb WHERE jsonb_typeof("variant_snapshot")='string' AND LEFT("variant_snapshot"#>>'{}',1) IN('{','[');
