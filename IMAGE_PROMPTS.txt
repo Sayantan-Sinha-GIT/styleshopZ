@@ -1,0 +1,38 @@
+# styleshopZ Image Prompts & Asset Catalog
+# All assets follow cinematic, high-contrast, dark-mode-first aesthetic (PLAYBOOK PART 9A.9)
+
+## 1. Hero Promotional Banners (Folder: public/photos/)
+- File: public/photos/banner1.webp
+  Prompt: Studio shot of flagship matte-black wireless headphones floating in mid-air over a dark carbon pedestal, subtle amber gold rim lighting, crisp studio reflections, 8k resolution, product photography, high-end electronics.
+- File: public/photos/banner2.webp
+  Prompt: Minimalist slate-gray aluminium ultrabook sitting half-open on an architectural concrete desk, soft amber accent lamp in the background, sharp screen reflections, clean modern aesthetic.
+- File: public/photos/banner3.webp
+  Prompt: Floating high-performance smartwatch with titanium casing and black sports band, water droplets glistening on sapphire crystal display, dramatic dramatic studio lighting.
+
+## 2. Category Covers (Folder: public/photos/categories/)
+- File: public/photos/categories/electronics.webp
+  Prompt: Close-up macro photograph of a sleek copper and gold motherboard trace with microchip, cinematic dark moody lighting, depth of field.
+- File: public/photos/categories/fashion.webp
+  Prompt: Premium textured dark linen shirt fabric weave folded cleanly on natural stone, warm golden morning light.
+- File: public/photos/categories/home-kitchen.webp
+  Prompt: Modern matte black air fryer on dark granite kitchen countertop with fresh rosemary sprig, warm ambient kitchen glow.
+- File: public/photos/categories/beauty-health.webp
+  Prompt: Amber glass dropper bottle with facial serum on dark wet slate, water ripples, pure luxury skincare photography.
+- File: public/photos/categories/sports-fitness.webp
+  Prompt: Hexagonal rubber dumbbell on dark gym floor, chalk powder atmospheric dust, dramatic high contrast rim light.
+
+## 3. Product Sample Imagery (Folder: public/photos/products/)
+- File: public/photos/products/sony-headphones-black.webp
+  Prompt: Front three-quarter angle product photo of premium noise-cancelling headphones in midnight black with plush memory foam earcups, clean dark grey studio background.
+- File: public/photos/products/bose-earbuds-gold.webp
+  Prompt: Pair of true wireless earbuds resting inside an open matte gold magnetic charging case, sleek compact design, studio lighting.
+- File: public/photos/products/apple-watch-titanium.webp
+  Prompt: Smartwatch with active OLED fitness ring display on brushed titanium case with magnetic Milanese loop strap.
+- File: public/photos/products/mechanical-keyboard.webp
+  Prompt: Tenkeyless mechanical keyboard with custom dark keycaps and subtle warm amber backlight, braided USB-C cable.
+- File: public/photos/products/air-fryer-compact.webp
+  Prompt: Compact 4L digital air fryer with touchscreen interface illuminated, sitting on a modern minimalist kitchen island.
+
+## 4. Evidence & Support Mockups (Folder: public/photos/)
+- File: public/photos/return_proof_1.webp
+  Prompt: Photo of an unopened luxury retail electronics box with official tamper seal intact on clean wooden tabletop, verification inspection shot.

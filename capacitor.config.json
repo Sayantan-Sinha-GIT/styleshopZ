@@ -1,0 +1,29 @@
+{
+  "appId": "com.styleshopz.app",
+  "appName": "styleshopZ",
+  "webDir": "public",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://styleshopz.vercel.app",
+    "cleartext": false,
+    "androidScheme": "https"
+  },
+  "android": {
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34,
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#0e0f11",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0e0f11"
+    }
+  }
+}
