@@ -15,7 +15,13 @@ Date: 11 October 2026. Scope: the demonstration marketplace described in PRD.md.
 
 ## Deployment verification
 
-Pending final live checks; the source will be updated with the deployed revision and observed results before handoff.
+The deployed Cloudflare worker passed all twelve integration scenarios on 2026-10-11 at 15:35:59 UTC, including the 50-buyer stock race. Actual administrator and seller password sign-ins returned the correct roles. A mobile browser completed a live demo order; authenticated PDF invoice and JSON export returned 200, and no JavaScript page errors occurred in that flow.
+
+GitHub Actions run 38151827957 passed npm ci, dependency audit (zero reported vulnerabilities), all six unit tests, TypeScript and the Linux Cloudflare production build. The Windows production build also passed.
+
+The Android release displayed live home/search results. The initial offline test exposed a generic WebView error; the release was rebuilt with bundled native recovery and a service-worker fallback that strips cached redirect flags. Cold start with both Wi-Fi and mobile data disabled displayed the bundled recovery page. After networking was restored, its retry button loaded the live shop inside com.styleshopz.app. The rebuilt APK signature was verified again.
+
+APK SHA-256: 9b1826b2a9d01cdacdac9401a7945f291e755ebb117481405b7dcabb19a06754. The publicly deployed download is checked against this byte-for-byte fingerprint before handoff. Browser fixtures were cancelled and removed after testing, restoring their stock. The integration runner cleaned its isolated fixtures; immutable administrator audit records remain.
 
 ## External boundaries
 
