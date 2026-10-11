@@ -29,3 +29,11 @@ APK SHA-256: dfd7c0b70f9b8333dbd5051bb203466eb1777d8db3992fdf47c17819baa99330. T
 ## Release boundaries
 
 No real charges, deliveries, seller payouts, production KYC or tax-compliance integration is enabled. Razorpay test-mode adapters require owner credentials and external validation. Shopping requires connectivity; Android offline mode provides recovery rather than offline ordering. Automated tests and reviews do not prove absence of all defects.
+
+## Deployed release verification
+
+The Cloudflare release at source b39cebd5b1cc22bce4df54e5c83cc37c6acd18c0 passed all twelve commerce scenarios, five discovery scenarios and the browser checks against the actual worker on 11 October 2026. GitHub Actions run 38161949023 passed dependency installation/audit, twelve unit tests, TypeScript and the Linux Cloudflare build. Public APK SHA-256 matches the signed local file exactly.
+
+The installed Android release loaded the updated home, signed in using an isolated email fixture and opened Google's system account sign-in. With an emulator GPS point and explicit location permission, Ola resolved Victoria Memorial in Kolkata; pin confirmation filled the written city, state, pincode and coordinates. A final address normalization correction recognizes Ola's street_address field and avoids duplicate area lines. No real Google account was signed in. Test accounts were removed; stock was restored after order fixtures.
+
+Private GitHub release v1.2.0 backs up the signed APK. Dispatch and other projects were not modified.

@@ -28,7 +28,7 @@ try{
   });
   if((await call('config')).body.maps)await check('real Ola landmark search and reverse geocoding return Indian address fields',async()=>{
     const places=await call('places/search?q=Victoria%20Memorial&lat=22.57&lng=88.36');assert.equal(places.status,200);assert(places.body.suggestions.length);
-    const reverse=await call('places/reverse?lat=22.5448&lng=88.3426');assert.equal(reverse.status,200);assert.equal(reverse.body.address.city,'Kolkata');assert.match(reverse.body.address.pincode,/^[1-9]\d{5}$/);
+    const reverse=await call('places/reverse?lat=22.5448&lng=88.3426');assert.equal(reverse.status,200);assert.equal(reverse.body.address.city,'Kolkata');assert.match(reverse.body.address.pincode,/^[1-9]\d{5}$/);assert(reverse.body.address.line1);assert.notEqual(reverse.body.address.line1,reverse.body.address.line2);
   });
   await check('expired and incorrect email codes cannot verify an account; a valid code is consumed',async()=>{
     const hash=code=>createHmac('sha256',process.env.AUTH_SECRET).update(`${uid}:verify:${code}`).digest('hex');

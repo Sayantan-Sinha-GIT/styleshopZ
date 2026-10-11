@@ -24,7 +24,10 @@ export async function places(req:Request,params:URLSearchParams,reverse:boolean)
     assert(result,'No street address found at this pin. Move closer to a road, or enter the address manually.',404);
     const components=result.address_components || [];
     const find=(...types:string[])=>components.find((c:any)=>c.types?.some((t:string)=>types.includes(t)))?.long_name || '';
-    return {address:{displayName:result.formatted_address || '',line1:[find('street_number','premise'),find('route','neighborhood')].filter(Boolean).join(', '),line2:find('sublocality','sublocality_level_1'),city:find('locality','administrative_area_level_2'),state:find('administrative_area_level_1'),pincode:find('postal_code')},...near};
+    const street=find('route','street_address') || find('neighborhood');
+    const line1=[find('street_number','premise'),street].filter(Boolean).join(', ');
+    const area=find('sublocality','sublocality_level_1');
+    return {address:{displayName:result.formatted_address || '',line1,line2:area===line1?'':area,city:find('locality','administrative_area_level_2'),state:find('administrative_area_level_1'),pincode:find('postal_code')},...near};
   }
   const q=text(params.get('q'),'Place',2,120);
   const data=await ola('/autocomplete',{input:q,...(near?{location:near.lat+','+near.lng,radius:'50000'}:{})});
