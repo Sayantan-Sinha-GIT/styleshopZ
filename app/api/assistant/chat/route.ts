@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         WHERE d.ends_at > NOW()
         LIMIT 3
       `;
-      const coupons = await sql`SELECT code, discount_type, discount_value, min_cart_paise FROM coupons WHERE is_active = true LIMIT 3`;
+      const coupons = await sql`SELECT code, discount_type, discount_value, min_cart_paise FROM coupons WHERE expires_at > NOW() LIMIT 3`;
       toolResults.push({
         type: 'deals',
         deals: deals.map((d) => ({
