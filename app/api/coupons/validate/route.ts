@@ -10,9 +10,9 @@ export async function POST(req: Request) {
     }
 
     const [coupon] = await sql`
-      SELECT id, code, discount_type, discount_value, min_cart_paise, usage_limit, times_used, expires_at
+      SELECT id, code, discount_type, discount_value, min_cart_paise, usage_limit, used_count, expires_at
       FROM coupons
-      WHERE UPPER(code) = UPPER(${code.trim()}) AND is_active = true
+      WHERE UPPER(code) = UPPER(${code.trim()})
     `;
 
     if (!coupon) {
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ valid: false, message: 'Coupon code has expired' });
     }
 
-    if (coupon.times_used >= coupon.usage_limit) {
+    if (coupon.usage_limit && coupon.used_count >= coupon.usage_limit) {
       return NextResponse.json({ valid: false, message: 'Coupon usage limit has been reached' });
     }
 

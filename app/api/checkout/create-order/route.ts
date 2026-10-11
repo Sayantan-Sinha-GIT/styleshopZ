@@ -96,7 +96,7 @@ export async function POST(req: Request) {
           discountPaise = Number(coupon.discount_value);
         }
         discountPaise = Math.min(discountPaise, subtotalPaise);
-        await sql`UPDATE coupons SET times_used = times_used + 1 WHERE id = ${coupon.id}`;
+        await sql`UPDATE coupons SET used_count = used_count + 1 WHERE id = ${coupon.id}`;
       }
     }
 
