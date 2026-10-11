@@ -20,6 +20,10 @@
 # production
 /build
 
+# open-next & cloudflare
+.open-next
+.wrangler
+
 # misc
 .DS_Store
 *.pem
@@ -30,7 +34,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
 !.env.example
 
@@ -40,6 +44,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
-.env*

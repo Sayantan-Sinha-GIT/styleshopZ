@@ -8,14 +8,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cloudflare": "opennextjs-cloudflare build",
     "start": "next start",
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "seed": "tsx scripts/seed.ts",
-    "migrate": "tsx scripts/migrate.ts"
+    "migrate": "tsx scripts/migrate.ts",
+    "postinstall": "node scripts/patch-opennext.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@opennextjs/cloudflare": "^1.20.10",
     "bcryptjs": "^3.0.3",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
