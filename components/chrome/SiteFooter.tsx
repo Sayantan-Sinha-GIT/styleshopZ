@@ -31,7 +31,7 @@ export function SiteFooter() {
           <h3>Behind the shop</h3>
           <Link href="/seller">Seller workspace</Link>
           <Link href="/admin">Admin workspace</Link>
-          <a href="/downloads/styleshopz-1.1.0.apk">
+          <a href="/downloads/styleshopz-1.2.0.apk">
             Get the Android app <ArrowUpRight size={14} />
           </a>
         </div>

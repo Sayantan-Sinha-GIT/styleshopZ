@@ -182,6 +182,10 @@ export async function checkCoupon(
   return { ...c, discountPaise: discountFor(c, subtotal) };
 }
 export async function createOrder(userId: string, payload: any) {
+  if(process.env.BREVO_API_KEY && process.env.MAIL_FROM){
+    const [account]=await query('SELECT email_verified_at,role FROM users WHERE id=$1',[userId]);
+    assert(account?.email_verified_at || account?.role==='admin','Verify your email from your account before placing an order.',403);
+  }
   const items = lineItems(payload.items),
     a = address(payload.address);
   const key = text(payload.idempotencyKey, "Checkout reference", 16, 100);

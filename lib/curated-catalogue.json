@@ -1,0 +1,1550 @@
+[
+  {
+    "id": "ca549b18-0c71-485f-a3fd-55d94311fc90",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-0",
+    "title": "Soundcraft Quiet ANC Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "40 mm drivers, active noise cancellation. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 249900,
+    "mrp": 324900,
+    "stock": 25,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Quiet ANC"
+    }
+  },
+  {
+    "id": "99233a54-7d5d-4127-ae60-adb6e3e56a69",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-0",
+    "title": "Soundcraft Pocket True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Compact charging case and touch controls. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 129900,
+    "mrp": 168900,
+    "stock": 25,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Pocket"
+    }
+  },
+  {
+    "id": "927e7b25-e3d0-4695-afdc-889c5d9bd4ab",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-0",
+    "title": "Loop Move Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Step tracking and walking goals. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 299900,
+    "mrp": 389900,
+    "stock": 25,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Move"
+    }
+  },
+  {
+    "id": "c9506fe0-0fa0-445b-aa15-80454b5533f9",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-0",
+    "title": "Forma One 128GB Android smartphone",
+    "brand": "Forma",
+    "description": "128GB storage, 6GB RAM, 6.5-inch display. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 1999900,
+    "mrp": 2599900,
+    "stock": 25,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "One 128GB"
+    }
+  },
+  {
+    "id": "eea733d5-fbd1-4984-a9b3-abb43221b1c6",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-0",
+    "title": "Forma Desk 14 Laptop",
+    "brand": "Forma",
+    "description": "14-inch display, 8GB RAM, 256GB SSD. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 4299900,
+    "mrp": 5589900,
+    "stock": 25,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Desk 14"
+    }
+  },
+  {
+    "id": "abea205f-da67-4c9a-a8ba-6c027c6bae55",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-0",
+    "title": "Keyroom Tactile 75 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "75 percent layout with tactile switches. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 249900,
+    "mrp": 324900,
+    "stock": 25,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Tactile 75"
+    }
+  },
+  {
+    "id": "eb3949c0-315d-4fc7-a773-a078aee49497",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-0",
+    "title": "Hearth Crisp 4L Air fryer",
+    "brand": "Hearth",
+    "description": "4-litre removable basket, timer controls. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 399900,
+    "mrp": 519900,
+    "stock": 25,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Crisp 4L"
+    }
+  },
+  {
+    "id": "4e367509-ead8-4531-ad25-5641c0e21f37",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-0",
+    "title": "Hearth Blend 1L Countertop blender",
+    "brand": "Hearth",
+    "description": "1-litre jug with two blending speeds. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 249900,
+    "mrp": 324900,
+    "stock": 25,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Blend 1L"
+    }
+  },
+  {
+    "id": "79a321af-991b-4b8b-ac49-9fb96ae1a98e",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-0",
+    "title": "Threadline Oxford Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Oxford weave, regular fit, button-down collar. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 79900,
+    "mrp": 103900,
+    "stock": 25,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "154c4d0d-2e66-4c74-a8f2-efe3cc28e5a1",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-0",
+    "title": "Threadline Garden Kurta set",
+    "brand": "Threadline",
+    "description": "Printed kurta with straight trousers. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 119900,
+    "mrp": 155900,
+    "stock": 25,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "635479ac-0d5a-431c-a388-0dcea66f5e51",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-0",
+    "title": "Roomkind Arc Floor lamp",
+    "brand": "Roomkind",
+    "description": "Curved stem and warm ambient shade. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 219900,
+    "mrp": 285900,
+    "stock": 25,
+    "image": "/photos/products/lamp-arc.webp",
+    "options": {
+      "model": "Arc"
+    }
+  },
+  {
+    "id": "0300873c-0798-456f-aabc-0dc8ff560d18",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-0",
+    "title": "Botanic Daily 30ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "30ml lightweight hydrating serum. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 44900,
+    "mrp": 58400,
+    "stock": 25,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Daily 30ml"
+    }
+  },
+  {
+    "id": "e0195bbd-f191-42ed-ae10-a04aa5808274",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-0",
+    "title": "Stride Start 5kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "5kg total adjustable plates and handles. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 179900,
+    "mrp": 233900,
+    "stock": 25,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Start 5kg"
+    }
+  },
+  {
+    "id": "f7ec45f3-6fc7-4359-a998-7fcf17e74765",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-0",
+    "title": "Stride Flow 4mm Yoga mat",
+    "brand": "Stride",
+    "description": "4mm textured mat for daily practice. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 59900,
+    "mrp": 77900,
+    "stock": 25,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Flow 4mm"
+    }
+  },
+  {
+    "id": "9de6816a-5baa-437c-acd6-ccfe8afaac8f",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-0",
+    "title": "Stride Pace Running shoes",
+    "brand": "Stride",
+    "description": "Breathable upper with a cushioned sole. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 189900,
+    "mrp": 246900,
+    "stock": 25,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "832b753b-e639-4f6e-a378-467eb89d01d3",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-0",
+    "title": "Fieldwork City 18L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "18-litre daypack with front organiser. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 99900,
+    "mrp": 129900,
+    "stock": 25,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "City 18L"
+    }
+  },
+  {
+    "id": "846afe4b-3c5c-49d3-ab29-00bf26224a5f",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-0",
+    "title": "Fieldwork Round Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Round-frame sunglasses with dark lenses. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 69900,
+    "mrp": 90900,
+    "stock": 25,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "Round"
+    }
+  },
+  {
+    "id": "e7fe2d7e-ff7e-46dc-aec8-f401021ecc52",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-1",
+    "title": "Soundcraft Studio Reference Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "Balanced tuning with wired listening mode. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 272400,
+    "mrp": 354100,
+    "stock": 28,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Studio Reference"
+    }
+  },
+  {
+    "id": "5b2ebe8a-d3f9-4476-afcf-c23473e77f69",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-1",
+    "title": "Soundcraft Commute ANC True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Active noise cancellation for commuting. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 141600,
+    "mrp": 184100,
+    "stock": 28,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Commute ANC"
+    }
+  },
+  {
+    "id": "6d7da9c7-13da-4e7f-ad9d-5f5299591895",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-1",
+    "title": "Loop Active Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Workout modes and heart-rate display. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 326900,
+    "mrp": 425000,
+    "stock": 28,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Active"
+    }
+  },
+  {
+    "id": "67c625e6-e798-42ae-a7bf-b6b0d09a0d3d",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-1",
+    "title": "Forma Plus 256GB Android smartphone",
+    "brand": "Forma",
+    "description": "256GB storage, 8GB RAM, 6.7-inch display. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 2179900,
+    "mrp": 2833900,
+    "stock": 28,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "Plus 256GB"
+    }
+  },
+  {
+    "id": "62bf7744-b5cd-4bb1-acdb-699269fbe8a5",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-1",
+    "title": "Forma Studio 15 Laptop",
+    "brand": "Forma",
+    "description": "15-inch display, 16GB RAM, 512GB SSD. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 4686900,
+    "mrp": 6093000,
+    "stock": 28,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Studio 15"
+    }
+  },
+  {
+    "id": "220d36ce-e3fa-4dca-a44b-1b5a113634ae",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-1",
+    "title": "Keyroom Linear 65 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "65 percent layout with linear switches. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 272400,
+    "mrp": 354100,
+    "stock": 28,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Linear 65"
+    }
+  },
+  {
+    "id": "9f94929a-c1aa-4b25-a6de-702b18082227",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-1",
+    "title": "Hearth Family 6L Air fryer",
+    "brand": "Hearth",
+    "description": "6-litre basket for family meals. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 435900,
+    "mrp": 566700,
+    "stock": 28,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Family 6L"
+    }
+  },
+  {
+    "id": "4645dc00-98a6-448e-a9e8-a04b908b1145",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-1",
+    "title": "Hearth Smooth 1.5L Countertop blender",
+    "brand": "Hearth",
+    "description": "1.5-litre jug and pulse control. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 272400,
+    "mrp": 354100,
+    "stock": 28,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Smooth 1.5L"
+    }
+  },
+  {
+    "id": "867a39aa-1662-49b9-a197-9f103c938b87",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-1",
+    "title": "Threadline Weekend Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Soft cotton weave with a casual fit. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 87100,
+    "mrp": 113200,
+    "stock": 28,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "05620832-3c5a-4d22-a3bd-a6ac19816bfa",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-1",
+    "title": "Threadline Everyday Kurta set",
+    "brand": "Threadline",
+    "description": "Cotton kurta and matching trousers. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 130700,
+    "mrp": 169900,
+    "stock": 28,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "d7d3c4fe-5d6c-43c7-a598-35aa495831ef",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-1",
+    "title": "Roomkind Read Floor lamp",
+    "brand": "Roomkind",
+    "description": "Adjustable reading head and weighted base. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 239700,
+    "mrp": 311600,
+    "stock": 28,
+    "image": "/photos/products/lamp-read.webp",
+    "options": {
+      "model": "Read"
+    }
+  },
+  {
+    "id": "94a71189-984e-4ccb-a652-e5d8f0aea232",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-1",
+    "title": "Botanic Gentle 30ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "30ml fragrance-free daily hydration. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 48900,
+    "mrp": 63600,
+    "stock": 28,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Gentle 30ml"
+    }
+  },
+  {
+    "id": "0b28922a-f05e-40c5-ae3d-bac402ea17f7",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-1",
+    "title": "Stride Move 10kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "10kg total adjustable set for home training. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 196100,
+    "mrp": 254900,
+    "stock": 28,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Move 10kg"
+    }
+  },
+  {
+    "id": "12ea958c-ede9-4a18-a199-8b291b2a8122",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-1",
+    "title": "Stride Comfort 6mm Yoga mat",
+    "brand": "Stride",
+    "description": "6mm cushioned mat with non-slip texture. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 65300,
+    "mrp": 84900,
+    "stock": 28,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Comfort 6mm"
+    }
+  },
+  {
+    "id": "118ab7fe-983a-4dac-aa8a-6b72dc9bbdd4",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-1",
+    "title": "Stride Daily Running shoes",
+    "brand": "Stride",
+    "description": "Everyday trainers with padded heel support. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 207000,
+    "mrp": 269100,
+    "stock": 28,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "d2164d47-11dd-4884-ac16-4030ebf74948",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-1",
+    "title": "Fieldwork Work 22L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "22-litre backpack with laptop compartment. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 108900,
+    "mrp": 141600,
+    "stock": 28,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "Work 22L"
+    }
+  },
+  {
+    "id": "6c94e40c-6bed-4677-a906-a0bc25d17fd9",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-1",
+    "title": "Fieldwork Classic Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Classic silhouette and lightweight frame. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 76200,
+    "mrp": 99100,
+    "stock": 28,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "Classic"
+    }
+  },
+  {
+    "id": "13b05616-37bc-4864-af51-46f20698cfbd",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-2",
+    "title": "Soundcraft Air Lightweight Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "Lightweight padded headband for long sessions. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 294900,
+    "mrp": 383400,
+    "stock": 31,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Air Lightweight"
+    }
+  },
+  {
+    "id": "23031083-878a-4bf5-a349-1f2ca78f385f",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-2",
+    "title": "Soundcraft Pulse Sport True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Sweat-resistant fit with silicone tips. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 153300,
+    "mrp": 199300,
+    "stock": 31,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Pulse Sport"
+    }
+  },
+  {
+    "id": "8f92b4fc-183f-4814-a7b0-729e42b17f87",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-2",
+    "title": "Loop Trail Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Bright outdoor-readable screen. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 353900,
+    "mrp": 460100,
+    "stock": 31,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Trail"
+    }
+  },
+  {
+    "id": "2ca825d0-aef3-41ab-afc9-87a88d115734",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-2",
+    "title": "Forma Go 128GB Android smartphone",
+    "brand": "Forma",
+    "description": "128GB storage, 6GB RAM, compact body. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 2359900,
+    "mrp": 3067900,
+    "stock": 31,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "Go 128GB"
+    }
+  },
+  {
+    "id": "b685ae4e-b925-472f-a53a-fbfa7475d931",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-2",
+    "title": "Forma Air 13 Laptop",
+    "brand": "Forma",
+    "description": "13-inch display, 8GB RAM, lightweight build. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 5073900,
+    "mrp": 6596100,
+    "stock": 31,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Air 13"
+    }
+  },
+  {
+    "id": "9d8fbd5b-c333-4c49-a57b-fa16b1d4beeb",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-2",
+    "title": "Keyroom Quiet 96 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "96-key layout with damped keys. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 294900,
+    "mrp": 383400,
+    "stock": 31,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Quiet 96"
+    }
+  },
+  {
+    "id": "bc32acc6-44d6-47a7-a8ec-1a3ed647e0ca",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-2",
+    "title": "Hearth Compact 3L Air fryer",
+    "brand": "Hearth",
+    "description": "3-litre compact kitchen footprint. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 471900,
+    "mrp": 613500,
+    "stock": 31,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Compact 3L"
+    }
+  },
+  {
+    "id": "d2ee9139-e399-449d-a89c-3d93b54dd1a6",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-2",
+    "title": "Hearth Daily 1L Countertop blender",
+    "brand": "Hearth",
+    "description": "1-litre compact everyday blender. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 294900,
+    "mrp": 383400,
+    "stock": 31,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Daily 1L"
+    }
+  },
+  {
+    "id": "91175973-55bb-4127-a211-749d0664b525",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-2",
+    "title": "Threadline Relaxed Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Relaxed shoulders and breathable cotton. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 94300,
+    "mrp": 122600,
+    "stock": 31,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "5e66c1d6-aebc-4ab7-ace7-4898298582db",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-2",
+    "title": "Threadline Festive Kurta set",
+    "brand": "Threadline",
+    "description": "Decorative neckline and a coordinated set. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 141500,
+    "mrp": 184000,
+    "stock": 31,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "71ec51df-ac3c-4d9b-a233-aff028932d6a",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-2",
+    "title": "Roomkind Warm Floor lamp",
+    "brand": "Roomkind",
+    "description": "Warm diffused light for living spaces. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 259500,
+    "mrp": 337400,
+    "stock": 31,
+    "image": "/photos/products/lamp-generated.png",
+    "options": {
+      "model": "Warm"
+    }
+  },
+  {
+    "id": "ee2eb22a-3613-4635-a523-93c0ce6b1765",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-2",
+    "title": "Botanic Dew 50ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "50ml serum with a smooth dewy texture. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 52900,
+    "mrp": 68800,
+    "stock": 31,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Dew 50ml"
+    }
+  },
+  {
+    "id": "c40c54ee-0751-4887-a558-f96b1e33dbd0",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-2",
+    "title": "Stride Build 15kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "15kg total set with secure collars. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 212300,
+    "mrp": 276000,
+    "stock": 31,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Build 15kg"
+    }
+  },
+  {
+    "id": "292c0026-4473-464c-ad62-50ac438e5a83",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-2",
+    "title": "Stride Studio 8mm Yoga mat",
+    "brand": "Stride",
+    "description": "8mm supportive exercise mat. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 70700,
+    "mrp": 91900,
+    "stock": 31,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Studio 8mm"
+    }
+  },
+  {
+    "id": "26063288-962e-44ea-acd7-df62a34665f1",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-2",
+    "title": "Stride Cloud Running shoes",
+    "brand": "Stride",
+    "description": "Soft cushioning for walks and easy runs. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 224100,
+    "mrp": 291300,
+    "stock": 31,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "9d285db7-1a9b-4add-a0c5-9ffb0b07b727",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-2",
+    "title": "Fieldwork Campus 24L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "24-litre backpack with padded shoulder straps. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 117900,
+    "mrp": 153300,
+    "stock": 31,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "Campus 24L"
+    }
+  },
+  {
+    "id": "8b71f686-93ff-48c0-a533-7b99be7253f6",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-2",
+    "title": "Fieldwork Weekend Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Casual frame with a protective pouch. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 82500,
+    "mrp": 107300,
+    "stock": 31,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "Weekend"
+    }
+  },
+  {
+    "id": "51840973-2c16-4d27-a7dc-c6b99380d747",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-3",
+    "title": "Soundcraft Travel Fold Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "Fold-flat earcups and a travel pouch. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 317400,
+    "mrp": 412600,
+    "stock": 34,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Travel Fold"
+    }
+  },
+  {
+    "id": "9c58eb9e-8697-4091-aea4-3337db1f1491",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-3",
+    "title": "Soundcraft Clear Call True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Dual microphone call mode. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 165000,
+    "mrp": 214500,
+    "stock": 34,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Clear Call"
+    }
+  },
+  {
+    "id": "0f0bab98-475e-4886-a376-854286ed7141",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-3",
+    "title": "Loop Everyday Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Clock faces and notification previews. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 380900,
+    "mrp": 495200,
+    "stock": 34,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Everyday"
+    }
+  },
+  {
+    "id": "9feed570-75ee-4767-a245-ec86c47100fd",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-3",
+    "title": "Forma Max 256GB Android smartphone",
+    "brand": "Forma",
+    "description": "256GB storage, 12GB RAM, large display. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 2539900,
+    "mrp": 3301900,
+    "stock": 34,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "Max 256GB"
+    }
+  },
+  {
+    "id": "3a037619-ddc5-45cd-abb2-0bc2835bfae0",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-3",
+    "title": "Forma Work 16 Laptop",
+    "brand": "Forma",
+    "description": "16-inch display, 16GB RAM, 1TB SSD. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 5460900,
+    "mrp": 7099200,
+    "stock": 34,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Work 16"
+    }
+  },
+  {
+    "id": "26b81e8c-6874-4d4f-a327-b013f252d2b9",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-3",
+    "title": "Keyroom Studio 80 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "Tenkeyless layout and USB-C connection. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 317400,
+    "mrp": 412600,
+    "stock": 34,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Studio 80"
+    }
+  },
+  {
+    "id": "76539573-64cb-4af7-add4-052731c9c94b",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-3",
+    "title": "Hearth Daily 5L Air fryer",
+    "brand": "Hearth",
+    "description": "5-litre basket with preset modes. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 507900,
+    "mrp": 660300,
+    "stock": 34,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Daily 5L"
+    }
+  },
+  {
+    "id": "1ee88346-741a-430f-ae2f-01a398ba4741",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-3",
+    "title": "Hearth Power 2L Countertop blender",
+    "brand": "Hearth",
+    "description": "2-litre jug for batch preparation. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 317400,
+    "mrp": 412600,
+    "stock": 34,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Power 2L"
+    }
+  },
+  {
+    "id": "c6bf6348-953f-49f8-a70e-fcc0c2bc66f1",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-3",
+    "title": "Threadline Everyday Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Regular fit for everyday layering. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 101500,
+    "mrp": 132000,
+    "stock": 34,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "26c98d14-a97e-4654-a7c3-3d37c8afa3e6",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-3",
+    "title": "Threadline Breeze Kurta set",
+    "brand": "Threadline",
+    "description": "Lightweight fabric with a relaxed silhouette. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 152300,
+    "mrp": 198000,
+    "stock": 34,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "bafb2c58-ae06-429c-ac46-4deac02bf2f6",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-3",
+    "title": "Roomkind Studio Floor lamp",
+    "brand": "Roomkind",
+    "description": "Slim profile for a desk-side corner. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 279300,
+    "mrp": 363100,
+    "stock": 34,
+    "image": "/photos/products/lamp-studio.webp",
+    "options": {
+      "model": "Studio"
+    }
+  },
+  {
+    "id": "8ecb3923-f129-494a-a667-9084da29267d",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-3",
+    "title": "Botanic Balance 30ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "30ml light gel-texture serum. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 56900,
+    "mrp": 74000,
+    "stock": 34,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Balance 30ml"
+    }
+  },
+  {
+    "id": "bc7e894e-0674-4c67-a3e7-b3b6585665d5",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-3",
+    "title": "Stride Lift 20kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "20kg total adjustable set. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 228500,
+    "mrp": 297100,
+    "stock": 34,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Lift 20kg"
+    }
+  },
+  {
+    "id": "024a97e6-777c-4fdb-ade4-d78ed285cbf9",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-3",
+    "title": "Stride Travel 3mm Yoga mat",
+    "brand": "Stride",
+    "description": "3mm lightweight roll-up travel mat. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 76100,
+    "mrp": 98900,
+    "stock": 34,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Travel 3mm"
+    }
+  },
+  {
+    "id": "67601229-9e9f-45b4-a695-d099ba8cad5b",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-3",
+    "title": "Stride Sprint Running shoes",
+    "brand": "Stride",
+    "description": "Lightweight trainers with flexible outsole. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 241200,
+    "mrp": 313600,
+    "stock": 34,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "9cfda964-c279-4b86-a174-65a202e79dbf",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-3",
+    "title": "Fieldwork Travel 28L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "28-litre backpack with spacious main compartment. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 126900,
+    "mrp": 165000,
+    "stock": 34,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "Travel 28L"
+    }
+  },
+  {
+    "id": "3371efd3-b0ae-4109-a01f-c484660412ac",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-3",
+    "title": "Fieldwork City Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Everyday frame with comfortable nose pads. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 88800,
+    "mrp": 115400,
+    "stock": 34,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "City"
+    }
+  },
+  {
+    "id": "68a99e95-2419-4eb1-aa6e-178bddb091a7",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-4",
+    "title": "Soundcraft Bass Plus Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "Low-frequency tuning and cushioned earcups. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 339900,
+    "mrp": 441900,
+    "stock": 37,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Bass Plus"
+    }
+  },
+  {
+    "id": "3e5c01b7-033d-42e1-a197-179def7fb848",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-4",
+    "title": "Soundcraft Air Mini True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Low-profile buds for smaller ears. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 176700,
+    "mrp": 229700,
+    "stock": 37,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Air Mini"
+    }
+  },
+  {
+    "id": "9e927db7-afa4-477b-a7ee-b709f347f0d6",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-4",
+    "title": "Loop Pulse Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Activity reminders and sleep summaries. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 407900,
+    "mrp": 530300,
+    "stock": 37,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Pulse"
+    }
+  },
+  {
+    "id": "4d73cd62-4433-4598-a7fa-20fe7f146de6",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-4",
+    "title": "Forma Lite 64GB Android smartphone",
+    "brand": "Forma",
+    "description": "64GB storage, 4GB RAM, everyday camera. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 2719900,
+    "mrp": 3535900,
+    "stock": 37,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "Lite 64GB"
+    }
+  },
+  {
+    "id": "827e103f-42d3-49e0-ae00-ac0991ee3790",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-4",
+    "title": "Forma Learn 14 Laptop",
+    "brand": "Forma",
+    "description": "14-inch display, 8GB RAM, 512GB SSD. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 5847900,
+    "mrp": 7602300,
+    "stock": 37,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Learn 14"
+    }
+  },
+  {
+    "id": "dedcfb8f-9b5f-4ca9-ad44-d38751e14917",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-4",
+    "title": "Keyroom Compact 60 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "60 percent compact layout. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 339900,
+    "mrp": 441900,
+    "stock": 37,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Compact 60"
+    }
+  },
+  {
+    "id": "a151ff3c-c9ce-41be-a225-d7bcec2b8b0b",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-4",
+    "title": "Hearth Crisp Plus 7L Air fryer",
+    "brand": "Hearth",
+    "description": "7-litre large basket with digital controls. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 543900,
+    "mrp": 707100,
+    "stock": 37,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Crisp Plus 7L"
+    }
+  },
+  {
+    "id": "32ecc10d-064c-4037-ae56-888827656590",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-4",
+    "title": "Hearth Mini 750ml Countertop blender",
+    "brand": "Hearth",
+    "description": "750ml jug for smaller portions. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 339900,
+    "mrp": 441900,
+    "stock": 37,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Mini 750ml"
+    }
+  },
+  {
+    "id": "e6fbaa2e-ecc7-4c0b-a184-52a2f768f64c",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-4",
+    "title": "Threadline Classic Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Classic collar and chest pocket. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 108700,
+    "mrp": 141300,
+    "stock": 37,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "f26e032a-6405-44d0-aa03-027156190efc",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-4",
+    "title": "Threadline Classic Kurta set",
+    "brand": "Threadline",
+    "description": "Straight-cut kurta with side pockets. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 163100,
+    "mrp": 212000,
+    "stock": 37,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "59a7833f-bd85-40db-a7aa-59fe3052f9b8",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-4",
+    "title": "Roomkind Corner Floor lamp",
+    "brand": "Roomkind",
+    "description": "Compact base for smaller rooms. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 299100,
+    "mrp": 388800,
+    "stock": 37,
+    "image": "/photos/products/lamp-corner.webp",
+    "options": {
+      "model": "Corner"
+    }
+  },
+  {
+    "id": "efce58a7-2c77-4bf7-ab0a-e0d9e4ad1af8",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-4",
+    "title": "Botanic Glow 30ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "30ml hydrating serum for daily care. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 60900,
+    "mrp": 79200,
+    "stock": 37,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Glow 30ml"
+    }
+  },
+  {
+    "id": "f1fad41b-6789-4bba-a60d-fe4c6b5ca4bf",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-4",
+    "title": "Stride Train 25kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "25kg total set with textured handles. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 244700,
+    "mrp": 318100,
+    "stock": 37,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Train 25kg"
+    }
+  },
+  {
+    "id": "c821c6ef-5302-4f66-aeff-f5a17de2df36",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-4",
+    "title": "Stride Daily 5mm Yoga mat",
+    "brand": "Stride",
+    "description": "5mm everyday yoga and stretching mat. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 81500,
+    "mrp": 106000,
+    "stock": 37,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Daily 5mm"
+    }
+  },
+  {
+    "id": "805a7ff6-eea5-4955-a98a-1f39559e8241",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-4",
+    "title": "Stride Road Running shoes",
+    "brand": "Stride",
+    "description": "Road-running fit with durable outsole. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 258300,
+    "mrp": 335800,
+    "stock": 37,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "afbfedbb-72d9-4b50-a57a-f8269fff5895",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-4",
+    "title": "Fieldwork Compact 15L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "15-litre compact daypack. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 135900,
+    "mrp": 176700,
+    "stock": 37,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "Compact 15L"
+    }
+  },
+  {
+    "id": "994c43de-1405-440c-a0ff-79355e6a426b",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-4",
+    "title": "Fieldwork Trail Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Lightweight frame for outdoor days. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 95100,
+    "mrp": 123600,
+    "stock": 37,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "Trail"
+    }
+  },
+  {
+    "id": "85d4a8b4-03c3-44a6-a211-de3f14c53499",
+    "category_id": "2300e348-3a08-4037-a2e5-bb2e084df586",
+    "sku": "DISC26-wireless-headphones-5",
+    "title": "Soundcraft Focus Work Wireless over-ear headphones",
+    "brand": "Soundcraft",
+    "description": "Dual microphones and a mute control. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 362400,
+    "mrp": 471100,
+    "stock": 40,
+    "image": "/photos/products/sony-headphones-black.webp",
+    "options": {
+      "model": "Focus Work"
+    }
+  },
+  {
+    "id": "277ca349-7ad0-4690-aecd-8592a19b3484",
+    "category_id": "727232f0-a301-4e1a-b3b7-34ed16836159",
+    "sku": "DISC26-tws-earbuds-5",
+    "title": "Soundcraft Everyday True wireless earbuds",
+    "brand": "Soundcraft",
+    "description": "Simple everyday wireless listening. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 188400,
+    "mrp": 244900,
+    "stock": 40,
+    "image": "/photos/products/bose-earbuds-gold.webp",
+    "options": {
+      "model": "Everyday"
+    }
+  },
+  {
+    "id": "0c017ac7-f59b-472e-a1b5-e26acbe76c59",
+    "category_id": "b218771f-8b88-43bb-b574-ffc926c0bfcc",
+    "sku": "DISC26-smartwatches-5",
+    "title": "Loop Connect Fitness smartwatch",
+    "brand": "Loop",
+    "description": "Bluetooth calling and health dashboard. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 434900,
+    "mrp": 565400,
+    "stock": 40,
+    "image": "/photos/products/apple-watch-titanium.webp",
+    "options": {
+      "model": "Connect"
+    }
+  },
+  {
+    "id": "e2543335-a03b-4d5c-a4a6-61075ef633bf",
+    "category_id": "84790cfd-03ee-47a6-b02d-7125e1f090bd",
+    "sku": "DISC26-flagship-smartphones-5",
+    "title": "Forma Pro 512GB Android smartphone",
+    "brand": "Forma",
+    "description": "512GB storage, 12GB RAM, fast charging. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 2899900,
+    "mrp": 3769900,
+    "stock": 40,
+    "image": "/photos/products/smartphone-generated.png",
+    "options": {
+      "model": "Pro 512GB"
+    }
+  },
+  {
+    "id": "24ece411-8109-494b-ae6a-7d7e7e82a4ed",
+    "category_id": "d01a8e53-4138-472a-9e38-dd9318aade6e",
+    "sku": "DISC26-ultrabooks-5",
+    "title": "Forma Creator 15 Laptop",
+    "brand": "Forma",
+    "description": "15-inch display, 32GB RAM, 1TB SSD. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 6234900,
+    "mrp": 8105400,
+    "stock": 40,
+    "image": "/photos/banner2.webp",
+    "options": {
+      "model": "Creator 15"
+    }
+  },
+  {
+    "id": "e5886699-440e-41ac-a9ce-dcd58fde748b",
+    "category_id": "81efc4dd-5cfa-4945-bdca-19f870a3d7a2",
+    "sku": "DISC26-keyboards-mice-5",
+    "title": "Keyroom Desk 100 Mechanical keyboard",
+    "brand": "Keyroom",
+    "description": "Full-size layout with number pad. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 362400,
+    "mrp": 471100,
+    "stock": 40,
+    "image": "/photos/products/mechanical-keyboard.webp",
+    "options": {
+      "model": "Desk 100"
+    }
+  },
+  {
+    "id": "7a053818-444b-47fb-a340-2c34eec7a727",
+    "category_id": "a519523f-b191-4808-b1f8-abd9c80e8f83",
+    "sku": "DISC26-air-fryers-blenders-5",
+    "title": "Hearth Easy 4L Air fryer",
+    "brand": "Hearth",
+    "description": "4-litre basket with simple manual controls. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 579900,
+    "mrp": 753900,
+    "stock": 40,
+    "image": "/photos/products/air-fryer-generated.png",
+    "options": {
+      "model": "Easy 4L"
+    }
+  },
+  {
+    "id": "962a61d9-6d1a-4d90-a0c6-39067b4422ce",
+    "category_id": "a94580ef-ddb0-456b-ae9b-e943a92f898a",
+    "sku": "DISC26-countertop-blenders-5",
+    "title": "Hearth Glass 1.5L Countertop blender",
+    "brand": "Hearth",
+    "description": "1.5-litre glass jug and easy-clean base. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 362400,
+    "mrp": 471100,
+    "stock": 40,
+    "image": "/photos/products/blender-generated.webp",
+    "options": {
+      "model": "Glass 1.5L"
+    }
+  },
+  {
+    "id": "49d5bc66-30b1-45eb-a7b7-3111ee55225d",
+    "category_id": "06d24cea-fb9e-4f2f-9716-5990e4f0ea72",
+    "sku": "DISC26-mens-casual-shirts-5",
+    "title": "Threadline Easy Fit Cotton casual shirt",
+    "brand": "Threadline",
+    "description": "Easy-care cotton blend and curved hem. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 115900,
+    "mrp": 150700,
+    "stock": 40,
+    "image": "/photos/products/shirt-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "e483ab65-4932-436b-a5d0-09f3935a2a52",
+    "category_id": "c0b1df6c-2886-46ed-ad5c-9d7aa764dcbb",
+    "sku": "DISC26-womens-kurta-sets-5",
+    "title": "Threadline Weekend Kurta set",
+    "brand": "Threadline",
+    "description": "Easy-fit kurta set for casual days. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 173900,
+    "mrp": 226100,
+    "stock": 40,
+    "image": "/photos/products/kurta-generated.png",
+    "options": {
+      "size": "M",
+      "color": "Printed"
+    }
+  },
+  {
+    "id": "17b89d40-8ebd-4ffd-abd0-1a69bff4cd18",
+    "category_id": "6a5effb5-97c7-4e82-aed8-d06c8ba3c646",
+    "sku": "DISC26-floor-lamps-5",
+    "title": "Roomkind Evening Floor lamp",
+    "brand": "Roomkind",
+    "description": "Soft light with an inline switch. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 318900,
+    "mrp": 414600,
+    "stock": 40,
+    "image": "/photos/products/lamp-evening.webp",
+    "options": {
+      "model": "Evening"
+    }
+  },
+  {
+    "id": "ea7ac000-1893-4307-af23-a834c60b050a",
+    "category_id": "dfbe2fe1-7ade-48c7-b8ca-21b4eb0593ec",
+    "sku": "DISC26-face-serums-5",
+    "title": "Botanic Calm 50ml Hydrating face serum",
+    "brand": "Botanic",
+    "description": "50ml fragrance-free hydrating serum. Patch test before use. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 64900,
+    "mrp": 84400,
+    "stock": 40,
+    "image": "/photos/products/serum-generated.png",
+    "options": {
+      "model": "Calm 50ml"
+    }
+  },
+  {
+    "id": "47204ab7-0e5b-4af8-af8f-adbe73edb19d",
+    "category_id": "b847f710-e677-4cce-b1d1-9017043ab064",
+    "sku": "DISC26-dumbbells-mats-5",
+    "title": "Stride Studio 30kg Adjustable dumbbell set",
+    "brand": "Stride",
+    "description": "30kg total set for a home workout space. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 260900,
+    "mrp": 339200,
+    "stock": 40,
+    "image": "/photos/products/dumbbells-generated.png",
+    "options": {
+      "model": "Studio 30kg"
+    }
+  },
+  {
+    "id": "5d406807-efb5-4362-ab4a-85f3f924c238",
+    "category_id": "8bea3fa3-6c6d-4870-a1db-6f23f2802514",
+    "sku": "DISC26-yoga-mats-5",
+    "title": "Stride Ground 10mm Yoga mat",
+    "brand": "Stride",
+    "description": "10mm extra-cushioned floor exercise mat. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 86900,
+    "mrp": 113000,
+    "stock": 40,
+    "image": "/photos/products/yoga-mat-generated.webp",
+    "options": {
+      "model": "Ground 10mm"
+    }
+  },
+  {
+    "id": "34a9dddf-eeb0-4c46-a928-762bab5aaa00",
+    "category_id": "74dd3149-d437-4c49-ad0c-3b4b49c6d652",
+    "sku": "DISC26-running-shoes-5",
+    "title": "Stride Move Running shoes",
+    "brand": "Stride",
+    "description": "Supportive lace-up trainers for daily movement. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 275400,
+    "mrp": 358000,
+    "stock": 40,
+    "image": "/photos/products/nike-running-shoes.webp",
+    "options": {
+      "size": "UK 8",
+      "color": "Neutral"
+    }
+  },
+  {
+    "id": "9718410c-dce1-4cfb-ac27-36b789c5eebf",
+    "category_id": "710608a2-323f-4e46-a362-1aa5e1cf8fb6",
+    "sku": "DISC26-backpacks-5",
+    "title": "Fieldwork Daytrip 20L Everyday backpack",
+    "brand": "Fieldwork",
+    "description": "20-litre backpack with side bottle pockets. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 144900,
+    "mrp": 188400,
+    "stock": 40,
+    "image": "/photos/products/urban-backpack.webp",
+    "options": {
+      "model": "Daytrip 20L"
+    }
+  },
+  {
+    "id": "ca451e6f-fb3f-4293-a6a7-9d1288957add",
+    "category_id": "001c3b1f-9d86-482d-ab11-18148d85d393",
+    "sku": "DISC26-sunglasses-5",
+    "title": "Fieldwork Everyday Sunglasses",
+    "brand": "Fieldwork",
+    "description": "Simple dark lenses and durable hinges. Sample product for the styleshopZ demonstration marketplace. Specifications and photography are illustrative; no real payment, delivery or manufacturer warranty is offered.",
+    "price": 101400,
+    "mrp": 131800,
+    "stock": 40,
+    "image": "/photos/products/designer-sunglasses.webp",
+    "options": {
+      "model": "Everyday"
+    }
+  }
+]

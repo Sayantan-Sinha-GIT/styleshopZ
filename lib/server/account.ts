@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
-import { randomBytes, createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { query, transaction } from "./db";
 import { assert, text, address, uuid, integer } from "./rules";
 import { rate, requireUser, sessionToken, cookie } from "./session";
 import { cartItems, photo, notify } from "./catalog";
 import { demoEnabled } from "./commerce";
+import { emailReady, sendCode } from './identity';
 
 export async function authenticate(req: Request, b: any, signup: boolean) {
   const email = text(b.email, "Email", 5, 254).toLowerCase();
@@ -41,7 +42,7 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
       );
       const role = b.role === "seller" ? "seller" : "customer";
       const [u] = await q(
-        "INSERT INTO users(email,password_hash,role,name) VALUES($1,$2,$3,$4) RETURNING id,name,email,role,session_version",
+        "INSERT INTO users(email,password_hash,role,name) VALUES($1,$2,$3,$4) RETURNING id,name,email,role,session_version,email_verified_at",
         [email, hash, role, name],
       );
       if (role === "seller")
@@ -73,6 +74,8 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
     assert(u && ok, "Email or password is incorrect.", 401);
     user = u;
   }
+  let verificationSent=false;
+  if(signup && emailReady()) { try { await sendCode(user,'verify'); verificationSent=true; } catch {} }
   return Response.json(
     {
       user: {
@@ -80,7 +83,9 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
         name: user.name,
         email: user.email,
         role: user.role,
+        email_verified_at: user.email_verified_at,
       },
+      verificationSent,
     },
     {
       headers: {
@@ -89,72 +94,6 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
       },
     },
   );
-}
-export async function resetPassword(req: Request, b: any) {
-  if (b.token) {
-    const password = text(b.password, "Password", 8, 72),
-      hash = createHash("sha256")
-        .update(text(b.token, "Reset token", 32, 100))
-        .digest("hex");
-    const passwordHash = await bcrypt.hash(password, 10);
-    await transaction(async (q) => {
-      const [r] = await q(
-        "SELECT * FROM password_resets WHERE token_hash=$1 AND used_at IS NULL AND expires_at>NOW() FOR UPDATE",
-        [hash],
-      );
-      assert(r, "This reset link has expired or has already been used.");
-      await q(
-        "UPDATE users SET password_hash=$2,session_version=session_version+1 WHERE id=$1",
-        [r.user_id, passwordHash],
-      );
-      await q("UPDATE password_resets SET used_at=NOW() WHERE token_hash=$1", [
-        hash,
-      ]);
-    });
-    return { ok: true };
-  }
-  const email = text(b.email, "Email", 5, 254).toLowerCase();
-  await rate("reset:" + email, 3, 900);
-  assert(
-    process.env.RESEND_API_KEY?.startsWith("re_") && process.env.MAIL_FROM,
-    "Password reset email is not configured. Contact the shop owner for account recovery.",
-    503,
-  );
-  const [u] = await query(
-    "SELECT id FROM users WHERE email=$1 AND deleted_at IS NULL",
-    [email],
-  );
-  if (u) {
-    const token = randomBytes(32).toString("hex"),
-      hash = createHash("sha256").update(token).digest("hex");
-    await query(
-      "INSERT INTO password_resets(token_hash,user_id,expires_at) VALUES($1,$2,NOW()+INTERVAL '30 minutes')",
-      [hash, u.id],
-    );
-    const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: process.env.MAIL_FROM,
-        to: email,
-        subject: "Reset your styleshopZ password",
-        text: `Reset your password within 30 minutes: ${origin}/login?reset=${token}`,
-      }),
-    });
-    assert(
-      res.ok,
-      "Email delivery is unavailable. Please try again later.",
-      503,
-    );
-  }
-  return {
-    ok: true,
-    message: "If this account exists, a reset link has been sent.",
-  };
 }
 export async function cartMutation(
   userId: string,
@@ -263,6 +202,8 @@ export async function profile(method: string, b: any) {
         [u.id, `deleted-${u.id}@invalid.test`],
       );
       await q("DELETE FROM addresses WHERE user_id=$1", [u.id]);
+      await q("DELETE FROM auth_identities WHERE user_id=$1", [u.id]);
+      await q("DELETE FROM email_codes WHERE user_id=$1", [u.id]);
       await q("DELETE FROM assistant_messages WHERE user_id=$1", [u.id]);
       await q("DELETE FROM carts WHERE user_id=$1", [u.id]);
       await q("DELETE FROM wishlists WHERE user_id=$1", [u.id]);
@@ -303,7 +244,7 @@ export async function addresses(
     if (isDefault)
       await q("UPDATE addresses SET is_default=FALSE WHERE user_id=$1", [u.id]);
     await q(
-      "INSERT INTO addresses(id,user_id,name,phone,line1,line2,city,state,pincode,is_default) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,phone=EXCLUDED.phone,line1=EXCLUDED.line1,line2=EXCLUDED.line2,city=EXCLUDED.city,state=EXCLUDED.state,pincode=EXCLUDED.pincode,is_default=EXCLUDED.is_default",
+      "INSERT INTO addresses(id,user_id,name,phone,line1,line2,city,state,pincode,is_default,latitude,longitude) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,phone=EXCLUDED.phone,line1=EXCLUDED.line1,line2=EXCLUDED.line2,city=EXCLUDED.city,state=EXCLUDED.state,pincode=EXCLUDED.pincode,is_default=EXCLUDED.is_default,latitude=EXCLUDED.latitude,longitude=EXCLUDED.longitude",
       [
         id,
         u.id,
@@ -315,6 +256,8 @@ export async function addresses(
         a.state,
         a.pincode,
         isDefault,
+        a.latitude ?? null,
+        a.longitude ?? null,
       ],
     );
     return { ok: true, id };

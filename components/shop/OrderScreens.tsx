@@ -9,6 +9,7 @@ import {
   DownloadSimple,
   ArrowRight,
   Truck,
+  MapPin,
 } from "@phosphor-icons/react";
 import {
   useStore,
@@ -402,6 +403,7 @@ function Checkout() {
           </span>
         )}
       </div>
+      {config.verificationEmail && user && !user.email_verified_at && <div className="location-confirmed" style={{marginBottom:24}}><span>Confirm your email before placing your order.</span><Link className="button small" href="/verify-email?next=/checkout">Verify email</Link></div>}
       {initializing ? (
         <State loading />
       ) : !items.length && !pendingOrder ? (
@@ -448,6 +450,7 @@ function Checkout() {
                     </label>
                   </>
                 )}
+                {selected && <div className="location-confirmed space-top"><MapPin size={20}/><div>{profile.data?.addresses.find((a:Item)=>a.id===selected)?.latitude != null ? 'This saved address includes a delivery pin.' : 'This saved address uses your written delivery details.'}<br/><Link className="text-link" href="/addresses">Review address or adjust its map pin</Link></div></div>}
               </State>
             </section>
             <section className="panel">

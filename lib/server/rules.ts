@@ -62,7 +62,13 @@ export function address(value: any) {
     city: text(value.city, "City", 2, 80),
     state: text(value.state, "State", 2, 80),
     pincode: text(value.pincode, "Pincode", 6, 6),
+    latitude: value.latitude === undefined || value.latitude === null || value.latitude === '' ? null : Number(value.latitude),
+    longitude: value.longitude === undefined || value.longitude === null || value.longitude === '' ? null : Number(value.longitude),
   };
+  assert(
+    (a.latitude === null && a.longitude === null) || (a.latitude !== null && a.longitude !== null && Number.isFinite(a.latitude) && Math.abs(a.latitude)<=90 && Number.isFinite(a.longitude) && Math.abs(a.longitude)<=180),
+    'Choose a valid delivery pin on the map.',
+  );
   assert(
     /^[1-9]\d{5}$/.test(a.pincode),
     "Enter a valid six-digit Indian pincode.",

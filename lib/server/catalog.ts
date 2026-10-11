@@ -12,7 +12,7 @@ export function photo(row: Row): Row {
 }
 export const priceJoins = `JOIN variants v ON v.product_id=p.id
   LEFT JOIN LATERAL(SELECT id,deal_price_paise,ends_at,quantity_cap,sold_count FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count<quantity_cap ORDER BY deal_price_paise LIMIT 1) d ON TRUE`;
-export async function catalogue(params: URLSearchParams, q: Query = query) {
+export async function catalogue(params: URLSearchParams, q: Query = query): Promise<{products:Row[];count:number;limit:number;offset:number;brands:Row[];fuzzy:boolean}> {
   const values: any[] = [];
   const param = (v: any) => {
     values.push(v);
@@ -25,15 +25,21 @@ export async function catalogue(params: URLSearchParams, q: Query = query) {
   ];
   const search = (params.get("q") || "").trim().slice(0, 100);
   const category = params.get("category") || params.get("category_id");
+  const fuzzy=params.get('_fuzzy')==='true';
+  let relevance='0';
   if (search) {
+    const synonyms:Record<string,string[]>={mobile:['smartphone','phone'],mobiles:['smartphone','phone'],earphones:['earbuds','headphones'],earphone:['earbuds','headphones'],laptop:['ultrabook','laptop'],laptops:['ultrabook','laptop'],sneakers:['sneakers','running shoes'],trainers:['running shoes'],rucksack:['backpack'],bag:['backpack','bag'],kurti:['kurta'],yoga:['yoga','mat'],tee:['t-shirt'],tees:['t-shirt']};
+    const query=param(search), vector="setweight(to_tsvector('english',p.title),'A') || setweight(to_tsvector('english',p.brand),'B') || setweight(to_tsvector('english',c.name),'B') || setweight(to_tsvector('english',p.description),'D')";
+    relevance=`ts_rank_cd(${vector},plainto_tsquery('english',${query}))*10 + word_similarity(lower(${query}),lower(p.title)) + CASE WHEN lower(p.title)=lower(${query}) THEN 4 ELSE 0 END + CASE WHEN p.featured THEN 0.2 ELSE 0 END`;
+    if(fuzzy)where.push(`word_similarity(lower(${query}),lower(p.title || ' ' || c.name))>0.35`);
     const words = search.split(/\s+/).filter(Boolean).slice(0, 8);
+    if(!fuzzy)
     for (const word of words) {
-      const p = param("%" + word.replace(/[%_\\]/g, "\\$&") + "%");
-      where.push(
-        `(p.title ILIKE ${p} OR p.brand ILIKE ${p} OR c.name ILIKE ${p} OR p.description ILIKE ${p})`,
-      );
+      const alternatives=[word,...(synonyms[word.toLowerCase()] || [])];
+      where.push('('+alternatives.map(term=>{const p=param('%'+term.replace(/[%_\\]/g,'\\$&')+'%');const t=param(term);return `(p.title ILIKE ${p} OR p.brand ILIKE ${p} OR c.name ILIKE ${p} OR p.description ILIKE ${p} OR (${vector}) @@ plainto_tsquery('english',${t}))`;}).join(' OR ')+')');
     }
   }
+  if(params.get('featured')==='true')where.push('p.featured=TRUE');
   if (category) {
     const p = param(category);
     where.push(
@@ -69,9 +75,10 @@ export async function catalogue(params: URLSearchParams, q: Query = query) {
         price_desc: "price_paise DESC,id",
         rating: "rating DESC NULLS LAST,id",
         newest: "created_at DESC,id",
+        relevance: 'relevance DESC,created_at DESC,id',
       } as Record<string, string>
-    )[params.get("sort") || "newest"] || "created_at DESC,id";
-  const base = `SELECT DISTINCT ON(p.id) p.id,p.title,p.brand,p.description,p.created_at,c.name category_name,c.slug category_slug,v.id default_variant_id,${price} price_paise,v.mrp_paise,v.stock,v.options default_options,r.rating,COALESCE(r.review_count,0)::int review_count,d.deal_price_paise,d.ends_at deal_ends_at,(SELECT url FROM product_images WHERE product_id=p.id ORDER BY sort_order LIMIT 1) image_url FROM products p JOIN sellers s ON s.id=p.seller_id JOIN categories c ON c.id=p.category_id ${priceJoins} LEFT JOIN LATERAL(SELECT ROUND(AVG(rating),1) rating,COUNT(*) review_count FROM reviews WHERE product_id=p.id AND status='approved') r ON TRUE WHERE ${where.join(" AND ")} ORDER BY p.id,${price},v.id`;
+    )[params.get("sort") || (search?'relevance':'newest')] || "created_at DESC,id";
+  const base = `SELECT DISTINCT ON(p.id) p.id,p.title,p.brand,p.description,p.created_at,${relevance} relevance,c.name category_name,c.slug category_slug,v.id default_variant_id,${price} price_paise,v.mrp_paise,v.stock,v.options default_options,r.rating,COALESCE(r.review_count,0)::int review_count,d.deal_price_paise,d.ends_at deal_ends_at,(SELECT url FROM product_images WHERE product_id=p.id ORDER BY sort_order LIMIT 1) image_url FROM products p JOIN sellers s ON s.id=p.seller_id JOIN categories c ON c.id=p.category_id ${priceJoins} LEFT JOIN LATERAL(SELECT ROUND(AVG(rating),1) rating,COUNT(*) review_count FROM reviews WHERE product_id=p.id AND status='approved') r ON TRUE WHERE ${where.join(" AND ")} ORDER BY p.id,${price},v.id`;
   const rows = await q(
     `WITH found AS(${base}) SELECT *,COUNT(*) OVER()::int total_count FROM found ORDER BY ${sort} LIMIT ${param(limit)} OFFSET ${param(offset)}`,
     values,
@@ -82,11 +89,15 @@ export async function catalogue(params: URLSearchParams, q: Query = query) {
         `SELECT COUNT(*)::int total FROM(${base}) t`,
         values.slice(0, -2),
       );
+  if(search && !fuzzy && !Number(count?.total) && !offset){const retry=new URLSearchParams(params);retry.set('_fuzzy','true');const result:any=await catalogue(retry,q);return {...result,fuzzy:result.count>0};}
+  const brands=await q(`SELECT brand,COUNT(*)::int count FROM (${base}) found GROUP BY brand ORDER BY count DESC,brand LIMIT 20`,values.slice(0,-2));
   return {
     products: rows.map(photo),
     count: Number(count?.total || 0),
     limit,
     offset,
+    brands,
+    fuzzy,
   };
 }
 export async function categories() {

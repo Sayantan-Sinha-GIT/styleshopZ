@@ -53,7 +53,7 @@ export async function currentUser() {
   const data = token && verifyToken(token);
   if (!data?.sub || data.kind) return null;
   const [u] = await query(
-    `SELECT u.id,u.email,u.name,u.phone,u.photo_url,u.role,u.session_version,u.preferences,s.id seller_id,s.status seller_status,s.shop_name FROM users u LEFT JOIN sellers s ON s.user_id=u.id WHERE u.id=$1 AND u.deleted_at IS NULL`,
+    `SELECT u.id,u.email,u.name,u.phone,u.photo_url,u.role,u.session_version,u.preferences,u.email_verified_at,s.id seller_id,s.status seller_status,s.shop_name FROM users u LEFT JOIN sellers s ON s.user_id=u.id WHERE u.id=$1 AND u.deleted_at IS NULL`,
     [data.sub],
   );
   return u && (data.version ?? 0) === u.session_version ? u : null;

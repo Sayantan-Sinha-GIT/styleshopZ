@@ -33,9 +33,7 @@ import {
   demoEnabled,
 } from "./commerce";
 import {
-  authenticate,
-  resetPassword,
-  cartMutation,
+  authenticate,  cartMutation,
   profile,
   addresses,
   wishlists,
@@ -50,6 +48,8 @@ import {
 } from "./management";
 import { assistant } from "./assistant";
 import { aiEnabled } from "../ai";
+import { googleAuthenticate, emailVerification, emailReset, emailReady } from './identity';
+import { places } from './places';
 
 async function dispatch(req: Request) {
   const url = new URL(req.url),
@@ -92,10 +92,19 @@ async function dispatch(req: Request) {
       razorpay: razorpayEnabled(),
       keyId: razorpayEnabled() ? process.env.RAZORPAY_KEY_ID : null,
       ai: aiEnabled(),
-      resetEmail: !!process.env.MAIL_FROM,
+      resetEmail: emailReady(),
+      verificationEmail: emailReady(),
+      google: !!process.env.FIREBASE_WEB_API_KEY,
+      firebaseApiKey:process.env.FIREBASE_WEB_API_KEY || '',
+      maps: !!process.env.OLA_MAPS_API_KEY,
       appUrl: process.env.NEXT_PUBLIC_APP_URL || url.origin,
     };
   if (path === "auth/login" && m === "POST") return authenticate(req, b, false);
+  if(path === 'auth/google' && m === 'POST')return googleAuthenticate(req,b);
+  if(path === 'auth/verify-email' && m === 'POST')return emailVerification(req,b);
+  if(path === 'auth/email-reset' && m === 'POST')return emailReset(req,b);
+  if(path === 'places/search' && m === 'GET')return places(req,p,false);
+  if(path === 'places/reverse' && m === 'GET')return places(req,p,true);
   if (path === "auth/register" && m === "POST")
     return authenticate(req, b, true);
   if (path === "auth/logout" && m === "POST")
@@ -104,12 +113,12 @@ async function dispatch(req: Request) {
       { headers: { "Set-Cookie": cookie("", true) } },
     );
   if (path === "auth/me") return { user: await currentUser() };
-  if (path === "auth/reset" && m === "POST") return resetPassword(req, b);
+  if (path === "auth/reset" && m === "POST") return emailReset(req, b);
   if (path === "products" && m === "GET") return catalogue(p);
   if (path === "categories" && m === "GET") return categories();
   if (path === "suggest" && m === "GET") {
     const result = await catalogue(
-      new URLSearchParams({ q: (p.get("q") || "").slice(0, 100), limit: "6" }),
+      new URLSearchParams({ q: (p.get("q") || "").slice(0, 100), limit: "6", category:p.get('category') || '' }),
     );
     return {
       suggestions: result.products.map((v) => ({ id: v.id, title: v.title })),

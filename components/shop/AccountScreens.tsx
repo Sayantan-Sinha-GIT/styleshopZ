@@ -29,17 +29,34 @@ import {
   money,
   type Item,
 } from "./Store";
+import { LocationPicker } from './LocationPicker';
+import { googleLoginToken } from '@/lib/google-login';
 
 export function LoginScreen() {
   const params = useSearchParams(),
-    { setUser, setNotice } = useStore();
+    { setUser, setNotice, config } = useStore();
+  const adminOnly=params.get('admin')==='1' || params.get('next')?.startsWith('/admin');
   const [mode, setMode] = useState(
-      params.get("signup") ? "signup" : params.get("reset") ? "reset" : "login",
+      params.get("signup") && !adminOnly ? "signup" : "login",
     ),
     [role, setRole] = useState("customer"),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [success, setSuccess] = useState("");
+  const [resetEmail,setResetEmail]=useState('');
+  const finishLogin=async(r:any)=>{
+    setUser(r.user);
+    try{const guest=JSON.parse(localStorage.getItem('styleshopz.guest.v2') || '[]');if(guest.length){await api('cart','POST',{items:guest});localStorage.removeItem('styleshopz.guest.v2');}}catch{setNotice('Some guest items could not be merged. Your guest bag is still saved on this device.');}
+    const next=params.get('next');
+    const destination=next?.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')?next:r.user.role==='seller'?'/seller':r.user.role==='admin'?'/admin':'/';
+    location.assign(r.verificationSent?'/verify-email?next='+encodeURIComponent(destination):destination);
+  };
+  const signGoogle=async()=>{
+    setBusy(true);setError('');
+    try{await finishLogin(await api('auth/google','POST',{idToken:await googleLoginToken(config.firebaseApiKey)}));}
+    catch(e:any){const c=e.code || '';setError(c.includes('popup-closed')||c.includes('cancelled')?'Google sign-in was closed. You can try again or use email.':c.includes('popup-blocked')?'Allow the Google sign-in popup, then try again.':c.includes('network')?'Google could not connect. Check your connection and try again.':e.message || 'Google sign-in failed. Please try again.');}
+    finally{setBusy(false);}
+  };
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true);
@@ -47,12 +64,12 @@ export function LoginScreen() {
     const fields = Object.fromEntries(new FormData(e.currentTarget));
     try {
       if (mode === "forgot" || mode === "reset") {
-        const r = await api("auth/reset", "POST", {
+        const r = await api("auth/email-reset", "POST", {
           ...fields,
-          token: mode === "reset" ? params.get("reset") : undefined,
+          email:mode==='reset'?resetEmail:fields.email,
         });
         setSuccess(r.message || "Password updated. You can sign in now.");
-        if (mode === "reset") setMode("login");
+        if (mode === "reset") {setMode("login");} else {setResetEmail(String(fields.email));setMode('reset');}
         return;
       }
       const r = await api(
@@ -60,30 +77,7 @@ export function LoginScreen() {
         "POST",
         { ...fields, role },
       );
-      setUser(r.user);
-      try {
-        const guest = JSON.parse(
-          localStorage.getItem("styleshopz.guest.v2") || "[]",
-        );
-        if (guest.length) {
-          await api("cart", "POST", { items: guest });
-          localStorage.removeItem("styleshopz.guest.v2");
-        }
-      } catch {
-        setNotice(
-          "Some guest items could not be merged. Your saved guest bag is still on this device.",
-        );
-      }
-      const next = params.get("next");
-      location.assign(
-        next?.startsWith("/") && !next.startsWith("//")
-          ? next
-          : r.user.role === "seller"
-            ? "/seller"
-            : r.user.role === "admin"
-              ? "/admin"
-              : "/",
-      );
+      await finishLogin(r);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -105,14 +99,14 @@ export function LoginScreen() {
               ? "Forgot your password?"
               : mode === "reset"
                 ? "Choose a new password"
-                : "Welcome back"}
+                : adminOnly ? 'Owner sign-in' : "Welcome back"}
         </h1>
         <p className="muted small">
           {mode === "signup"
             ? "Create your styleshopZ account."
             : "Your everyday finds are waiting."}
         </p>
-        {!["forgot", "reset"].includes(mode) && (
+        {!adminOnly && !["forgot", "reset"].includes(mode) && (
           <div className="tabs" style={{ margin: 0 }}>
             <button
               className={mode === "login" ? "active" : ""}
@@ -134,7 +128,9 @@ export function LoginScreen() {
             </button>
           </div>
         )}
+        {!adminOnly && ['login','signup'].includes(mode) && <><button type="button" className="google-button" disabled={busy} onClick={signGoogle}><svg width="19" height="19" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.5H24v8.5h11c-.5 2.8-2 5.2-4.2 6.7v5.6h6.8c4-3.7 6-9.1 6-16.3Z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.8-5.6c-1.8 1.2-4.1 2-6.7 2-5.3 0-9.8-3.6-11.4-8.4H5.6v5.8A20 20 0 0 0 24 44Z"/><path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.8H5.6a20 20 0 0 0 0 19l7-6Z"/><path fill="#EA4335" d="M24 11.5c3 0 5.7 1 7.8 3l5.8-5.8A19.4 19.4 0 0 0 24 4 20 20 0 0 0 5.6 14.1l7 5.8c1.6-4.8 6.1-8.4 11.4-8.4Z"/></svg>{busy?'Connecting…':'Continue with Google'}</button><div className="auth-divider">or use your email</div></>}
         <form onSubmit={submit}>
+          {mode==='reset' && <><p className="small muted">Enter the code sent to {resetEmail || 'your email'}. It expires in 10 minutes.</p><Field className="verify-code" label="Eight-digit reset code" name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{8}" maxLength={8} minLength={8} required/></>}
           {mode === "signup" && (
             <Field
               label="Your name"
@@ -212,14 +208,14 @@ export function LoginScreen() {
               : mode === "signup"
                 ? "Create account"
                 : mode === "forgot"
-                  ? "Send reset link"
+                  ? "Send reset code"
                   : mode === "reset"
                     ? "Update password"
                     : "Sign in"}
             <ArrowRight size={18} />
           </button>
         </form>
-        {mode === "login" && (
+        {mode === "login" && !adminOnly && (
           <button
             className="text-link small"
             style={{ background: "none", border: 0, color: "var(--dim)" }}
@@ -240,7 +236,7 @@ export function LoginScreen() {
           </button>
         )}
         <p className="small muted">
-          Demonstration shop · Your details stay within this app.
+          {adminOnly?'Owner access is limited to the preconfigured email and password.':'Demonstration shop · Google sign-in verifies your email automatically.'}
         </p>
       </div>
     </div>
@@ -321,6 +317,7 @@ export function AccountScreen() {
             </Link>
           )}
         </div>
+        {user && !user.email_verified_at && user.role!=='admin' && <div className="location-confirmed space-top"><Bell size={20}/><div><strong>Confirm your email address</strong><p>{config.verificationEmail?'Verify your email to finish setting up your account and place orders.':'Email verification will be available after the shop owner connects Brevo.'}</p></div><Link className="button quiet small" href="/verify-email">Verify email</Link></div>}
         {config.demo && (
           <p className="small muted space-top">
             This deployment is in demo mode. No money is charged, and shipments
@@ -415,13 +412,21 @@ export function AddressesScreen() {
   );
 }
 export function AddressFields({ value = {} }: { value?: Item }) {
+  const [fields,setFields]=useState<Item>(value), [mapOpen,setMapOpen]=useState(!value.latitude);
+  const change=(e:React.ChangeEvent<HTMLInputElement>)=>{setFields(f=>({...f,[e.target.name]:e.target.value}));};
   return (
     <div className="form-grid">
+      <div className="pin-fields">
+        {fields.latitude != null && fields.longitude != null && <div className="location-confirmed"><MapPin size={20}/><span>Delivery pin saved · {Number(fields.latitude).toFixed(5)}, {Number(fields.longitude).toFixed(5)}</span><button type="button" className="button quiet small" onClick={()=>setMapOpen(p=>!p)}>{mapOpen?'Hide map':'Adjust pin'}</button></div>}
+        {fields.latitude == null && <button type="button" className="button secondary" onClick={()=>setMapOpen(p=>!p)}><MapPin size={19}/>{mapOpen?'Hide map and enter address manually':'Find my address on the map'}</button>}
+        {mapOpen && <LocationPicker initial={fields} onConfirm={a=>{setFields(f=>({...f,...Object.fromEntries(Object.entries(a).filter(([k,v])=>!['displayName'].includes(k)&&v!==''&&v!=null))}));setMapOpen(false);}}/>}
+        <input type="hidden" name="latitude" value={fields.latitude ?? ''}/><input type="hidden" name="longitude" value={fields.longitude ?? ''}/>
+      </div>
       <Field
         label="Full name"
         name="name"
         required
-        defaultValue={value.name || ""}
+        value={fields.name || ""} onChange={change}
         minLength={2}
         maxLength={100}
         autoComplete="name"
@@ -431,7 +436,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         name="phone"
         type="tel"
         required
-        defaultValue={value.phone || ""}
+        value={fields.phone || ""} onChange={change}
         autoComplete="tel"
       />
       <label className="field full-span">
@@ -439,7 +444,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         <input
           name="line1"
           required
-          defaultValue={value.line1 || ""}
+          value={fields.line1 || ""} onChange={change}
           minLength={5}
           maxLength={200}
           autoComplete="address-line1"
@@ -449,7 +454,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         <span>Address line 2 (optional)</span>
         <input
           name="line2"
-          defaultValue={value.line2 || ""}
+          value={fields.line2 || ""} onChange={change}
           maxLength={200}
           autoComplete="address-line2"
         />
@@ -458,7 +463,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         label="City"
         name="city"
         required
-        defaultValue={value.city || ""}
+        value={fields.city || ""} onChange={change}
         maxLength={80}
         autoComplete="address-level2"
       />
@@ -466,7 +471,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         label="State"
         name="state"
         required
-        defaultValue={value.state || ""}
+        value={fields.state || ""} onChange={change}
         maxLength={80}
         autoComplete="address-level1"
       />
@@ -474,7 +479,7 @@ export function AddressFields({ value = {} }: { value?: Item }) {
         label="Pincode"
         name="pincode"
         required
-        defaultValue={value.pincode || ""}
+        value={fields.pincode || ""} onChange={change}
         pattern="[1-9][0-9]{5}"
         maxLength={6}
         inputMode="numeric"
@@ -518,7 +523,7 @@ function AddressBook() {
         </button>
       </div>
       <State loading={d.loading} error={d.error} retry={d.refresh}>
-        <div className="form-grid">
+        <div className="form-grid address-list">
           {d.data?.addresses.map((a: Item) => (
             <div className="address-card" key={a.id}>
               <div className="row between">
@@ -559,15 +564,6 @@ function AddressBook() {
             </div>
           ))}
         </div>
-        {!d.data?.addresses.length && !editing && (
-          <Empty
-            title="Where should your finds arrive?"
-            link="#address-form"
-            label="Add your first address"
-          >
-            Save up to ten delivery addresses.
-          </Empty>
-        )}
       </State>
       {(editing || (!d.loading && !d.data?.addresses.length)) && (
         <form

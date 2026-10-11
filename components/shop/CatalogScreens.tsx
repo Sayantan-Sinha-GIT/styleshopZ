@@ -13,6 +13,10 @@ import {
   MagnifyingGlass,
   Microphone,
   X,
+  Pause,
+  Play,
+  CaretLeft,
+  CaretRight,
 } from "@phosphor-icons/react";
 import {
   useData,
@@ -54,11 +58,27 @@ const slides = [
   },
 ];
 export function HomeScreen() {
-  const products = useData("products?limit=8"),
+  const products = useData("products?limit=8&featured=true"),
     cats = useData("categories"),
     deals = useData("deals");
   const [active, setActive] = useState(0),
     [recent, setRecent] = useState<Item[]>([]);
+  const [paused, setPaused] = useState(false), [interacting, setInteracting] = useState(false), [visible, setVisible] = useState(true), [reduced, setReduced] = useState(true);
+  const hero = useRef<HTMLElement>(null), touch = useRef<number | null>(null);
+  useEffect(()=>{
+    const mq = matchMedia('(prefers-reduced-motion: reduce)');
+    const change = ()=>setReduced(mq.matches); change(); mq.addEventListener('change',change);
+    const observe = new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:.3});
+    if(hero.current)observe.observe(hero.current);
+    const visibility=()=>setVisible(!document.hidden && !!hero.current && hero.current.getBoundingClientRect().bottom>180);
+    document.addEventListener('visibilitychange',visibility);
+    return ()=>{mq.removeEventListener('change',change);observe.disconnect();document.removeEventListener('visibilitychange',visibility);};
+  },[]);
+  useEffect(()=>{
+    if(paused || interacting || !visible || reduced)return;
+    const id=setTimeout(()=>setActive(a=>(a+1)%slides.length),6000);
+    return ()=>clearTimeout(id);
+  },[active,paused,interacting,visible,reduced]);
   const { language } = useStore();
   useEffect(() => {
     try {
@@ -80,11 +100,17 @@ export function HomeScreen() {
       );
     } catch {}
   }, []);
+  useEffect(()=>{
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('scene-arrive');observer.unobserve(entry.target);}},{threshold:.15});
+    document.querySelectorAll('.collection-story > a,.promo-banner').forEach(el=>observer.observe(el));
+    return()=>observer.disconnect();
+  },[]);
   const slide = slides[active];
   return (
     <>
-      <section className="home-hero">
-        <div className="hero-copy fade-in" key={active}>
+      <section ref={hero} className={'home-hero campaign-'+active} aria-roledescription="carousel" aria-label="Featured collections" onMouseEnter={()=>setInteracting(true)} onMouseLeave={()=>setInteracting(false)} onFocusCapture={()=>setInteracting(true)} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setInteracting(false);}} onTouchStart={e=>{touch.current=e.touches[0].clientX;}} onTouchEnd={e=>{if(touch.current!==null){const dx=e.changedTouches[0].clientX-touch.current;if(Math.abs(dx)>60)setActive(a=>(a+(dx<0?1:slides.length-1))%slides.length);touch.current=null;}}}>
+        <div className="hero-copy campaign-copy" key={active}>
           <h1>
             {language === "hi" ? "हर दिन के लिए अच्छे चुनाव।" : slide.title}
           </h1>
@@ -97,21 +123,14 @@ export function HomeScreen() {
             {slide.cta}
             <ArrowRight size={17} />
           </Link>
+          <span className="hero-footnote">Small upgrades. Entirely your style.</span>
         </div>
         <div className="hero-picture">
-          <img
-            src={slide.image}
-            alt={
-              active === 0
-                ? "Studio headphones"
-                : active === 1
-                  ? "Laptop on a work desk"
-                  : "Titanium smartwatch"
-            }
-            fetchPriority="high"
-          />
+          {slides.map((s,i)=><img key={s.image} className={i===active?'active':''} src={s.image} alt={i===active ? ['Studio headphones','Laptop on a work desk','Titanium smartwatch'][i] : ''} aria-hidden={i!==active} fetchPriority={i===0?'high':'auto'}/>)}
         </div>
-        <div className="hero-dots" aria-label="Featured collections">
+        <div className="hero-controls">
+          <button aria-label="Previous collection" onClick={()=>setActive(a=>(a+slides.length-1)%slides.length)}><CaretLeft size={18}/></button>
+        <div className="hero-dots">
           {slides.map((_, n) => (
             <button
               key={n}
@@ -120,6 +139,9 @@ export function HomeScreen() {
               onClick={() => setActive(n)}
             />
           ))}
+        </div>
+          <button aria-label="Next collection" onClick={()=>setActive(a=>(a+1)%slides.length)}><CaretRight size={18}/></button>
+          <button aria-label={paused || reduced ? 'Play featured collections' : 'Pause featured collections'} onClick={()=>{if(reduced){setReduced(false);setPaused(false);}else setPaused(p=>!p);}}>{paused || reduced ? <Play size={16} weight="fill"/> : <Pause size={16} weight="fill"/>}</button>
         </div>
       </section>
       <div className="home-content">
@@ -136,6 +158,10 @@ export function HomeScreen() {
             <ShieldCheck size={20} />
             Demo checkout · No real charges
           </span>
+        </div>
+        <div className="discovery-strip" aria-label="Quick shopping ideas">
+          <span>What’s on your list?</span>
+          {[['Under ₹999','/search?max_price=99900'],['Desk upgrades','/search?q=keyboard'],['Everyday style','/search?category=fashion'],['Home comforts','/search?category=home-kitchen'],['Move more','/search?category=sports-fitness']].map(([label,href])=><Link href={href} key={label}>{label}<ArrowRight size={14}/></Link>)}
         </div>
         <div className="section-heading">
           <h2>
@@ -216,6 +242,10 @@ export function HomeScreen() {
             ))}
           </div>
         </State>
+        <section className="collection-story">
+          <Link href="/search?category=fashion" className="story-style"><img src="/photos/categories/fashion.webp" alt="Clothes and accessories for everyday style" loading="lazy"/><div><h2>Fresh fits.<br/>Your way.</h2><span>Explore fashion <ArrowRight size={20}/></span></div></Link>
+          <Link href="/search?category=home-kitchen" className="story-home"><img src="/photos/categories/home-kitchen.webp" alt="A bright kitchen with everyday home essentials" loading="lazy"/><div><h2>A home that<br/>feels like you.</h2><span>Make room for something good <ArrowRight size={20}/></span></div></Link>
+        </section>
         <section className="promo-banner">
           <div>
             <h2>A good place to start your search.</h2>
@@ -262,7 +292,15 @@ export function SearchScreen() {
     result = useData("products?" + queryString);
   const [recent, setRecent] = useState<string[]>([]),
     [filterOpen, setFilterOpen] = useState(false),
+    [desktopFilters, setDesktopFilters] = useState(false),
     [voice, setVoice] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 761px)');
+    const sync = () => setDesktopFilters(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
   useEffect(() => {
     try {
       setRecent(
@@ -281,7 +319,7 @@ export function SearchScreen() {
     p.delete("offset");
     if (value) p.set(key, value);
     else p.delete(key);
-    router.push("/search?" + p.toString());
+    router.push("/search?" + p.toString(), { scroll: false });
   };
   const listen = () => {
     const SR =
@@ -301,7 +339,7 @@ export function SearchScreen() {
           <h1>
             {params.get("q")
               ? `Results for “${params.get("q")}”`
-              : "Find your kind of good"}
+              : cats.data?.flat.find((c: Item)=>c.slug===params.get('category'))?.name || "Browse the whole shop"}
           </h1>
           <p>
             Everyday essentials, a few unexpected finds, and room to explore.
@@ -330,8 +368,8 @@ export function SearchScreen() {
       <div className="search-layout">
         <aside className="filter-panel">
           <details
-            open={filterOpen}
-            onToggle={(e) => setFilterOpen(e.currentTarget.open)}
+            open={desktopFilters || filterOpen}
+            onToggle={(e) => { if (!desktopFilters) setFilterOpen(e.currentTarget.open); }}
           >
             <summary>Filter your finds</summary>
             <div className="space-top">
@@ -355,17 +393,19 @@ export function SearchScreen() {
                   {c.name}
                 </button>
               ))}
+              {cats.data?.flat.filter((c:Item)=>c.parent_id===cats.data?.flat.find((x:Item)=>x.slug===params.get('category'))?.id).map((c:Item)=><button className="filter-link subcategory" type="button" key={c.id} onClick={()=>update('category',c.slug)}>{c.name} <span className="muted">({c.product_count})</span></button>)}
             </div>
             <Field
               label="Minimum price (₹)"
               type="number"
               min={0}
-              value={
+              key={'min-'+params.get('min_price')}
+              defaultValue={
                 params.get("min_price")
                   ? Number(params.get("min_price")) / 100
                   : ""
               }
-              onChange={(e) =>
+              onBlur={(e) =>
                 update(
                   "min_price",
                   e.target.value ? String(Number(e.target.value) * 100) : "",
@@ -376,24 +416,20 @@ export function SearchScreen() {
               label="Maximum price (₹)"
               type="number"
               min={0}
-              value={
+              key={'max-'+params.get('max_price')}
+              defaultValue={
                 params.get("max_price")
                   ? Number(params.get("max_price")) / 100
                   : ""
               }
-              onChange={(e) =>
+              onBlur={(e) =>
                 update(
                   "max_price",
                   e.target.value ? String(Number(e.target.value) * 100) : "",
                 )
               }
             />
-            <Field
-              label="Brand"
-              placeholder="e.g. Sony"
-              defaultValue={params.get("brand") || ""}
-              onBlur={(e) => update("brand", e.target.value)}
-            />
+            <SelectField label="Brand" value={params.get('brand') || ''} onChange={e=>update('brand',e.target.value)}><option value="">All brands</option>{result.data?.brands?.map((b:Item)=><option key={b.brand} value={b.brand}>{b.brand} ({b.count})</option>)}</SelectField>
             <SelectField
               label="Customer rating"
               value={params.get("rating") || ""}
@@ -445,20 +481,23 @@ export function SearchScreen() {
             </span>
             <select
               aria-label="Sort products"
-              value={params.get("sort") || "newest"}
+              value={params.get("sort") || (params.get('q') ? 'relevance' : 'newest')}
               onChange={(e) => update("sort", e.target.value)}
             >
+              <option value="relevance">Most relevant</option>
               <option value="newest">Newest first</option>
               <option value="price_asc">Price: low to high</option>
               <option value="price_desc">Price: high to low</option>
               <option value="rating">Best rated</option>
             </select>
           </div>
+          {Array.from(params.entries()).some(([k])=>!['q','sort','offset','limit'].includes(k)) && <div className="chips active-filters" aria-label="Applied filters">{Array.from(params.entries()).filter(([k])=>!['q','sort','offset','limit'].includes(k)).map(([k,v])=><button className="chip" key={k} onClick={()=>update(k,'')}>{k==='category' ? cats.data?.flat.find((c:Item)=>c.slug===v)?.name || v : k.replaceAll('_',' ')+': '+(['min_price','max_price'].includes(k)?money(Number(v)):v)} <X size={12}/><span className="sr-only">Remove filter</span></button>)}</div>}
           <State
             loading={result.loading}
             error={result.error}
             retry={result.refresh}
           >
+            {result.data?.fuzzy && <p className="small muted" style={{marginBottom:18}} role="status">Showing similar matches for “{params.get('q')}”. Try a different spelling to narrow your search.</p>}
             {result.data?.products.length ? (
               <>
                 <div className="product-grid">

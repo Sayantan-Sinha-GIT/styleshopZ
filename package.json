@@ -1,6 +1,6 @@
 {
   "name": "styleshopz",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -16,29 +16,37 @@
     "migrate": "tsx scripts/migrate.ts && node scripts/apply-migrations.mjs",
     "postinstall": "node scripts/patch-opennext.mjs",
     "test:integration": "node scripts/integration.mjs",
+    "test:discovery": "node scripts/discovery-integration.mjs",
     "db:upgrade": "node scripts/apply-migrations.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
     "@capacitor/cli": "^8.5.3",
     "@capacitor/core": "^8.5.3",
+    "@capacitor/geolocation": "^8.2.3",
+    "@capgo/capacitor-social-login": "^8.5.11",
     "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^1.2.0",
     "@opennextjs/cloudflare": "^1.20.10",
     "@phosphor-icons/react": "^2.1.10",
     "bcryptjs": "^3.0.3",
+    "firebase": "^13.0.0",
     "gsap": "^3.15.0",
+    "jose": "^6.2.12",
+    "leaflet": "^1.9.4",
     "lenis": "^1.3.26",
     "motion": "^14.1.0",
     "next": "16.4.0",
     "pdf-lib": "^1.17.1",
     "postgres": "^3.4.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/bcryptjs": "^2.4.6",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -53,6 +61,7 @@
     "xcode": {
       "uuid": "^11.1.1"
     },
-    "uuid": "^11.1.1"
+    "uuid": "^11.1.1",
+    "@grpc/grpc-js": "^1.14.6"
   }
 }

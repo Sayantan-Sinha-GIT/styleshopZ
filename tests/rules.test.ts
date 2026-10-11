@@ -46,6 +46,8 @@ it("validates Indian addresses", () => {
   expect(address(a).pincode).toBe("700001");
   expect(() => address({ ...a, pincode: "000000" })).toThrow();
   expect(() => address({ ...a, phone: "1234567890" })).toThrow();
+  expect(address({...a,latitude:'22.54',longitude:'88.34'}).latitude).toBe(22.54);
+  for(const coords of [{latitude:91,longitude:88},{latitude:22,longitude:181},{latitude:'NaN',longitude:88},{latitude:22,longitude:null}])expect(()=>address({...a,...coords})).toThrow();
 });
 it("limits returns to delivered items within seven days", () => {
   const now = 1800000000000;

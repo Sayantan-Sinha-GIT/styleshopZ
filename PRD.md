@@ -1,16 +1,18 @@
-# styleshopZ — release 1.1
+# styleshopZ — release 1.2
 
 ## Product and audience
 
-A practical Amazon/Flipkart-style demonstration marketplace for Indian shoppers, sellers and an owner administrator. Prioritise finding products, understanding prices and completing recoverable shopping tasks. Use compact, readable charcoal/amber interfaces, light/dark themes, responsive grids and minimal motion.
+A practical Amazon/Flipkart-style demonstration marketplace for Indian shoppers, sellers and an owner administrator. Prioritise finding products, understanding prices and completing recoverable shopping tasks. Use warm, readable charcoal/amber interfaces, light/dark themes, responsive grids, richer photography and purposeful animation that respects reduced-motion preferences.
 
-This document replaces the earlier aspirational scope with the actual release boundary. The existing connected Cloudflare and Neon services host the app; additional vendors are unnecessary for this release.
+This document records the release boundary. Cloudflare and Neon host the app. A dedicated Firebase project supplies Google identity, Ola supplies address lookup, and Brevo supplies verification/recovery email when the owner adds its credentials.
 
 ## Customer journey
 
-Browse the sample catalogue without an account. Search and filter by category, brand, price, rating, discount and stock; sort and paginate results. Inspect variants, images, illustrative specifications, price observations, reviews and questions. Compare products, save items and use multiple wishlists.
+Browse the sample catalogue without an account. Home highlights curated products and animated campaigns; full catalogue and department pages provide discovery beyond home. Search supports department scope, suggestions, recent searches, weighted full-text matching, common shopping synonyms and labelled typo recovery. Filter by category, brand, price, rating, discount and stock; sort and paginate results. Release 1.2 adds 102 curated products, 17 ranges and five leaf categories. Inspect variants, images, illustrative specifications, price observations, reviews and questions. Compare products, save items and use multiple wishlists.
 
-Register or sign in to persist the bag, saved items, addresses and preferences. The server validates availability, holds exact quantities for 15 minutes and calculates prices and discounts from database records. Checkout supports clearly labelled demo payment and simulated cash on delivery. An idempotency key protects repeated submissions.
+Register or sign in using Google or email/password to persist the bag, saved items, addresses and preferences. Google identities are verified server-side. Email verification and password recovery use expiring, rate-limited, single-use Brevo codes; delivery awaits owner credentials. Once enabled, new email accounts must verify before checkout. The fixed owner account uses its private password and has no Google access.
+
+Every order requires a complete delivery address. Ola search, reverse lookup, a movable map pin and optional GPS help fill the address; coordinates persist with the address and order snapshot. Manual entry remains available if location services fail. The server validates availability, holds exact quantities for 15 minutes and calculates prices and discounts from database records. Checkout supports clearly labelled demo payment and simulated cash on delivery. An idempotency key protects repeated submissions.
 
 Customers can view their own orders, item-level fulfilment and tracking, cancel eligible orders, download invoices, submit verified demo-purchase reviews after delivery, and request a return within seven days of item delivery. Support conversations persist and can receive administrator replies. Account export and customer deletion are available.
 
@@ -37,9 +39,9 @@ Ship the responsive website and a signed release APK for Android 8 or later. The
 ## Deferred integrations and features
 
 - Gemini/Groq open-ended chat: pending owner keys and live provider validation.
-- Password-reset emails: pending a verified sender and Resend credentials. Existing sign-in/registration work; recovery displays its configuration status.
+- Brevo email delivery: verification/recovery implementation complete; pending owner API key, verified sender and actual email delivery validation.
 - Razorpay test checkout: guarded test-key/webhook configuration; pending external verification. Live-money processing is deliberately disabled.
-- Real carrier booking/tracking, seller settlements, real GST invoicing, production KYC, phone OTP, social login, push notifications, biometric login, loyalty programmes and complete Hindi translation are future work.
+- Real carrier booking/tracking, seller settlements, real GST invoicing, production KYC, phone OTP, push notifications, biometric login, loyalty programmes and complete Hindi translation are future work.
 
 ## Acceptance
 

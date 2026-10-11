@@ -80,3 +80,38 @@ Origin: hand-authored styleshopZ amber monogram, rendered from SVG using Sharp f
 
 public/app-icon-512.png
 Origin: hand-authored styleshopZ amber monogram, rendered from SVG using Sharp for release 1.1.0.
+
+
+public/photos/products/lamp-arc.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Use case: product-mockup. Catalogue photograph for an illustrative Indian marketplace sample product: one tall floor lamp with an elegant curved black metal arch stem, a small cream dome shade and a round heavy stone base. Whole lamp fully in frame, warm off-white seamless studio background, soft daylight and grounded shadow, natural tactile materials, three-quarter view, landscape 4:3. No room furniture, no text, no logos, no watermark.
+
+
+public/photos/products/lamp-read.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Use case: product-mockup. Catalogue photograph for an illustrative Indian marketplace sample product: one adjustable reading floor lamp with a matte charcoal articulated arm, a small directional brass cone head and a round weighted black base. Whole lamp fully in frame, warm off-white seamless studio background, soft daylight and grounded shadow, natural tactile materials, three-quarter view, landscape 4:3. No room furniture, no text, no logos, no watermark.
+
+
+public/photos/products/lamp-studio.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Use case: product-mockup. Catalogue photograph for an illustrative Indian marketplace sample product: one slim floor lamp with a straight brushed brass stem, an elongated narrow cylindrical cream fabric shade and a small circular brass base. Whole lamp fully in frame, warm off-white seamless studio background, soft daylight and grounded shadow, natural tactile materials, three-quarter view, landscape 4:3. No room furniture, no text, no logos, no watermark.
+
+
+public/photos/products/lamp-corner.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Use case: product-mockup. Catalogue photograph for an illustrative Indian marketplace sample product: one compact tripod floor lamp with three light oak legs and a tapered white linen shade. Whole lamp fully in frame, warm off-white seamless studio background, soft daylight and grounded shadow, natural tactile materials, three-quarter view, landscape 4:3. No room furniture, no text, no logos, no watermark.
+
+
+public/photos/products/lamp-evening.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Use case: product-mockup. Catalogue photograph for an illustrative Indian marketplace sample product: one sculptural floor lamp with a walnut wood stem, a wide pleated warm cream shade and an inline cable switch visible near its base. Whole lamp fully in frame, warm off-white seamless studio background, soft daylight and grounded shadow, natural tactile materials, three-quarter view, landscape 4:3. No room furniture, no text, no logos, no watermark.
+
+
+public/photos/products/yoga-mat-generated.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Product-mockup photograph for an Indian marketplace sample catalogue: one sage green textured yoga mat, partly rolled to reveal its thickness, with no other equipment. Warm off-white seamless studio background, gentle daylight, grounded soft shadow, premium tactile material, three-quarter overhead perspective, whole mat in frame, no text, no logo. Landscape 4:3.
+
+
+public/photos/products/blender-generated.webp
+Origin: built-in image_gen, 11 October 2026.
+Prompt: Product-mockup photograph for an Indian marketplace sample catalogue: one compact cream-colored countertop blender with a clear glass jug, black blade base details, no food or accessories. Warm off-white seamless studio background, natural soft daylight, grounded shadow, whole appliance in frame, three-quarter perspective, no text, no logo. Landscape 4:3.

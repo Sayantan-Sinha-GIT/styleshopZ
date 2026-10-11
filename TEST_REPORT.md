@@ -1,30 +1,31 @@
-# Release verification — 1.1.0
+# Release verification — 1.2.0
 
 Date: 11 October 2026. Scope: the demonstration marketplace described in PRD.md.
 
-## Observed local results
+## Automated verification
 
-- Six Vitest server-rule tests passed: exact paise totals/thresholds/caps, line-item validation, Indian address validation, return-window boundaries, signed-session tamper/expiry rejection and raw webhook HMAC verification.
-- Twelve HTTP/database integration scenarios passed with isolated fixtures and cleanup: registration role restriction/session cookie; catalogue details/pagination; unauthenticated and admin access; cart/saved/wishlist persistence; server prices/coupons/idempotency; cross-account order/support protection and admin reply; sequential fulfilment/review eligibility; one-time return refund/restock; invalid webhook and unpurchased review rejection; expired holds; 50 buyers racing for 10 units; repeated cancellation.
-- The race produced exactly ten successful orders, stock zero, and ten units restored after cancellation. This is a single-variant contention test, not a capacity benchmark.
-- Actual browser signup, product selection, bag, address entry, demo checkout and order confirmation succeeded. Thirteen desktop/mobile views showed no horizontal overflow, missing images or JavaScript page errors in the observed flows.
-- Search query synchronization passed headphones → shirt → Back → headphones. A selected empty wishlist recovered correctly while another list held an item.
-- Independent finish review resolved all five findings: sample-content truth, manual-only hero controls, query synchronization, selected-list empty state and customer-facing assistant copy. Final disposition: ship for these scored fixes. The review is bounded to the supplied web captures, not an exhaustive audit of every admin state.
-- Generic subagent fallbacks used the packaged Impeccable reviewer/documenter role references because named harness presets were unavailable. Raster provenance scan: 26 images, zero missing metadata.
-- Android release APK 1.1.0 (versionCode 2) built successfully with JDK 21/SDK 36, passed apksigner verification and installed on the Android 15 emulator. Minimum supported Android version: 8. Signing key remains outside the repository.
+- Twelve Vitest tests passed. Coverage includes paise totals, Indian addresses and map coordinate validation, return windows, signed sessions, webhook HMACs, real RSA-signed Google JWT validation, provider/account rejection, administrator exclusion, hashed eight-digit Brevo codes and failed email replacement handling.
+- Twelve HTTP/database integration scenarios passed locally: registration role restriction, catalogue/pagination, ownership and administrator checks, cart/saved/wishlist persistence, server prices/coupons/idempotency, support access, fulfilment/review eligibility, one-time returns/refunds/restocking, expired holds and repeated cancellation. The inventory race launched 50 buyers for ten units and produced exactly ten successful orders with no overselling.
+- Five discovery integration scenarios passed locally: curated listings, synonyms, typo recovery, scoped results and pagination; protected map endpoints; actual Ola landmark search/reverse lookup; expired/wrong/single-use verification codes; and coordinates persisted into addresses and order snapshots.
+- Browser checks verify automatic campaign advancement, stable page position while typing in sticky search, owner login without Google/signup, and actual Ola selection/address save. Nine desktop/phone/reported-width captures are checked for overflow, missing images and JavaScript errors. Final review corrections add visible desktop filters and full-width phone address assertions.
+- Dependency audit reports zero vulnerabilities. TypeScript and Windows Cloudflare production build passed.
 
-## Deployment verification
+## Provider and native checks
 
-The deployed Cloudflare worker passed all twelve integration scenarios on 2026-10-11 at 15:35:59 UTC, including the 50-buyer stock race. Actual administrator and seller password sign-ins returned the correct roles. A mobile browser completed a live demo order; authenticated PDF invoice and JSON export returned 200, and no JavaScript page errors occurred in that flow.
+The dedicated Firebase project styleshopz-market-2026 has Google enabled, the live worker domain authorized and the signed Android certificate registered. The actual browser popup reached Google's account sign-in page. JWT/account validation is tested independently; a real person's completed Google sign-in has not been exercised by the maintainer.
 
-GitHub Actions run 38151827957 passed npm ci, dependency audit (zero reported vulnerabilities), all six unit tests, TypeScript and the Linux Cloudflare production build. The Windows production build also passed.
+Brevo delivery is deliberately unconfigured at the owner's request. BREVO_API_KEY and MAIL_FROM are blank in private .env.local. Tests validate code creation, hashing, expiry and consumption; no actual delivered verification or recovery email is claimed. Gemini/Groq also await owner keys.
 
-The Android release displayed live home/search results. The initial offline test exposed a generic WebView error; the release was rebuilt with bundled native recovery and a service-worker fallback that strips cached redirect flags. Cold start with both Wi-Fi and mobile data disabled displayed the bundled recovery page. After networking was restored, its retry button loaded the live shop inside com.styleshopz.app. The rebuilt APK signature was verified again.
+Android release 1.2.0 (versionCode 3) includes native Google sign-in and GPS plugins. The signed APK built with JDK 21/SDK 36, passed signing verification and installed on the Android 15 emulator. Android 8 is the minimum supported version. Physical-device compatibility and Play Store publication are outside this release.
 
-APK SHA-256: 9b1826b2a9d01cdacdac9401a7945f291e755ebb117481405b7dcabb19a06754. The publicly deployed download is checked against this byte-for-byte fingerprint before handoff. Browser fixtures were cancelled and removed after testing, restoring their stock. The integration runner cleaned its isolated fixtures; immutable administrator audit records remain.
+## Visual review
 
-## External boundaries
+The independent Impeccable finish review requested four corrections: visible desktop filters, replacement of numbered catalogue clones, a stacked phone assistant promotion and full-width phone saved-address cards. Replacement captures passed with disposition **ship** on all four scored fixes, with no attributable regressions observed. Review covers supplied web captures and sampled source, not every administrator or native state. A fresh documenter records the actual updated system; generic agents use the packaged Impeccable role references.
 
-Gemini/Groq credentials, a verified password-reset sender and Razorpay test/webhook credentials are not configured for this release. Their external provider flows are not claimed as tested. No real money, delivery, seller payout or tax-compliance integration is enabled. Shopping is online; the Android offline page provides recovery, not offline ordering.
+Seven new product photographs were generated with the built-in image tool. The provenance scan covers 31 raster assets with zero missing records. Exact prompts and saved asset paths are in IMAGE_PROMPTS.txt. Generated photographs and specifications remain illustrative sample content.
 
-The dependency audit and build results apply to the lockfile and source committed with this release. They do not prove absence of every security defect. No Play Store publication or physical-device compatibility matrix was performed.
+APK SHA-256: dfd7c0b70f9b8333dbd5051bb203466eb1777d8db3992fdf47c17819baa99330. The public download is verified against this signed artifact during deployment.
+
+## Release boundaries
+
+No real charges, deliveries, seller payouts, production KYC or tax-compliance integration is enabled. Razorpay test-mode adapters require owner credentials and external validation. Shopping requires connectivity; Android offline mode provides recovery rather than offline ordering. Automated tests and reviews do not prove absence of all defects.

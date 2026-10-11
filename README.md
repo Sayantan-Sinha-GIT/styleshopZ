@@ -3,11 +3,14 @@
 An Indian marketplace demonstration with a responsive Next.js website and a signed Android application. Hosted on Cloudflare Workers with a Neon PostgreSQL database.
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Android: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.1.0.apk
+Android: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.2.0.apk
 
 ## What works
 
-- Search, category browsing, filters, sorting, product variants, image galleries, comparison and deals.
+- Department-aware search, synonyms, typo recovery, brand/price filters, sorting, pagination, product variants, image galleries, comparison and deals. Release 1.2 adds 102 curated sample products across 17 ranges.
+- Automatic promotional carousel with pause controls, richer collection photography, responsive motion and reduced-motion support.
+- Customer Google sign-in and email/password accounts; fixed owner credentials use a separate owner sign-in. Brevo verification and recovery codes are ready for sender configuration.
+- Ola address search, movable map pin and optional GPS, with saved delivery coordinates and manual address entry.
 - Customer registration and login, guest bag merge, saved items, multiple wishlists, addresses, profile, notification preferences and data export.
 - Server-priced checkout with expiring stock reservations, idempotent orders, coupons, demo payment and simulated cash on delivery.
 - Order tracking, cancellation, downloadable invoices, purchase-gated reviews and return requests with proof uploads.
@@ -20,7 +23,7 @@ Android: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1
 
 This is a demonstration marketplace. Catalogue photography and specifications are illustrative. Seed feedback is labelled as sample content. No real charges, shipments, seller payouts or manufacturer warranties are offered.
 
-Gemini/Groq chat is optional and awaits provider keys. Razorpay test-mode processing and password-reset email adapters are implemented but require credentials and external end-to-end validation before enabling them. See PRD.md and SETUP_GUIDE.md for the explicit release boundary.
+Gemini/Groq chat and Brevo delivery await owner keys. Google Authentication uses the dedicated styleshopz-market-2026 Firebase project; Ola requests use a private server key. Razorpay test-mode processing requires credentials and external end-to-end validation before enabling it. See PRD.md and SETUP_GUIDE.md for the release boundary.
 
 ## Development
 
@@ -38,6 +41,7 @@ The optional development seed needs ALLOW_DEMO_SEED=true and DEV_SEED_PASSWORD o
     npm run lint
     npm audit --audit-level=high
     npm run test:integration
+    npm run test:discovery
     npm run build:cloudflare
     npx wrangler deploy
 

@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "authorizedDomains": ["localhost", "styleshopz.srimantasutapa123.workers.dev", "styleshopz-market-2026.firebaseapp.com"],
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "styleshopZ",
+        "supportEmail": "srimantasutapa123@gmail.com"
+      }
+    }
+  }
+}

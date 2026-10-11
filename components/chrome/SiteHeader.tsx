@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MagnifyingGlass,
   ShoppingBag,
@@ -24,8 +24,14 @@ export function SiteHeader() {
     [suggestions, setSuggestions] = useState<any[]>([]),
     [theme, setTheme] = useState("dark");
   const [searchFocused, setSearchFocused] = useState(false);
+  const [department, setDepartment] = useState("");
+  const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
+  const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [recent, setRecent] = useState<string[]>([]);
+  useEffect(() => () => { if (blurTimer.current) clearTimeout(blurTimer.current); }, []);
   useEffect(() => {
     setSearch(pathname === "/search" ? activeQuery : "");
+    setDepartment(pathname === "/search" ? params.get("category") || "" : "");
   }, [pathname, activeQuery]);
   useEffect(
     () => setTheme(document.documentElement.dataset.theme || "dark"),
@@ -39,7 +45,7 @@ export function SiteHeader() {
     let alive = true;
     const timer = setTimeout(
       () =>
-        api("suggest?q=" + encodeURIComponent(search))
+        api("suggest?q=" + encodeURIComponent(search) + (department ? "&category=" + encodeURIComponent(department) : ""))
           .then((d) => {
             if (alive) setSuggestions(d.suggestions);
           })
@@ -50,7 +56,7 @@ export function SiteHeader() {
       alive = false;
       clearTimeout(timer);
     };
-  }, [search]);
+  }, [search, department]);
   const count = cart.items
     .filter((i: any) => !i.saved_for_later)
     .reduce((s: number, i: any) => s + i.quantity, 0);
@@ -78,7 +84,8 @@ export function SiteHeader() {
       } catch {}
     }
     setSuggestions([]);
-    router.push("/search?q=" + encodeURIComponent(q));
+    setSearchFocused(false);
+    router.push("/search?q=" + encodeURIComponent(q) + (department ? "&category=" + encodeURIComponent(department) : ""));
   };
   return (
     <>
@@ -102,8 +109,20 @@ export function SiteHeader() {
             </span>
           </Link>
           <form className="search-bar" onSubmit={submit} role="search">
+            <select className="search-department" aria-label="Search department" value={department} onChange={e=>setDepartment(e.target.value)}>
+              <option value="">All</option><option value="electronics">Electronics</option><option value="fashion">Fashion</option><option value="home-kitchen">Home & kitchen</option><option value="beauty-health">Beauty & health</option><option value="sports-fitness">Sports & fitness</option>
+            </select>
             <MagnifyingGlass size={21} />
             <input
+              type="search"
+              name="q"
+              enterKeyHint="search"
+              autoComplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={searchFocused && (suggestions.length > 0 || (!search && recent.length > 0))}
+              aria-controls="search-suggestions"
+              aria-activedescendant={selectedSuggestion >= 0 ? `suggestion-${selectedSuggestion}` : undefined}
               aria-label="Search products"
               placeholder={
                 language === "hi"
@@ -112,17 +131,24 @@ export function SiteHeader() {
               }
               maxLength={100}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setTimeout(() => setSearchFocused(false), 180)}
+              onChange={(e) => { setSearch(e.target.value); setSelectedSuggestion(-1); }}
+              onFocus={() => { if (blurTimer.current) clearTimeout(blurTimer.current); setSearchFocused(true); try { setRecent(JSON.parse(localStorage.getItem("shop.recent-searches") || "[]")); } catch {} }}
+              onBlur={() => { blurTimer.current = setTimeout(() => setSearchFocused(false), 180); }}
+              onKeyDown={e=>{
+                if (e.key === "Escape") {setSearchFocused(false);setSelectedSuggestion(-1);}
+                if (e.key === "ArrowDown") { e.preventDefault(); setSelectedSuggestion(n=>Math.min(n+1,(search?suggestions.length:recent.length)-1));setSearchFocused(true); }
+                if (e.key === "ArrowUp") {e.preventDefault();setSelectedSuggestion(n=>Math.max(-1,n-1));}
+                if (e.key === "Enter" && selectedSuggestion >= 0) {if(search && suggestions[selectedSuggestion]){e.preventDefault();setSearchFocused(false);router.push('/products/'+suggestions[selectedSuggestion].id);}else if(!search && recent[selectedSuggestion]){e.preventDefault();setSearchFocused(false);router.push('/search?q='+encodeURIComponent(recent[selectedSuggestion]));}}
+              }}
             />
             <button aria-label="Search" type="submit">
               <ArrowRight size={20} />
             </button>
             {searchFocused && suggestions.length > 0 && (
-              <div className="suggestions">
-                {suggestions.map((s) => (
+              <div className="suggestions" id="search-suggestions" role="listbox" aria-label="Suggested products">
+                {suggestions.map((s, i) => (
                   <Link
+                    id={`suggestion-${i}`} role="option" aria-selected={selectedSuggestion === i}
                     key={s.id}
                     href={"/products/" + s.id}
                     onClick={() => {
@@ -135,6 +161,7 @@ export function SiteHeader() {
                 ))}
               </div>
             )}
+            {searchFocused && !search && recent.length > 0 && <div className="suggestions" id="search-suggestions" role="listbox" aria-label="Recent searches">{recent.map((q,i)=><Link id={`suggestion-${i}`} role="option" aria-selected={selectedSuggestion===i} key={q} href={'/search?q='+encodeURIComponent(q)} onClick={()=>setSearchFocused(false)}><MagnifyingGlass size={16}/>{q}</Link>)}</div>}
           </form>
           <div className="header-actions">
             <button
@@ -163,6 +190,11 @@ export function SiteHeader() {
               </span>
             </Link>
             <Link
+              className="header-saved icon-button"
+              href="/wishlists"
+              aria-label="Saved products"
+            ><Heart size={23}/></Link>
+            <Link
               className="bag-link"
               href="/cart"
               aria-label={`Bag with ${count} items`}
@@ -176,6 +208,7 @@ export function SiteHeader() {
           <Link href="/categories">
             {language === "hi" ? "सभी विभाग" : "All departments"}
           </Link>
+          <Link href="/search">Browse all products</Link>
           <Link href="/deals">
             {language === "hi" ? "आज के ऑफर" : "Today’s deals"}
           </Link>
