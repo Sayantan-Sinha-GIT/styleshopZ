@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     `;
 
     let subtotalPaise = 0;
-    const itemsWithPrices = items.map((item) => {
+    const itemsWithPrices = items.map((item: any) => {
       const activePrice = item.deal_price_paise ? Number(item.deal_price_paise) : Number(item.price_paise);
       subtotalPaise += activePrice * item.quantity;
       return {

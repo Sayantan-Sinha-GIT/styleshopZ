@@ -19,15 +19,15 @@ export async function GET() {
     `;
 
     // Group into 3-tier hierarchy
-    const l1 = categories.filter((c) => c.level === 1);
-    const l2 = categories.filter((c) => c.level === 2);
-    const l3 = categories.filter((c) => c.level === 3);
+    const l1 = categories.filter((c: any) => c.level === 1);
+    const l2 = categories.filter((c: any) => c.level === 2);
+    const l3 = categories.filter((c: any) => c.level === 3);
 
-    const tree = l1.map((top) => {
+    const tree = l1.map((top: any) => {
       const subs = l2
-        .filter((sub) => sub.parent_id === top.id)
-        .map((sub) => {
-          const leaves = l3.filter((leaf) => leaf.parent_id === sub.id);
+        .filter((sub: any) => sub.parent_id === top.id)
+        .map((sub: any) => {
+          const leaves = l3.filter((leaf: any) => leaf.parent_id === sub.id);
           return {
             ...sub,
             leaves,

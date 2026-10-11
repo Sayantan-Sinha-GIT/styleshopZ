@@ -66,7 +66,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     // Calculate 7-day return eligibility
     let returnEligible = false;
-    const deliveredEvent = events.find((e) => e.status === 'delivered');
+    const deliveredEvent = events.find((e: any) => e.status === 'delivered');
     if (deliveredEvent) {
       const deliveredAt = new Date(deliveredEvent.created_at).getTime();
       const now = Date.now();

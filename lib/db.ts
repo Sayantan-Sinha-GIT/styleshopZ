@@ -1,24 +1,15 @@
-import postgres from 'postgres';
+import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 
 // Global singleton to prevent connection leaks during Next.js hot reloads
 const globalForDb = globalThis as unknown as {
-  sql?: postgres.Sql;
+  sql?: NeonQueryFunction<false, false>;
 };
 
 const databaseUrl = process.env.DATABASE_URL || '';
 
-export const sql =
+export const sql: any =
   globalForDb.sql ||
-  (databaseUrl
-    ? postgres(databaseUrl, {
-        prepare: false, // Required for transaction poolers (Neon / Supabase PgBouncer)
-        max: 4,
-        idle_timeout: 20,
-        max_lifetime: 300,
-        connect_timeout: 10,
-        ssl: 'require',
-      })
-    : (null as unknown as postgres.Sql));
+  (databaseUrl ? neon(databaseUrl) : (null as any));
 
 if (process.env.NODE_ENV !== 'production' && sql) {
   globalForDb.sql = sql;

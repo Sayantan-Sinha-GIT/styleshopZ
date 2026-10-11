@@ -53,12 +53,12 @@ export async function POST(req: Request) {
       const coupons = await sql`SELECT code, discount_type, discount_value, min_cart_paise FROM coupons WHERE expires_at > NOW() LIMIT 3`;
       toolResults.push({
         type: 'deals',
-        deals: deals.map((d) => ({
+        deals: deals.map((d: any) => ({
           title: d.title,
           originalPrice: `₹${(d.price_paise / 100).toLocaleString('en-IN')}`,
           dealPrice: `₹${(d.deal_price_paise / 100).toLocaleString('en-IN')}`,
         })),
-        coupons: coupons.map((c) => ({
+        coupons: coupons.map((c: any) => ({
           code: c.code,
           discount: c.discount_type === 'percent' ? `${c.discount_value}% OFF` : `₹${c.discount_value / 100} OFF`,
           minCart: `₹${c.min_cart_paise / 100}`,
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 
       toolResults.push({
         type: 'products',
-        items: products.map((p) => ({
+        items: products.map((p: any) => ({
           id: p.id,
           title: p.title,
           brand: p.brand,
