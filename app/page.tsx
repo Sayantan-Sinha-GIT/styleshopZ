@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getProductImage, getCategoryCover } from '@/lib/images';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,12 +27,85 @@ interface ProductItem {
   category_name: string;
 }
 
+const HERO_BANNERS = [
+  {
+    id: 1,
+    title: 'Studio Pro Wireless ANC Headphones',
+    tagline: 'Pure Acoustics · 40-Hour Battery · Active Noise Cancellation',
+    price: '₹14,999',
+    originalPrice: '₹24,999',
+    badge: 'Deal of the Day · 40% OFF',
+    image: '/photos/banner1.webp',
+    ctaLink: '/products',
+  },
+  {
+    id: 2,
+    title: 'AeroBook Studio M2 Workstation',
+    tagline: 'Minimalist Aluminum Body · Retina TrueTone Display · 18h Battery',
+    price: '₹89,999',
+    originalPrice: '₹1,09,999',
+    badge: 'Flagship Electronics',
+    image: '/photos/banner2.webp',
+    ctaLink: '/categories',
+  },
+  {
+    id: 3,
+    title: 'Chronos Sapphire OLED Smartwatch',
+    tagline: 'Grade 5 Titanium · ECG & SpO2 Sensors · 7-Day Battery Life',
+    price: '₹19,999',
+    originalPrice: '₹29,999',
+    badge: 'Wearable Tech',
+    image: '/photos/banner3.webp',
+    ctaLink: '/products',
+  },
+];
+
+const STORE_DEPARTMENTS = [
+  {
+    name: 'Electronics',
+    desc: 'Audio, Wearables, Laptops, Mobile & Smart Home',
+    image: '/photos/categories/electronics.webp',
+    itemsCount: '180+ Products',
+    link: '/search?category=Electronics',
+  },
+  {
+    name: 'Fashion & Apparel',
+    desc: 'Sneakers, Streetwear, Eyewear, Watches & Outerwear',
+    image: '/photos/categories/fashion.webp',
+    itemsCount: '120+ Products',
+    link: '/search?category=Fashion',
+  },
+  {
+    name: 'Home & Kitchen',
+    desc: 'Smart Appliances, Air Fryers, Espresso & Cookware',
+    image: '/photos/categories/home-kitchen.webp',
+    itemsCount: '95+ Products',
+    link: '/search?category=Home',
+  },
+  {
+    name: 'Beauty & Health',
+    desc: 'Skincare, Fragrances, Grooming & Wellness',
+    image: '/photos/categories/beauty-health.webp',
+    itemsCount: '70+ Products',
+    link: '/search?category=Beauty',
+  },
+  {
+    name: 'Sports & Fitness',
+    desc: 'Training Gear, Running Shoes, Dumbbells & Mats',
+    image: '/photos/categories/sports-fitness.webp',
+    itemsCount: '60+ Products',
+    link: '/search?category=Sports',
+  },
+];
+
 export default function HomePage() {
   const [deals, setDeals] = useState<DealItem[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<ProductItem[]>([]);
   const [hours, setHours] = useState('00');
   const [minutes, setMinutes] = useState('00');
   const [seconds, setSeconds] = useState('00');
+  const [activeBanner, setActiveBanner] = useState(0);
+  const [activeLoopStep, setActiveLoopStep] = useState(0);
 
   // Fetch live deals and products from API
   useEffect(() => {
@@ -68,7 +142,7 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // GSAP Animations and Order in Motion Timeline
+  // GSAP Animations — Balanced & Clean (Amazon-style without scroll-jacking)
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isReducedMotion) return;
@@ -87,54 +161,54 @@ export default function HomePage() {
           .join('');
 
         gsap.from(el.querySelectorAll('.c'), {
-          yPercent: 115,
-          rotate: 5,
-          duration: 1.1,
+          yPercent: 110,
+          rotate: 3,
+          duration: 0.9,
           ease: 'expo.out',
-          stagger: { amount: 0.6 },
-          scrollTrigger: { trigger: el, start: 'top 90%' },
+          stagger: { amount: 0.4 },
+          scrollTrigger: { trigger: el, start: 'top 92%' },
         });
       };
 
       document.querySelectorAll<HTMLElement>('[data-s]').forEach(splitAndRise);
 
-      // 2. Fade rise for [data-r]
+      // 2. Smooth fade rise for [data-r]
       document.querySelectorAll<HTMLElement>('[data-r]').forEach((el) => {
         gsap.from(el, {
-          y: 30,
+          y: 20,
           opacity: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 90%' },
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 92%' },
         });
       });
 
-      // 3. Floating Hero Product
+      // 3. Gentle Hero Product Float
       gsap.to('.fl', {
-        y: -16,
-        rotate: 3,
-        duration: 2.6,
+        y: -10,
+        rotate: 1.5,
+        duration: 3.2,
         yoyo: true,
         repeat: -1,
         ease: 'sine.inOut',
       });
 
       gsap.from(['.pw', '.ring', '.chip', '.sr'], {
-        scale: 0.85,
+        scale: 0.92,
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.12,
-        ease: 'expo.out',
-        delay: 0.3,
+        duration: 1.0,
+        stagger: 0.08,
+        ease: 'power3.out',
+        delay: 0.2,
       });
 
       // 4. Parallax Stage Pointer Move
       const stg = document.getElementById('stg');
       if (stg) {
         const zElements = Array.from(stg.querySelectorAll<HTMLElement>('[data-z]')).map((el) => ({
-          x: gsap.quickTo(el, 'x', { duration: 0.9, ease: 'power3' }),
-          y: gsap.quickTo(el, 'y', { duration: 0.9, ease: 'power3' }),
-          z: Number(el.dataset.z || 20),
+          x: gsap.quickTo(el, 'x', { duration: 0.8, ease: 'power3' }),
+          y: gsap.quickTo(el, 'y', { duration: 0.8, ease: 'power3' }),
+          z: Number(el.dataset.z || 15),
         }));
 
         const handlePointerMove = (e: PointerEvent) => {
@@ -158,7 +232,7 @@ export default function HomePage() {
         stg.addEventListener('pointerleave', handlePointerLeave);
       }
 
-      // 5. Interactive "Order in Motion" Sequence
+      // 5. Interactive "Order in Motion" Sequence (Triggered ONLY on user click)
       const buyBtn = document.getElementById('buy');
       const cartBtn = document.getElementById('cart');
       const sheet = document.getElementById('sh');
@@ -180,22 +254,22 @@ export default function HomePage() {
       const triggerConfetti = () => {
         const s = document.getElementById('stg');
         if (!s) return;
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 24; i++) {
           const p = document.createElement('i');
           p.className = 'cn';
           s.appendChild(p);
           const angle = Math.random() * 6.28;
-          const dist = 80 + Math.random() * 170;
+          const dist = 70 + Math.random() * 150;
           gsap.fromTo(
             p,
             { x: 0, y: 0, rotate: 0, opacity: 1, scale: 1 },
             {
               x: Math.cos(angle) * dist,
-              y: Math.sin(angle) * dist - 40,
-              rotate: Math.random() * 540,
+              y: Math.sin(angle) * dist - 30,
+              rotate: Math.random() * 360,
               opacity: 0,
-              scale: 0.4,
-              duration: 1.4,
+              scale: 0.3,
+              duration: 1.2,
               ease: 'power3.out',
               onComplete: () => p.remove(),
             }
@@ -234,7 +308,7 @@ export default function HomePage() {
           .set(fillLine, { scaleX: 0 })
           .to(typeObj, {
             progress: word.length,
-            duration: 0.9,
+            duration: 0.8,
             ease: 'none',
             onUpdate: () => {
               typingSpan.textContent = word.slice(0, Math.round(typeObj.progress));
@@ -243,26 +317,26 @@ export default function HomePage() {
           .call(() => {
             statusText.textContent = 'Buy: product flies to your cart';
           })
-          .to(prodEl, { x: dx, y: dy, scale: 0.08, rotate: -25, duration: 0.8, ease: 'power3.in' }, '+=.2')
+          .to(prodEl, { x: dx, y: dy, scale: 0.08, rotate: -15, duration: 0.7, ease: 'power3.in' }, '+=.2')
           .call(() => {
             badgeCount.textContent = '1';
           })
-          .fromTo(cartBtn, { scale: 1 }, { scale: 1.25, yoyo: true, repeat: 1, duration: 0.16 })
+          .fromTo(cartBtn, { scale: 1 }, { scale: 1.2, yoyo: true, repeat: 1, duration: 0.16 })
           .set(prodEl, { x: 0, y: 0, scale: 1, rotate: 0, opacity: 0 })
-          .fromTo(sheet, { autoAlpha: 1, yPercent: 105 }, { yPercent: 0, duration: 0.8, ease: 'expo.out' })
-          .to(payBtn, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, '+=.8')
-          .to(sheet, { yPercent: 105, duration: 0.5, ease: 'power3.in' }, '+=.2')
+          .fromTo(sheet, { autoAlpha: 1, yPercent: 105 }, { yPercent: 0, duration: 0.7, ease: 'expo.out' })
+          .to(payBtn, { scale: 0.94, duration: 0.1, yoyo: true, repeat: 1 }, '+=.6')
+          .to(sheet, { yPercent: 105, duration: 0.4, ease: 'power3.in' }, '+=.2')
           .set(sheet, { autoAlpha: 0 })
           .call(triggerConfetti)
-          .to(prodEl, { opacity: 1, duration: 0.7 })
+          .to(prodEl, { opacity: 1, duration: 0.6 })
           .call(() => {
             setNodeActive(0);
             statusText.textContent = `${labels[0]}. Your order is on its way.`;
           });
 
         for (let i = 1; i < 5; i++) {
-          tl.to(parcelIcon, { left: `${i * 25}%`, duration: 0.7, ease: 'power2.inOut' }, '>.1')
-            .to(fillLine, { scaleX: i / 4, duration: 0.7, ease: 'power2.inOut' }, '<')
+          tl.to(parcelIcon, { left: `${i * 25}%`, duration: 0.6, ease: 'power2.inOut' }, '>.1')
+            .to(fillLine, { scaleX: i / 4, duration: 0.6, ease: 'power2.inOut' }, '<')
             .call(() => {
               setNodeActive(i);
               statusText.textContent = i < 4 ? labels[i] : 'Delivered. Every step was tracked.';
@@ -274,10 +348,7 @@ export default function HomePage() {
         buyBtn.addEventListener('click', runOrderAnimation);
       }
 
-      // Auto trigger demo order after 2.4s
-      gsap.delayedCall(2.4, runOrderAnimation);
-
-      // 6. Marquee 1 Continuous loop
+      // 6. Marquee ticker loop
       const mqEl = document.getElementById('mq1');
       if (mqEl) {
         const words = ['Search', 'Cart', 'Checkout', 'Track', 'Return', 'Support', 'Assistant'];
@@ -285,102 +356,44 @@ export default function HomePage() {
         mqEl.innerHTML += mqEl.innerHTML;
         let x = 0;
         gsap.ticker.add(() => {
-          x -= 1.2;
+          x -= 0.9;
           const halfWidth = mqEl.scrollWidth / 2;
           if (x <= -halfWidth) x += halfWidth;
           mqEl.style.transform = `translate3d(${x}px,0,0)`;
         });
       }
 
-      // 7. Pinned 4-Step Loop Story
-      const phone = document.querySelector('.phone');
-      const stepGroups = document.querySelectorAll('.phone .g');
-      const steps = document.querySelectorAll('.step');
-      const stepNum = document.getElementById('sn');
-
-      if (phone && stepGroups.length && steps.length) {
-        document.querySelectorAll<SVGGeometryElement>('.phone .dr').forEach((e) => {
-          try {
-            const length = e.getTotalLength();
-            gsap.set(e, { strokeDasharray: length, strokeDashoffset: length });
-          } catch {}
-        });
-
-        gsap.set(stepGroups, { opacity: 0 });
-        gsap.set(steps, { autoAlpha: 0 });
-
-        const loopTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.pin',
-            pin: true,
-            start: 'top top',
-            end: '+=320%',
-            scrub: 0.5,
-            onUpdate: (self) => {
-              if (stepNum) {
-                stepNum.textContent = `0${Math.min(3, Math.floor(self.progress * 4)) + 1}`;
-              }
-            },
-          },
-        });
-
-        loopTimeline.to('.phone .fr', { strokeDashoffset: 0, duration: 0.5, ease: 'none' });
-
-        stepGroups.forEach((g, i) => {
-          const s = 0.3 + i * 1.4;
-          loopTimeline
-            .fromTo(steps[i], { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.35 }, s)
-            .set(g, { opacity: 1 }, s)
-            .to(g.querySelectorAll('.dr'), { strokeDashoffset: 0, duration: 0.7, stagger: 0.05, ease: 'none' }, s)
-            .fromTo(g.querySelectorAll('.fd'), { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.05 }, s + 0.2);
-
-          if (i === 2) {
-            loopTimeline.fromTo('.pc2', { y: 0 }, { y: 320, duration: 0.9, ease: 'none' }, s + 0.3);
-          }
-          if (i < 3) {
-            loopTimeline.to([steps[i], g], { autoAlpha: 0, duration: 0.25 }, s + 1.15);
-          }
-        });
-
-        loopTimeline.to('.rail i', { scaleX: 1, duration: loopTimeline.duration(), ease: 'none' }, 0);
-        gsap.set('.rail i', { scaleX: 0 });
-      }
-
-      // 8. 3D Tilt on Deal Cards
-      document.querySelectorAll<HTMLElement>('.dl').forEach((c, i) => {
-        gsap.from(c.querySelectorAll('.dv, h3, p'), {
-          x: i % 2 ? 80 : -80,
-          y: 60,
+      // 7. Deal Cards Clean Fade-in (No jarring 3D tilt)
+      document.querySelectorAll<HTMLElement>('.dl').forEach((c) => {
+        gsap.from(c, {
+          y: 25,
           opacity: 0,
-          rotateY: i % 2 ? -18 : 18,
-          transformPerspective: 900,
-          duration: 1.1,
-          stagger: 0.1,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: c, start: 'top 90%' },
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: c, start: 'top 92%' },
         });
       });
 
-      // 9. Categories Inset Expand
-      document.querySelectorAll<HTMLElement>('.tile').forEach((t) => {
+      // 8. Categories Soft Reveal
+      document.querySelectorAll<HTMLElement>('.dept-card').forEach((t) => {
         gsap.from(t, {
-          clipPath: 'inset(32% 32% 32% 32% round 40px)',
-          y: 80,
-          duration: 1.3,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: t, start: 'top 88%' },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: t, start: 'top 92%' },
         });
       });
 
-      // 10. Stat Number Counters
+      // 9. Stat Number Counters
       document.querySelectorAll<HTMLElement>('[data-n]').forEach((el) => {
         const target = Number(el.dataset.n || 0);
         const suffix = el.dataset.x || '';
         const obj = { val: 0 };
         gsap.to(obj, {
           val: target,
-          duration: 2.2,
-          ease: 'power3.out',
+          duration: 1.8,
+          ease: 'power2.out',
           snap: { val: 1 },
           onUpdate: () => {
             el.textContent = `${obj.val}${suffix}`;
@@ -389,7 +402,7 @@ export default function HomePage() {
         });
       });
 
-      // 11. AI Chat Typing Reveal
+      // 10. AI Chat Typing Reveal
       const bu = document.getElementById('bu');
       const ba = document.getElementById('ba');
       if (bu && ba) {
@@ -398,48 +411,47 @@ export default function HomePage() {
         gsap.set([bu, ba], { autoAlpha: 0 });
         const typeChat = { progress: 0 };
         gsap
-          .timeline({ scrollTrigger: { trigger: '#chat', start: 'top 70%' } })
+          .timeline({ scrollTrigger: { trigger: '#chat', start: 'top 75%' } })
           .to(bu, { autoAlpha: 1, duration: 0.3 })
           .to(typeChat, {
             progress: userPrompt.length,
-            duration: 2.0,
+            duration: 1.6,
             ease: 'none',
             onUpdate: () => {
               bu.textContent = userPrompt.slice(0, Math.round(typeChat.progress));
             },
           })
           .to(ba, { autoAlpha: 1, duration: 0.3 })
-          .fromTo(ba.children, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, stagger: 0.25, duration: 0.5 });
+          .fromTo(ba.children, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, stagger: 0.2, duration: 0.4 });
       }
 
-      // 12. Pinned Rules Reveal ("Never break")
-      const rh = document.getElementById('rh');
-      if (rh) {
-        splitAndRise(rh);
+      // 11. Smooth Rules Reveal (No aggressive pin lock)
+      const rulesEl = document.getElementById('rules');
+      if (rulesEl) {
+        gsap.from('#rh', {
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: rulesEl, start: 'top 85%' },
+        });
+        gsap.from('.rl li', {
+          y: 20,
+          opacity: 0,
+          stagger: 0.08,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.rl', start: 'top 88%' },
+        });
       }
-      const rulesTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.rs',
-          pin: true,
-          start: 'top top',
-          end: '+=170%',
-          scrub: 0.6,
-        },
-      });
 
-      rulesTl
-        .fromTo('.rp', { clipPath: 'inset(14% 10% 14% 10% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'none' })
-        .from('.ob', { scale: 0.75, duration: 1, ease: 'none' }, 0)
-        .from('.rl li', { autoAlpha: 0, y: 24, stagger: 0.12, duration: 0.4 }, 0.4)
-        .from('.rl .ln', { scaleX: 0, stagger: 0.12, duration: 0.4 }, 0.4);
-
-      // 13. Roles Matrix Underline Expands
+      // 12. Roles Matrix Underline
       document.querySelectorAll<HTMLElement>('.rr').forEach((r) => {
         gsap.from(r.querySelector('.ln'), {
           scaleX: 0,
-          duration: 1.2,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: r, start: 'top 88%' },
+          duration: 0.9,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: r, start: 'top 90%' },
         });
       });
     });
@@ -459,13 +471,17 @@ export default function HomePage() {
 
       <main className="w-full relative z-10" id="main">
         {/* HERO SECTION */}
-        <section className="hero pt-24 sm:pt-28 pb-16 min-h-screen flex flex-col justify-between" id="top">
+        <section className="hero pt-24 sm:pt-28 pb-12 flex flex-col justify-between" id="top">
           <div className="w hg grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 items-center max-w-7xl mx-auto w-full">
             <div className="hl flex flex-col justify-center">
-              <h1 className="d text-6xl sm:text-8xl lg:text-[130px] font-black leading-[0.88] mb-6 tracking-tight" data-s>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-mono font-semibold w-max mb-4">
+                <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+                Amazon-Style Digital Marketplace
+              </div>
+              <h1 className="d text-5xl sm:text-7xl lg:text-[104px] font-black leading-[0.94] mb-5 tracking-tight" data-s>
                 Find it. Buy it. <em className="accent-serif">Watch it come.</em>
               </h1>
-              <p className="lead text-base sm:text-xl text-dim max-w-xl mb-7 leading-relaxed">
+              <p className="lead text-base sm:text-lg text-dim max-w-xl mb-6 leading-relaxed">
                 A mobile-first marketplace modelled on Amazon.in. Browse, search, buy and track on Android, while sellers ship and admins moderate.{' '}
                 <b className="text-text font-semibold">Payments run in Razorpay test mode only.</b>
               </p>
@@ -476,14 +492,17 @@ export default function HomePage() {
                 <a className="btn g" href="#loop">
                   See the loop
                 </a>
+                <Link className="btn g" href="/categories">
+                  Explore Catalogue
+                </Link>
               </div>
               <p className="m text-xs sm:text-sm text-dim font-mono">
-                Order in motion: find, buy and track in five seconds.
+                Order in motion: tap &ldquo;Buy&rdquo; to simulate real-time cart, checkout &amp; 5-stage tracking.
               </p>
             </div>
 
-            {/* 3D PARALLAX STAGE */}
-            <div className="stage relative aspect-square w-full max-w-[580px] justify-self-center flex items-center justify-center" id="stg">
+            {/* 3D PARALLAX STAGE WITH REAL HEADPHONES PHOTOGRAPHY */}
+            <div className="stage relative aspect-square w-full max-w-[540px] justify-self-center flex items-center justify-center" id="stg">
               <svg className="ring absolute inset-0 w-full h-full text-line pointer-events-none" data-z="14" viewBox="0 0 400 400" aria-hidden="true">
                 <circle cx="200" cy="200" r="196" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="2 10" />
                 <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -498,17 +517,15 @@ export default function HomePage() {
                 <u className="w-0.5 h-4 bg-brand inline-block" />
               </div>
 
-              {/* Floating Product Headphones Illustration */}
-              <div className="pw absolute inset-[16%_14%_18%]" data-z="30">
-                <div className="prod w-full h-full">
-                  <div className="fl w-full h-full">
-                    <svg viewBox="0 0 300 300" role="img" aria-label="Headphones illustration" className="w-full h-full overflow-visible">
-                      <ellipse cx="150" cy="288" rx="78" ry="8" fill="var(--line)" />
-                      <path d="M62 176C62 62 238 62 238 176" stroke="var(--text)" strokeWidth="16" strokeLinecap="round" fill="none" />
-                      <rect x="38" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-                      <rect x="202" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-                      <path d="M56 182v52M244 182v52" stroke="#17120a" strokeOpacity="0.35" strokeWidth="7" strokeLinecap="round" />
-                    </svg>
+              {/* Floating Real Product Photography */}
+              <div className="pw absolute inset-[14%_12%_16%]" data-z="30">
+                <div className="prod w-full h-full flex items-center justify-center">
+                  <div className="fl w-full h-full relative flex items-center justify-center">
+                    <img
+                      src="/photos/products/sony-headphones-black.webp"
+                      alt="Studio Pro Wireless ANC Headphones"
+                      className="w-full h-full object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.65)]"
+                    />
                   </div>
                 </div>
               </div>
@@ -549,7 +566,7 @@ export default function HomePage() {
           </div>
 
           {/* 5-STAGE TIMELINE TRACKER */}
-          <div className="w max-w-7xl mx-auto w-full mt-10">
+          <div className="w max-w-7xl mx-auto w-full mt-8">
             <div className="tl py-3">
               <p className="m text-sm font-mono text-dim mb-2" id="st" role="status">
                 Delivered. Every step was tracked.
@@ -584,128 +601,271 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* MARQUEE 1 */}
-        <section className="mq py-0 overflow-hidden border-y border-line" aria-hidden="true">
-          <div className="mt d flex gap-10 w-max text-5xl sm:text-7xl lg:text-[130px] font-black items-center py-4 text-text uppercase tracking-wider" id="mq1" />
-        </section>
-
-        {/* THE LOOP PINNED STORY */}
-        <section className="loop py-0" id="loop">
-          <div className="pin h-screen flex items-center">
-            <div className="w lp grid grid-cols-1 md:grid-cols-2 gap-10 items-center max-w-7xl mx-auto w-full">
-              <div className="lt">
-                <p className="m text-sm font-mono text-dim mb-3">
-                  The loop · step <span id="sn" className="text-text font-bold">04</span> of 04
-                </p>
-                <div className="steps relative h-72 sm:h-96 mt-4">
-                  <div className="step absolute inset-0">
-                    <h2 className="d text-6xl sm:text-8xl font-black">Find</h2>
-                    <p className="text-dim max-w-md mt-4 text-base sm:text-lg">
-                      Autocomplete, recent searches and typo tolerance. Filter by price, rating, brand, delivery speed, discount and availability, then sort.
-                    </p>
-                    <p className="m mt-3 text-xs sm:text-sm">Search, filters and voice or barcode input</p>
+        {/* AMAZON-STYLE FEATURED PROMO BANNERS CAROUSEL */}
+        <section className="py-6 border-y border-line bg-surface/30">
+          <div className="w max-w-7xl mx-auto px-4">
+            <div className="relative rounded-3xl overflow-hidden border border-line bg-surface">
+              <div className="grid grid-cols-1 md:grid-cols-12 items-center min-h-[380px]">
+                {/* Banner Text Details */}
+                <div className="md:col-span-7 p-8 sm:p-12 z-2">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-brand text-on-brand mb-4">
+                    {HERO_BANNERS[activeBanner].badge}
+                  </span>
+                  <h3 className="d text-3xl sm:text-5xl font-black mb-3 text-text leading-tight">
+                    {HERO_BANNERS[activeBanner].title}
+                  </h3>
+                  <p className="text-dim text-sm sm:text-base mb-6 max-w-lg leading-relaxed">
+                    {HERO_BANNERS[activeBanner].tagline}
+                  </p>
+                  <div className="flex items-baseline gap-4 mb-8">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-[var(--ax)]">
+                      {HERO_BANNERS[activeBanner].price}
+                    </span>
+                    <span className="text-lg line-through text-dim">
+                      {HERO_BANNERS[activeBanner].originalPrice}
+                    </span>
                   </div>
-                  <div className="step absolute inset-0">
-                    <h2 className="d text-6xl sm:text-8xl font-black">Buy</h2>
-                    <p className="text-dim max-w-md mt-4 text-base sm:text-lg">
-                      Your cart syncs across devices, and a guest cart merges when you log in. At checkout your stock is held for 15 minutes and the server recalculates every price.
-                    </p>
-                    <p className="m mt-3 text-xs sm:text-sm">Razorpay in test mode, or cash on delivery up to ₹50,000</p>
-                  </div>
-                  <div className="step absolute inset-0">
-                    <h2 className="d text-6xl sm:text-8xl font-black">Track</h2>
-                    <p className="text-dim max-w-md mt-4 text-base sm:text-lg">
-                      Placed, packed, shipped, out for delivery, delivered. Updates arrive by polling every 30 seconds, and the last known status stays readable offline.
-                    </p>
-                    <p className="m mt-3 text-xs sm:text-sm">Push and email on every status change</p>
-                  </div>
-                  <div className="step absolute inset-0">
-                    <h2 className="d text-6xl sm:text-8xl font-black">Return</h2>
-                    <p className="text-dim max-w-md mt-4 text-base sm:text-lg">
-                      Return within 7 days of delivery with a reason and photos. Refunds go back through Razorpay, in full or in part.
-                    </p>
-                    <p className="m mt-3 text-xs sm:text-sm">Cancel before shipment, return after delivery</p>
+                  <div className="flex gap-4 items-center">
+                    <Link href={HERO_BANNERS[activeBanner].ctaLink} className="btn">
+                      Shop Flagship Now
+                    </Link>
+                    <div className="flex gap-2 ml-4">
+                      {HERO_BANNERS.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveBanner(idx)}
+                          className={`w-3 h-3 rounded-full transition-all ${
+                            activeBanner === idx ? 'bg-brand w-8' : 'bg-line hover:bg-dim'
+                          }`}
+                          aria-label={`Go to slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="rail h-0.5 bg-line mt-6 max-w-md">
-                  <i className="block h-full bg-brand origin-left scale-x-0" />
+
+                {/* Banner Real Photography */}
+                <div className="md:col-span-5 h-[280px] md:h-full relative overflow-hidden bg-bg">
+                  <img
+                    src={HERO_BANNERS[activeBanner].image}
+                    alt={HERO_BANNERS[activeBanner].title}
+                    className="w-full h-full object-cover transition-opacity duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-surface via-transparent to-transparent pointer-events-none" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* MARQUEE 1 */}
+        <section className="mq py-0 overflow-hidden border-b border-line" aria-hidden="true">
+          <div className="mt d flex gap-10 w-max text-4xl sm:text-6xl lg:text-[100px] font-black items-center py-3 text-text uppercase tracking-wider" id="mq1" />
+        </section>
+
+        {/* THE 4-STEP LOOP (UNPINNED & INTERACTIVE) */}
+        <section className="py-20 border-b border-line" id="loop">
+          <div className="w max-w-7xl mx-auto px-4">
+            <div className="flex justify-between items-baseline mb-8 flex-wrap gap-4">
+              <div>
+                <p className="m text-sm font-mono text-dim mb-1">Interactive Marketplace Flow</p>
+                <h2 className="d text-4xl sm:text-6xl font-black uppercase">The Shopping Loop</h2>
+              </div>
+              <div className="flex gap-2">
+                {['01 Find', '02 Buy', '03 Track', '04 Return'].map((stepTitle, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveLoopStep(idx)}
+                    className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono transition-all ${
+                      activeLoopStep === idx
+                        ? 'bg-brand text-on-brand font-bold shadow'
+                        : 'bg-surface border border-line text-dim hover:text-text'
+                    }`}
+                  >
+                    {stepTitle}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-surface p-8 sm:p-12 rounded-3xl border border-line">
+              <div className="md:col-span-6">
+                {activeLoopStep === 0 && (
+                  <div className="space-y-4">
+                    <span className="px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-mono font-bold">
+                      Step 01 of 04
+                    </span>
+                    <h3 className="d text-4xl sm:text-5xl font-black">Find Instantly</h3>
+                    <p className="text-dim text-base leading-relaxed">
+                      Instant autocomplete, recent searches, and typo tolerance (&ldquo;headphnes&rdquo; &rarr; headphones).
+                      Filter seamlessly by price range, star rating, brand, fast delivery, discount threshold, and stock availability.
+                    </p>
+                    <ul className="text-xs sm:text-sm font-mono text-dim space-y-2 pt-2">
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> 3-level faceted catalog search
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Voice &amp; barcode simulated input
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Sort by Relevance, Price: Low to High, Ratings
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeLoopStep === 1 && (
+                  <div className="space-y-4">
+                    <span className="px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-mono font-bold">
+                      Step 02 of 04
+                    </span>
+                    <h3 className="d text-4xl sm:text-5xl font-black">Buy &amp; Hold Stock</h3>
+                    <p className="text-dim text-base leading-relaxed">
+                      Your cart syncs across devices, and guest carts merge automatically upon login.
+                      At checkout, atomic database inventory locks hold stock for 15 minutes while the server recalculates every price.
+                    </p>
+                    <ul className="text-xs sm:text-sm font-mono text-dim space-y-2 pt-2">
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Razorpay Test Mode integration (UPI, Cards, Netbanking)
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Cash on Delivery up to ₹50,000
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Automated coupon validation on the backend
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeLoopStep === 2 && (
+                  <div className="space-y-4">
+                    <span className="px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-mono font-bold">
+                      Step 03 of 04
+                    </span>
+                    <h3 className="d text-4xl sm:text-5xl font-black">Track in Real Time</h3>
+                    <p className="text-dim text-base leading-relaxed">
+                      Five distinct lifecycle stages: Placed, Packed, Shipped, Out for Delivery, and Delivered.
+                      Status updates poll every 30 seconds, while last-known states remain cached offline for bad network conditions.
+                    </p>
+                    <ul className="text-xs sm:text-sm font-mono text-dim space-y-2 pt-2">
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Push notifications &amp; transactional email alerts
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Live simulated dispatch checkpoints
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> One-tap cancellation before shipment
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeLoopStep === 3 && (
+                  <div className="space-y-4">
+                    <span className="px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-mono font-bold">
+                      Step 04 of 04
+                    </span>
+                    <h3 className="d text-4xl sm:text-5xl font-black">7-Day Returns &amp; Refunds</h3>
+                    <p className="text-dim text-base leading-relaxed">
+                      Return eligible delivered products within 7 calendar days with a reason and photo proof.
+                      Sellers or admins approve requests, and refunds route directly back to the original payment source.
+                    </p>
+                    <ul className="text-xs sm:text-sm font-mono text-dim space-y-2 pt-2">
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Full or partial refunds supported
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Photo evidence stored securely
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-brand">✓</span> Complete audit log of return resolutions
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                <div className="pt-6">
+                  <Link href="/products" className="btn sm">
+                    Start Shopping &rarr;
+                  </Link>
                 </div>
               </div>
 
-              {/* VECTOR PHONE ILLUSTRATION */}
-              <svg className="phone h-[44vh] sm:h-[66vh] max-h-[660px] justify-self-center text-text" viewBox="0 0 300 560" role="img" aria-label="Phone illustration showing 4 stages">
-                <rect className="dr fr" x="20" y="10" width="260" height="540" rx="38" fill="none" stroke="currentColor" strokeWidth="2" />
-                <g className="g" id="g1">
-                  <rect className="dr" x="44" y="64" width="212" height="40" rx="20" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="66" y="89" fill="var(--text)" fontSize="12" fontFamily="DM Mono">headphnes</text>
-                  <text className="t fd" x="44" y="128" fill="var(--brand)" fontSize="12" fontFamily="DM Mono">Showing results for headphones</text>
-                  <rect className="dr" x="44" y="146" width="56" height="26" rx="13" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="108" y="146" width="64" height="26" rx="13" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="180" y="146" width="56" height="26" rx="13" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="54" y="163" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Price</text>
-                  <text className="t fd" x="118" y="163" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Rating</text>
-                  <text className="t fd" x="190" y="163" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Brand</text>
-                  <rect className="dr" x="44" y="196" width="64" height="64" rx="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M124 210h100M124 230h70M124 250h40" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="44" y="276" width="64" height="64" rx="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M124 290h100M124 310h70M124 330h40" fill="none" stroke="currentColor" strokeWidth="2" />
-                </g>
-                <g className="g" id="g2">
-                  <rect className="dr" x="44" y="70" width="64" height="64" rx="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M124 84h100M124 104h70M124 124h50" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="44" y="150" width="212" height="34" rx="17" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="62" y="172" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Stock held for 15 min</text>
-                  <text className="t fd" x="44" y="226" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Items</text>
-                  <path className="dr" d="M44 236h212" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="44" y="268" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Delivery, simulated fee</text>
-                  <path className="dr" d="M44 278h212" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="44" y="310" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Total, set by the server</text>
-                  <path className="dr" d="M44 320h212" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="fd fa" x="44" y="440" width="212" height="48" rx="24" fill="var(--brand)" />
-                  <text className="t fd" x="150" y="469" textAnchor="middle" fill="#17120a" fontSize="14" fontWeight="bold">Pay</text>
-                </g>
-                <g className="g" id="g3">
-                  <path className="dr" d="M70 110V430" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="70" cy="110" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="70" cy="190" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="70" cy="270" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="70" cy="350" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="70" cy="430" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="94" y="114" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Placed</text>
-                  <text className="t fd" x="94" y="194" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Packed</text>
-                  <text className="t fd" x="94" y="274" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Shipped</text>
-                  <text className="t fd" x="94" y="354" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Out for delivery</text>
-                  <text className="t fd" x="94" y="434" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Delivered</text>
-                  <rect className="fa pc2" x="60" y="100" width="20" height="20" rx="4" fill="var(--brand)" />
-                  <text className="t fd" x="44" y="500" fill="var(--dim)" fontSize="12" fontFamily="DM Mono">Polling every 30 seconds</text>
-                </g>
-                <g className="g" id="g4">
-                  <path className="dr" d="M118 166a62 62 0 1 1-14 66" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M96 150l22 16-24 10" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="tb fd" x="150" y="238" textAnchor="middle" fill="var(--brand)" fontSize="64" fontFamily="Big Shoulders Display" fontWeight="900">7</text>
-                  <text className="t fd" x="150" y="262" textAnchor="middle" fill="var(--text)" fontSize="12" fontFamily="DM Mono">days to return</text>
-                  <rect className="dr" x="44" y="330" width="60" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="116" y="330" width="60" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="44" y="420" fill="var(--dim)" fontSize="12" fontFamily="DM Mono">Reason and photos</text>
-                  <rect className="dr" x="44" y="448" width="212" height="46" rx="23" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <text className="t fd" x="150" y="476" textAnchor="middle" fill="var(--text)" fontSize="12" fontFamily="DM Mono">Refund in full or in part</text>
-                </g>
-              </svg>
+              {/* Vector Graphic Phone Display */}
+              <div className="md:col-span-6 flex justify-center">
+                <svg className="w-full max-w-[280px] h-auto text-text" viewBox="0 0 300 520" role="img" aria-label="Phone preview">
+                  <rect x="15" y="10" width="270" height="500" rx="36" fill="var(--bg)" stroke="currentColor" strokeWidth="2" />
+                  <rect x="100" y="20" width="100" height="14" rx="7" fill="var(--line)" />
+                  {activeLoopStep === 0 && (
+                    <g>
+                      <rect x="35" y="60" width="230" height="36" rx="18" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
+                      <text x="50" y="83" fill="var(--brand)" fontSize="13" fontFamily="Plus Jakarta Sans">headphnes</text>
+                      <text x="35" y="125" fill="var(--dim)" fontSize="11" fontFamily="Plus Jakarta Sans">Showing results for &quot;headphones&quot;</text>
+                      <rect x="35" y="145" width="230" height="70" rx="12" fill="var(--surface)" />
+                      <rect x="35" y="230" width="230" height="70" rx="12" fill="var(--surface)" />
+                      <rect x="35" y="315" width="230" height="70" rx="12" fill="var(--surface)" />
+                    </g>
+                  )}
+                  {activeLoopStep === 1 && (
+                    <g>
+                      <text x="35" y="70" fill="var(--text)" fontSize="16" fontWeight="bold" fontFamily="Plus Jakarta Sans">Checkout</text>
+                      <rect x="35" y="90" width="230" height="28" rx="8" fill="var(--surface)" />
+                      <text x="45" y="108" fill="var(--brand)" fontSize="11" fontFamily="Plus Jakarta Sans">Stock held for 15 min</text>
+                      <rect x="35" y="130" width="230" height="90" rx="12" fill="var(--surface)" />
+                      <rect x="35" y="235" width="230" height="40" rx="20" fill="var(--brand)" />
+                      <text x="150" y="260" fill="#17120a" fontSize="14" fontWeight="bold" textAnchor="middle" fontFamily="Plus Jakarta Sans">Pay ₹14,999</text>
+                    </g>
+                  )}
+                  {activeLoopStep === 2 && (
+                    <g>
+                      <text x="35" y="70" fill="var(--text)" fontSize="16" fontWeight="bold" fontFamily="Plus Jakarta Sans">Track Order</text>
+                      <circle cx="50" cy="110" r="6" fill="var(--brand)" />
+                      <line x1="50" y1="116" x2="50" y2="170" stroke="var(--brand)" strokeWidth="2" />
+                      <circle cx="50" cy="170" r="6" fill="var(--brand)" />
+                      <line x1="50" y1="176" x2="50" y2="230" stroke="var(--brand)" strokeWidth="2" />
+                      <circle cx="50" cy="230" r="6" fill="var(--brand)" />
+                      <line x1="50" y1="236" x2="50" y2="290" stroke="var(--brand)" strokeWidth="2" />
+                      <circle cx="50" cy="290" r="6" fill="var(--brand)" />
+                      <line x1="50" y1="296" x2="50" y2="350" stroke="var(--line)" strokeWidth="2" />
+                      <circle cx="50" cy="350" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
+                      <text x="70" y="115" fill="var(--text)" fontSize="12" fontFamily="Plus Jakarta Sans">Order Placed</text>
+                      <text x="70" y="175" fill="var(--text)" fontSize="12" fontFamily="Plus Jakarta Sans">Packed at Hub</text>
+                      <text x="70" y="235" fill="var(--text)" fontSize="12" fontFamily="Plus Jakarta Sans">Shipped</text>
+                      <text x="70" y="295" fill="var(--brand)" fontSize="12" fontWeight="bold" fontFamily="Plus Jakarta Sans">Out for Delivery</text>
+                      <text x="70" y="355" fill="var(--dim)" fontSize="12" fontFamily="Plus Jakarta Sans">Delivered</text>
+                    </g>
+                  )}
+                  {activeLoopStep === 3 && (
+                    <g>
+                      <text x="35" y="70" fill="var(--text)" fontSize="16" fontWeight="bold" fontFamily="Plus Jakarta Sans">Return Window</text>
+                      <rect x="35" y="90" width="230" height="90" rx="12" fill="var(--surface)" />
+                      <text x="150" y="140" fill="var(--brand)" fontSize="36" fontWeight="bold" textAnchor="middle" fontFamily="Plus Jakarta Sans">7</text>
+                      <text x="150" y="165" fill="var(--dim)" fontSize="12" textAnchor="middle" fontFamily="Plus Jakarta Sans">Days Hassle-Free Returns</text>
+                      <rect x="35" y="200" width="230" height="38" rx="10" fill="var(--line)" />
+                      <text x="45" y="224" fill="var(--text)" fontSize="11" fontFamily="Plus Jakarta Sans">Reason: Defective or Wrong Item</text>
+                      <rect x="35" y="250" width="230" height="38" rx="10" fill="var(--line)" />
+                      <text x="45" y="274" fill="var(--text)" fontSize="11" fontFamily="Plus Jakarta Sans">Proof: 2 Photos Uploaded</text>
+                    </g>
+                  )}
+                </svg>
+              </div>
             </div>
           </div>
         </section>
 
         {/* DEALS OF THE DAY */}
-        <section className="py-24" id="deals">
-          <div className="w max-w-7xl mx-auto">
-            <div className="dh flex justify-between items-end gap-8 flex-wrap mb-16">
+        <section className="py-20" id="deals">
+          <div className="w max-w-7xl mx-auto px-4">
+            <div className="dh flex justify-between items-end gap-8 flex-wrap mb-12">
               <div>
                 <p className="m text-sm font-mono text-dim mb-2">Deals of the day</p>
-                <h2 className="d text-5xl sm:text-7xl lg:text-[110px] font-black leading-none" data-s>
+                <h2 className="d text-4xl sm:text-6xl lg:text-[80px] font-black leading-none" data-s>
                   Gone when the clock says so
                 </h2>
               </div>
-              <div className="cd d flex text-5xl sm:text-7xl lg:text-9xl font-mono font-bold tracking-tight" role="timer" aria-label="Time left in today's deals">
+              <div className="cd d flex text-4xl sm:text-6xl lg:text-7xl font-mono font-bold tracking-tight text-brand" role="timer" aria-label="Time left in today's deals">
                 <span id="h">{hours}</span>
                 <span>:</span>
                 <span id="mi">{minutes}</span>
@@ -714,108 +874,56 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 5 Distinct Deal Mechanisms */}
-            <div className="dg grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
-              <article className="dl md:col-span-7 border-t border-line pt-5">
-                <div className="dv h-40 flex items-center justify-center mb-4 text-text">
-                  <svg viewBox="0 0 200 120" className="h-full max-w-full overflow-visible" aria-hidden="true">
-                    <circle cx="100" cy="60" r="52" fill="none" stroke="var(--line)" strokeWidth="2" />
-                    <circle cx="100" cy="60" r="52" fill="none" stroke="var(--brand)" strokeWidth="5" strokeDasharray="90 240" />
-                    <path d="M108 22L82 66h20l-8 32 30-48h-22z" fill="var(--brand)" />
-                  </svg>
-                </div>
-                <h3 className="d text-3xl sm:text-4xl font-bold mb-2">Lightning deals</h3>
-                <p className="text-dim text-sm sm:text-base leading-relaxed">
-                  A deal price with a start, an end and a quantity cap. When the cap or the clock runs out, the deal is over.
-                </p>
-              </article>
-
-              <article className="dl md:col-span-5 md:mt-20 border-t border-line pt-5">
-                <div className="dv h-40 flex items-center justify-center mb-4 text-text">
-                  <svg viewBox="0 0 200 120" className="h-full max-w-full overflow-visible" aria-hidden="true">
-                    <path d="M20 20h160v30a10 10 0 0 0 0 20v30H20V70a10 10 0 0 0 0-20z" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    <path d="M130 24v72" stroke="var(--brand)" strokeWidth="2.5" strokeDasharray="4 6" />
-                    <path d="M40 50h70M40 70h50" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <h3 className="d text-3xl sm:text-4xl font-bold mb-2">Coupons</h3>
-                <p className="text-dim text-sm sm:text-base leading-relaxed">
-                  One code with a minimum cart, a usage limit and a per-user limit. Start and expiry are checked on the server.
-                </p>
-              </article>
-
-              <article className="dl md:col-span-4 border-t border-line pt-5">
-                <div className="dv h-40 flex items-center justify-center mb-4 text-text">
-                  <svg viewBox="0 0 200 120" className="h-full max-w-full overflow-visible" aria-hidden="true">
-                    <rect x="24" y="22" width="152" height="86" rx="12" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    <rect x="40" y="42" width="30" height="22" rx="4" fill="var(--brand)" />
-                    <path d="M40 86h60" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <h3 className="d text-3xl sm:text-4xl font-bold mb-2">Bank offers</h3>
-                <p className="text-dim text-sm sm:text-base leading-relaxed">
-                  Offers at checkout, clearly marked as simulated. Instant discounts with cards or netbanking.
-                </p>
-              </article>
-
-              <article className="dl md:col-span-4 md:mt-16 border-t border-line pt-5">
-                <div className="dv h-40 flex items-center justify-center mb-4 text-text">
-                  <svg viewBox="0 0 200 120" className="h-full max-w-full overflow-visible" aria-hidden="true">
-                    <circle cx="100" cy="60" r="26" fill="var(--brand)" />
-                    <path d="M100 14v18M100 88v18M54 60h18M128 60h18M67 27l12 12M121 81l12 12M67 93l12-12M121 39l12-12" stroke="var(--brand)" strokeWidth="4" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <h3 className="d text-3xl sm:text-4xl font-bold mb-2">Seasonal pages</h3>
-                <p className="text-dim text-sm sm:text-base leading-relaxed">
-                  Banners and the homepage layout are set from the admin panel, each with its own active window.
-                </p>
-              </article>
-
-              <article className="dl md:col-span-4 border-t border-line pt-5">
-                <div className="dv h-40 flex items-center justify-center mb-4 text-text">
-                  <svg viewBox="0 0 200 120" className="h-full max-w-full overflow-visible" aria-hidden="true">
-                    <path d="M60 24v60M36 62l24 24 24-24" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                    <circle cx="132" cy="60" r="38" fill="var(--brand)" />
-                    <path d="M116 52l16 18 16-18" fill="none" stroke="#17120a" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <h3 className="d text-3xl sm:text-4xl font-bold mb-2">Price-drop badges</h3>
-                <p className="text-dim text-sm sm:text-base leading-relaxed">
-                  Save a product to a wishlist and get an alert when the price falls or it is back in stock.
-                </p>
-              </article>
-            </div>
-
-            {/* LIVE DEALS ITEMS FROM DATABASE */}
+            {/* LIVE DEALS ITEMS WITH REAL PRODUCT PHOTOGRAPHY */}
             {deals.length > 0 && (
-              <div className="mt-12 pt-8 border-t border-line">
-                <h3 className="d text-3xl font-black uppercase mb-6 text-[var(--ax)]">Live Lightning Deals · Claim before timer expires</h3>
+              <div className="mb-16">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {deals.map((deal) => {
                     const discountPercent = Math.round(
                       ((deal.original_price_paise - deal.deal_price_paise) / deal.original_price_paise) * 100
                     );
+                    const dealImg = getProductImage(deal.title, 'Electronics');
+
                     return (
-                      <div key={deal.id} className="p-5 rounded-2xl bg-surface border border-line flex flex-col justify-between">
+                      <div key={deal.id} className="p-5 rounded-2xl bg-surface border border-line flex flex-col justify-between group hover:border-brand transition-all duration-200">
                         <div>
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="px-2 py-0.5 rounded-full text-xs font-mono bg-brand text-on-brand font-bold">
+                          <div className="relative w-full h-48 rounded-xl overflow-hidden bg-bg mb-4 flex items-center justify-center">
+                            <img
+                              src={dealImg}
+                              alt={deal.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                            <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-xs font-mono bg-brand text-on-brand font-bold shadow">
                               {discountPercent}% OFF
                             </span>
+                          </div>
+
+                          <div className="flex justify-between items-start mb-2">
                             <span className="text-xs font-mono text-dim">
                               {deal.sold_count} / {deal.quantity_cap} claimed
                             </span>
+                            <span className="text-xs font-mono text-brand font-semibold">
+                              Lightning Deal
+                            </span>
                           </div>
-                          <h4 className="font-semibold text-lg line-clamp-2 mb-2 text-text">{deal.title}</h4>
+                          <h4 className="font-semibold text-base line-clamp-2 mb-1 text-text group-hover:text-brand transition-colors">
+                            {deal.title}
+                          </h4>
                           <p className="text-xs text-dim font-mono mb-4">Brand: {deal.brand}</p>
                         </div>
-                        <div className="flex items-baseline gap-3 pt-3 border-t border-line/60">
-                          <span className="text-2xl font-bold text-[var(--ax)]">
-                            ₹{(deal.deal_price_paise / 100).toLocaleString('en-IN')}
-                          </span>
-                          <span className="text-sm line-through text-dim">
-                            ₹{(deal.original_price_paise / 100).toLocaleString('en-IN')}
-                          </span>
+                        <div className="flex items-baseline justify-between pt-3 border-t border-line/60">
+                          <div className="flex items-baseline gap-2.5">
+                            <span className="text-2xl font-bold text-[var(--ax)]">
+                              ₹{(deal.deal_price_paise / 100).toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-sm line-through text-dim">
+                              ₹{(deal.original_price_paise / 100).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          <Link href={`/products/${deal.id}`} className="text-xs font-mono text-dim group-hover:text-text transition-colors">
+                            Claim &rarr;
+                          </Link>
                         </div>
                       </div>
                     );
@@ -823,89 +931,125 @@ export default function HomePage() {
                 </div>
               </div>
             )}
+
+            {/* 5 Distinct Deal Mechanisms */}
+            <div className="dg grid grid-cols-1 md:grid-cols-12 gap-6 pt-8 border-t border-line">
+              <article className="dl md:col-span-4 p-6 rounded-2xl bg-surface border border-line">
+                <h3 className="d text-2xl font-bold mb-2">Lightning deals</h3>
+                <p className="text-dim text-sm leading-relaxed">
+                  A deal price with a start, an end and a quantity cap. When the cap or the clock runs out, the deal automatically terminates on the server.
+                </p>
+              </article>
+
+              <article className="dl md:col-span-4 p-6 rounded-2xl bg-surface border border-line">
+                <h3 className="d text-2xl font-bold mb-2">Coupons</h3>
+                <p className="text-dim text-sm leading-relaxed">
+                  Discount codes with minimum cart value, total usage caps, and per-user limits, fully verified and applied during checkout calculation.
+                </p>
+              </article>
+
+              <article className="dl md:col-span-4 p-6 rounded-2xl bg-surface border border-line">
+                <h3 className="d text-2xl font-bold mb-2">Bank offers</h3>
+                <p className="text-dim text-sm leading-relaxed">
+                  Checkout discounts on simulated card or UPI payments, clearly marked for testing without charging real money.
+                </p>
+              </article>
+
+              <article className="dl md:col-span-6 p-6 rounded-2xl bg-surface border border-line">
+                <h3 className="d text-2xl font-bold mb-2">Seasonal campaigns</h3>
+                <p className="text-dim text-sm leading-relaxed">
+                  Admin-managed promotional banners and collection arrangements with customized scheduling windows.
+                </p>
+              </article>
+
+              <article className="dl md:col-span-6 p-6 rounded-2xl bg-surface border border-line">
+                <h3 className="d text-2xl font-bold mb-2">Price-drop alerts</h3>
+                <p className="text-dim text-sm leading-relaxed">
+                  Wishlist items notify customers when prices decrease or out-of-stock items are replenished.
+                </p>
+              </article>
+            </div>
           </div>
         </section>
 
-        {/* CATEGORIES SECTION */}
-        <section className="py-24" id="cats">
-          <div className="w max-w-7xl mx-auto">
-            <div className="intro grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 items-end mb-16">
-              <h2 className="d text-5xl sm:text-7xl lg:text-[110px] font-black leading-none" data-s>
-                Three levels deep, every shelf a page
-              </h2>
+        {/* STORE DEPARTMENTS WITH REAL PHOTOGRAPHY */}
+        <section className="py-20 border-t border-line" id="cats">
+          <div className="w max-w-7xl mx-auto px-4">
+            <div className="intro grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 items-end mb-12">
+              <div>
+                <p className="m text-sm font-mono text-dim mb-2">Curated Categories</p>
+                <h2 className="d text-4xl sm:text-6xl lg:text-[80px] font-black leading-none" data-s>
+                  Shop by Department
+                </h2>
+              </div>
               <p className="text-dim text-base sm:text-lg max-w-md leading-relaxed" data-r>
-                A 3-level category tree with a landing page for each. Every category carries attribute definitions, and those power the filters in search.
+                Explore our 3-level taxonomy. Each top-level shelf features deep attribute-powered filtering, ratings, and instant stock availability.
               </p>
             </div>
 
-            <div className="ct grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 items-start">
-              <div className="tile bg-surface p-7 overflow-hidden min-h-[440px] rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-[var(--ax)] mb-2">1</div>
-                <svg viewBox="0 0 200 120" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
-                  <rect className="dr" x="10" y="10" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="73" y="10" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="136" y="10" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="10" y="66" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="73" y="66" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <rect className="dr" x="136" y="66" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
-                </svg>
-                <h3 className="text-xl font-bold mb-2">Top-level categories</h3>
-                <p className="text-dim text-sm leading-relaxed">The landing pages people start from. Electronics, Fashion, Home, Beauty, Sports.</p>
-              </div>
-
-              <div className="tile bg-surface p-7 overflow-hidden min-h-[500px] md:mt-16 rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-[var(--ax)] mb-2">2</div>
-                <svg viewBox="0 0 200 140" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
-                  <circle className="dr" cx="100" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M100 25v20M30 45h140M30 45v30M100 45v30M170 45v30" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="30" cy="84" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="100" cy="84" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="170" cy="84" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-                </svg>
-                <h3 className="text-xl font-bold mb-2">Sub-categories</h3>
-                <p className="text-dim text-sm leading-relaxed">Branches that narrow the shelf: Audio, Wearables, Laptops, Men's, Women's, Appliances.</p>
-              </div>
-
-              <div className="tile bg-surface p-7 overflow-hidden min-h-[440px] md:mt-8 rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-[var(--ax)] mb-2">3</div>
-                <svg viewBox="0 0 200 150" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
-                  <circle className="dr" cx="100" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <path className="dr" d="M100 20v14M40 34h120M40 34v16M100 34v16M160 34v16" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="40" cy="58" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="100" cy="58" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                  <circle className="dr" cx="160" cy="58" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-                </svg>
-                <h3 className="text-xl font-bold mb-2">Leaves with attributes</h3>
-                <p className="text-dim text-sm leading-relaxed">Where products live, each with variants, price and stock. Powers faceted filters.</p>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              {STORE_DEPARTMENTS.map((dept, idx) => (
+                <Link
+                  key={idx}
+                  href={dept.link}
+                  className="dept-card group rounded-2xl overflow-hidden bg-surface border border-line flex flex-col justify-between hover:border-brand transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="h-44 w-full relative overflow-hidden bg-bg">
+                    <img
+                      src={dept.image}
+                      alt={dept.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <span className="text-[11px] font-mono text-brand font-semibold block mb-1">
+                        {dept.itemsCount}
+                      </span>
+                      <h3 className="text-lg font-bold text-text mb-1 group-hover:text-brand transition-colors">
+                        {dept.name}
+                      </h3>
+                      <p className="text-xs text-dim line-clamp-2 leading-relaxed">
+                        {dept.desc}
+                      </p>
+                    </div>
+                    <div className="pt-4 mt-4 border-t border-line/60 flex items-center justify-between text-xs font-mono text-dim group-hover:text-text">
+                      <span>Explore</span>
+                      <span>&rarr;</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
 
         {/* STATS & RESILIENCE */}
-        <section className="py-24" id="stats">
-          <div className="w max-w-7xl mx-auto">
+        <section className="py-20 border-t border-line" id="stats">
+          <div className="w max-w-7xl mx-auto px-4">
             <div className="sg grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="border-t border-line pt-3">
-                <div className="big d text-6xl sm:text-8xl lg:text-[130px] font-black leading-none" data-n="500" data-x="+">
-                  500+
+                <div className="big d text-5xl sm:text-7xl lg:text-[96px] font-black leading-none" data-n="525" data-x="+">
+                  525+
                 </div>
-                <p className="m text-xs sm:text-sm text-dim mt-2">products seeded, with variants and stock</p>
+                <p className="m text-xs sm:text-sm text-dim mt-2">seeded products with variants and real stock</p>
               </div>
               <div className="border-t border-line pt-3">
-                <div className="big d text-6xl sm:text-8xl lg:text-[130px] font-black leading-none" data-n="15">
+                <div className="big d text-5xl sm:text-7xl lg:text-[96px] font-black leading-none" data-n="15">
                   15
                 </div>
                 <p className="m text-xs sm:text-sm text-dim mt-2">minute stock hold at checkout</p>
               </div>
               <div className="border-t border-line pt-3">
-                <div className="big d text-6xl sm:text-8xl lg:text-[130px] font-black leading-none" data-n="30">
+                <div className="big d text-5xl sm:text-7xl lg:text-[96px] font-black leading-none" data-n="30">
                   30
                 </div>
                 <p className="m text-xs sm:text-sm text-dim mt-2">second polling for order tracking</p>
               </div>
               <div className="border-t border-line pt-3">
-                <div className="big d text-6xl sm:text-8xl lg:text-[130px] font-black leading-none" data-n="7">
+                <div className="big d text-5xl sm:text-7xl lg:text-[96px] font-black leading-none" data-n="7">
                   7
                 </div>
                 <p className="m text-xs sm:text-sm text-dim mt-2">day return window after delivery</p>
@@ -913,7 +1057,7 @@ export default function HomePage() {
             </div>
 
             {/* BUILT FOR BAD DAYS */}
-            <div className="bad grid grid-cols-1 md:grid-cols-2 gap-12 mt-20 items-center">
+            <div className="bad grid grid-cols-1 md:grid-cols-2 gap-12 mt-16 items-center">
               <div className="skw grid gap-4 bg-surface p-6 rounded-2xl border border-line" aria-hidden="true">
                 <div className="sk flex gap-4 items-center">
                   <i className="w-16 h-16 rounded-xl skeleton flex-none" />
@@ -934,11 +1078,11 @@ export default function HomePage() {
                 </p>
               </div>
               <div>
-                <h3 className="d text-4xl sm:text-6xl font-black mb-4 leading-tight" data-s>
+                <h3 className="d text-3xl sm:text-5xl font-black mb-4 leading-tight" data-s>
                   Built for bad days
                 </h3>
                 <p className="text-dim text-base sm:text-lg leading-relaxed" data-r>
-                  Slow network, a sleeping backend or no signal at all. You get skeleton cards, up to 3 automatic retries, and home, categories, cart and orders stay readable offline. Changes you make queue and retry.
+                  Slow networks, sleeping backend instances, or intermittent connectivity. Features built-in skeleton loaders, automated exponential retries, and offline-readable local carts and order statuses.
                 </p>
               </div>
             </div>
@@ -946,15 +1090,15 @@ export default function HomePage() {
         </section>
 
         {/* AI SHOPPING ASSISTANT */}
-        <section className="py-24" id="ai">
-          <div className="w ag grid grid-cols-1 lg:grid-cols-2 gap-14 items-center max-w-7xl mx-auto">
+        <section className="py-20 border-t border-line" id="ai">
+          <div className="w ag grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-4">
             <div>
               <p className="m text-sm font-mono text-dim mb-2">AI shopping assistant</p>
-              <h2 className="d text-5xl sm:text-7xl lg:text-[96px] font-black leading-none my-4" data-s>
+              <h2 className="d text-4xl sm:text-6xl lg:text-[76px] font-black leading-none my-4" data-s>
                 Ask anything. <em className="accent-serif">Confirm every action.</em>
               </h2>
               <p className="text-dim text-base sm:text-lg leading-relaxed mb-6" data-r>
-                Search, compare, summarise reviews and Q&amp;A, find coupons and check where an order is. It never places, cancels, returns or refunds without your tap in the chat, never asks for card data, and says it doesn't know instead of inventing a price.
+                Search, compare, summarise reviews and Q&amp;A, find coupons and check where an order is. It never places, cancels, returns or refunds without your tap in the chat, never asks for card data, and says it doesn&apos;t know instead of inventing a price.
               </p>
               <ul className="lm m flex flex-wrap gap-4 text-xs sm:text-sm font-mono text-dim p-0 list-none">
                 <li className="px-3 py-1 rounded-full border border-line">30 messages a day</li>
@@ -964,7 +1108,7 @@ export default function HomePage() {
             </div>
 
             {/* Interactive Chat Mockup */}
-            <div className="chat flex flex-col gap-3.5 p-6 sm:p-8 bg-surface rounded-3xl min-h-[500px] border border-line" id="chat">
+            <div className="chat flex flex-col gap-3.5 p-6 sm:p-8 bg-surface rounded-3xl min-h-[460px] border border-line" id="chat">
               <div className="b u self-end bg-brand text-on-brand rounded-2xl rounded-br-none px-4 py-3 font-semibold max-w-[90%] text-sm sm:text-base" id="bu">
                 Find me a headphones deal, then cancel my last order.
               </div>
@@ -976,23 +1120,23 @@ export default function HomePage() {
                 </div>
                 <div className="res grid gap-3 text-xs sm:text-sm">
                   <div className="rc flex gap-3.5 items-center">
-                    <svg viewBox="0 0 300 300" className="w-12 h-12 flex-none" aria-hidden="true">
-                      <path d="M62 176C62 62 238 62 238 176" stroke="var(--text)" strokeWidth="18" strokeLinecap="round" fill="none" />
-                      <rect x="38" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-                      <rect x="202" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-                    </svg>
+                    <img
+                      src="/photos/products/sony-headphones-black.webp"
+                      alt="Headphones deal"
+                      className="w-12 h-12 rounded-lg object-cover flex-none"
+                    />
                     <div>
                       <b className="block font-semibold">Deals found</b>
-                      <span className="text-dim text-xs">Prices come from the catalogue, not from me.</span>
+                      <span className="text-dim text-xs">Prices come directly from our catalogue database.</span>
                     </div>
                   </div>
                   <div className="rc flex gap-3.5 items-center">
-                    <svg viewBox="0 0 60 60" className="w-12 h-12 flex-none" aria-hidden="true">
-                      <path d="M8 14h44M8 30h32M8 46h38" stroke="var(--text)" strokeWidth="5" strokeLinecap="round" />
-                    </svg>
+                    <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center flex-none text-brand">
+                      ★
+                    </div>
                     <div>
                       <b className="block font-semibold">Review summary</b>
-                      <span className="text-dim text-xs">Built from verified purchasers' reviews.</span>
+                      <span className="text-dim text-xs">Built from verified purchasers&apos; reviews.</span>
                     </div>
                   </div>
                 </div>
@@ -1006,75 +1150,54 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* RULES THAT NEVER BREAK (PINNED EXPANDING CANOPY) */}
-        <section className="rs h-screen relative overflow-hidden flex items-center justify-center" id="rules">
-          <div className="ob d absolute inset-0 grid place-items-center text-7xl sm:text-[180px] lg:text-[280px] font-black uppercase text-transparent whitespace-nowrap pointer-events-none select-none" style={{ WebkitTextStroke: '2px var(--line)' }} aria-hidden="true">
-            Never break
-          </div>
-          <div className="rp absolute inset-0 bg-brand text-on-brand flex items-center">
-            <div className="ri w-full px-6 sm:px-16 lg:px-28">
-              <p className="m text-xs sm:text-sm font-mono text-on-brand font-semibold mb-2" style={{ color: 'var(--on-brand)' }}>Hard rules, each with a named test</p>
-              <h2 className="d text-4xl sm:text-7xl lg:text-9xl font-black uppercase mb-8" id="rh">
+        {/* RULES THAT NEVER BREAK */}
+        <section className="py-20 bg-surface/50 border-t border-line" id="rules">
+          <div className="w max-w-7xl mx-auto px-4">
+            <div className="max-w-3xl mb-12">
+              <p className="m text-xs sm:text-sm font-mono text-brand font-semibold mb-2">Security &amp; Invariants</p>
+              <h2 className="d text-4xl sm:text-6xl lg:text-[76px] font-black uppercase" id="rh">
                 Rules that never break
               </h2>
-              <ul className="rl list-none p-0 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  The client never sets a price. The server recalculates every total.
-                </li>
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  An order confirms only after server-side signature verification and the payment.captured webhook.
-                </li>
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  50 concurrent buyers of 10 units: exactly 10 succeed.
-                </li>
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  Replay the same webhook five times: one order, one payment.
-                </li>
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  Every endpoint checks session, role and ownership.
-                </li>
-                <li className="relative pl-9 text-sm sm:text-lg font-bold leading-snug">
-                  <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-on-brand origin-left" />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="absolute left-0 top-3 w-5 h-5">
-                    <path d="M4 12l5 5L20 6" />
-                  </svg>
-                  No card data on our servers or in logs.
-                </li>
-              </ul>
             </div>
+            <ul className="rl list-none p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">01 · PRICING INVARIANT</span>
+                The client never sets a price. The server recalculates every total, tax, and discount.
+              </li>
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">02 · PAYMENT VERIFICATION</span>
+                An order confirms only after server-side HMAC signature verification and the webhook capture.
+              </li>
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">03 · CONCURRENCY SAFE</span>
+                50 concurrent buyers of 10 inventory units: exactly 10 succeed, 40 safely fail without overselling.
+              </li>
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">04 · IDEMPOTENT WEBHOOKS</span>
+                Replay the same payment webhook 5 times: exactly one order confirmed, no duplicate charges.
+              </li>
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">05 · RBAC AUTHORIZATION</span>
+                Every API endpoint validates active session, user role, and resource ownership.
+              </li>
+              <li className="p-6 rounded-2xl bg-surface border border-line relative text-sm sm:text-base font-medium leading-relaxed">
+                <span className="text-brand font-mono text-xs block mb-2 font-bold">06 · ZERO CARD LOGS</span>
+                No raw credit or debit card data ever touches our servers, databases, or log files.
+              </li>
+            </ul>
           </div>
         </section>
 
         {/* FOUR ROLES, ONE MARKETPLACE */}
-        <section className="py-24" id="roles">
-          <div className="w max-w-7xl mx-auto">
-            <h2 className="d text-5xl sm:text-7xl lg:text-[110px] font-black uppercase mb-16" data-s>
+        <section className="py-20 border-t border-line" id="roles">
+          <div className="w max-w-7xl mx-auto px-4">
+            <h2 className="d text-4xl sm:text-6xl lg:text-[80px] font-black uppercase mb-12" data-s>
               Four roles, one marketplace
             </h2>
-            <div className="space-y-12">
+            <div className="space-y-8">
               <div className="rr grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-6 py-6 relative items-start">
                 <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-line origin-left" />
-                <h3 className="d text-5xl sm:text-7xl font-bold uppercase transition-all duration-300 hover:text-brand hover:translate-x-3" data-s>
+                <h3 className="d text-4xl sm:text-5xl font-bold uppercase transition-all duration-300 hover:text-brand" data-s>
                   Guest
                 </h3>
                 <p className="text-dim text-sm sm:text-base">
@@ -1089,7 +1212,7 @@ export default function HomePage() {
 
               <div className="rr grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-6 py-6 relative items-start">
                 <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-line origin-left" />
-                <h3 className="d text-5xl sm:text-7xl font-bold uppercase transition-all duration-300 hover:text-brand hover:translate-x-3" data-s>
+                <h3 className="d text-4xl sm:text-5xl font-bold uppercase transition-all duration-300 hover:text-brand" data-s>
                   Customer
                 </h3>
                 <p className="text-dim text-sm sm:text-base">
@@ -1098,13 +1221,13 @@ export default function HomePage() {
                 </p>
                 <p className="text-dim text-sm sm:text-base">
                   <b className="block text-text font-mono text-xs uppercase mb-1 font-bold">Cannot</b>
-                  See other users' data, or use seller and admin tools.
+                  See other users&apos; data, or use seller and admin tools.
                 </p>
               </div>
 
               <div className="rr grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-6 py-6 relative items-start">
                 <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-line origin-left" />
-                <h3 className="d text-5xl sm:text-7xl font-bold uppercase transition-all duration-300 hover:text-brand hover:translate-x-3" data-s>
+                <h3 className="d text-4xl sm:text-5xl font-bold uppercase transition-all duration-300 hover:text-brand" data-s>
                   Seller
                 </h3>
                 <p className="text-dim text-sm sm:text-base">
@@ -1113,13 +1236,13 @@ export default function HomePage() {
                 </p>
                 <p className="text-dim text-sm sm:text-base">
                   <b className="block text-text font-mono text-xs uppercase mb-1 font-bold">Cannot</b>
-                  See other sellers' data, moderate or refund.
+                  See other sellers&apos; data, moderate or refund.
                 </p>
               </div>
 
               <div className="rr grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-6 py-6 relative items-start">
                 <i className="ln absolute left-0 right-0 top-0 h-0.5 bg-line origin-left" />
-                <h3 className="d text-5xl sm:text-7xl font-bold uppercase transition-all duration-300 hover:text-brand hover:translate-x-3" data-s>
+                <h3 className="d text-4xl sm:text-5xl font-bold uppercase transition-all duration-300 hover:text-brand" data-s>
                   Admin
                 </h3>
                 <p className="text-dim text-sm sm:text-base">
@@ -1135,14 +1258,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* LIVE CATALOGUE PREVIEW */}
+        {/* LIVE CATALOGUE PREVIEW WITH REAL PHOTOGRAPHY */}
         {featuredProducts.length > 0 && (
           <section className="py-20 border-t border-line" id="catalogue">
-            <div className="w max-w-7xl mx-auto">
+            <div className="w max-w-7xl mx-auto px-4">
               <div className="flex justify-between items-baseline mb-10 flex-wrap gap-4">
                 <div>
                   <p className="m text-xs font-mono text-dim mb-1">Live from our 525 seeded products</p>
-                  <h3 className="d text-4xl sm:text-6xl font-black uppercase">Browse the Catalogue</h3>
+                  <h3 className="d text-3xl sm:text-5xl font-black uppercase">Browse the Catalogue</h3>
                 </div>
                 <Link href="/categories" className="btn g sm font-mono text-xs">
                   View all categories &rarr;
@@ -1150,30 +1273,42 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featuredProducts.map((p) => (
-                  <Link
-                    key={p.id}
-                    href={`/products/${p.id}`}
-                    className="p-5 rounded-2xl bg-surface border border-line flex flex-col justify-between group hover:border-brand transition-colors"
-                  >
-                    <div>
-                      <div className="flex justify-between items-center text-xs font-mono text-dim mb-2">
-                        <span>{p.brand}</span>
-                        <span className="text-[var(--ax)] font-semibold">★ {p.rating}</span>
+                {featuredProducts.map((p) => {
+                  const prodImg = getProductImage(p.title, p.category_name);
+
+                  return (
+                    <Link
+                      key={p.id}
+                      href={`/products/${p.id}`}
+                      className="p-4 rounded-2xl bg-surface border border-line flex flex-col justify-between group hover:border-brand transition-all duration-200 hover:-translate-y-1"
+                    >
+                      <div>
+                        <div className="w-full aspect-square rounded-xl overflow-hidden bg-bg mb-3.5 flex items-center justify-center">
+                          <img
+                            src={prodImg}
+                            alt={p.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="flex justify-between items-center text-xs font-mono text-dim mb-1.5">
+                          <span>{p.brand}</span>
+                          <span className="text-[var(--ax)] font-semibold">★ {p.rating}</span>
+                        </div>
+                        <h4 className="font-semibold text-base line-clamp-2 mb-1 group-hover:text-[var(--ax)] transition-colors">
+                          {p.title}
+                        </h4>
+                        <p className="text-xs text-dim mb-3">{p.category_name}</p>
                       </div>
-                      <h4 className="font-semibold text-base line-clamp-2 mb-2 group-hover:text-[var(--ax)] transition-colors">
-                        {p.title}
-                      </h4>
-                      <p className="text-xs text-dim mb-4">{p.category_name}</p>
-                    </div>
-                    <div className="pt-3 border-t border-line/60 flex justify-between items-baseline">
-                      <span className="text-xl font-bold text-text">
-                        ₹{(p.price_paise / 100).toLocaleString('en-IN')}
-                      </span>
-                      <span className="text-xs font-mono text-dim">Details &rarr;</span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 border-t border-line/60 flex justify-between items-baseline">
+                        <span className="text-xl font-bold text-text">
+                          ₹{(p.price_paise / 100).toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-xs font-mono text-dim group-hover:text-text transition-colors">Details &rarr;</span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>

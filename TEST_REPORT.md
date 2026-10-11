@@ -1,7 +1,7 @@
 # styleshopZ Automated Test Matrix & Verification Report
 
 **Project**: styleshopZ  
-**Production URL**: https://styleshopz.vercel.app  
+**Production URL**: https://styleshopz.pages.dev  
 **Database**: Neon Serverless Postgres (`aws-ap-southeast-1`)  
 **Test Framework**: Vitest v5.0.3 + Playwright Core  
 **Execution Timestamp**: 2026-10-11T12:02:40Z  
@@ -66,5 +66,5 @@
 ---
 
 ## 3. Deployment & Live Verification Proof
-- Live site responding at: `https://styleshopz.vercel.app`
+- Live site responding at: `https://styleshopz.pages.dev`
 - Database: 525 products, 1,048 variants, 12 active deals, 3 coupons seeded in Neon Postgres

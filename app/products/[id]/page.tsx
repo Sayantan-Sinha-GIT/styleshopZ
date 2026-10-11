@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getProductImage } from '@/lib/images';
 
 function ProductDetailContent() {
   const params = useParams();
@@ -127,14 +128,12 @@ function ProductDetailContent() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-20">
         {/* Product Visual Area */}
         <div className="aspect-square bg-surface rounded-3xl border border-line p-8 flex items-center justify-center relative overflow-hidden group">
-          <div className="w-full h-full flex items-center justify-center">
-            <svg viewBox="0 0 300 300" className="w-3/4 h-3/4 text-text transition-opacity duration-300 group-hover:opacity-90" aria-hidden="true">
-              <ellipse cx="150" cy="288" rx="88" ry="10" fill="var(--line)" />
-              <path d="M62 176C62 62 238 62 238 176" stroke="currentColor" strokeWidth="16" strokeLinecap="round" fill="none" />
-              <rect x="38" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-              <rect x="202" y="148" width="60" height="112" rx="30" fill="var(--brand)" />
-              <path d="M56 182v52M244 182v52" stroke="#17120a" strokeOpacity="0.35" strokeWidth="7" strokeLinecap="round" />
-            </svg>
+          <div className="w-full h-full flex items-center justify-center relative">
+            <img
+              src={getProductImage(product.title, product.category_name)}
+              alt={product.title}
+              className="w-full h-full object-contain rounded-2xl group-hover:scale-105 transition-transform duration-500"
+            />
           </div>
           {discountPercent > 0 && (
             <span className="absolute top-6 left-6 px-3 py-1 rounded-full text-xs font-mono font-bold bg-brand text-on-brand shadow-lg">

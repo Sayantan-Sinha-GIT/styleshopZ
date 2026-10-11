@@ -4,7 +4,7 @@
   "webDir": "public",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://styleshopz.vercel.app",
+    "url": "https://styleshopz.pages.dev",
     "cleartext": false,
     "androidScheme": "https"
   },

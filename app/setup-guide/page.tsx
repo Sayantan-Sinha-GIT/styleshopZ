@@ -23,14 +23,15 @@ const SERVICES = [
   },
   {
     num: '02',
-    name: 'Vercel Hobby Hosting',
-    tier: 'Hobby Tier ($0/month, Singapore sin1 edge)',
-    purpose: 'Hosts the Next.js production web app, serverless API routes, and edge cache.',
+    name: 'Cloudflare Pages (Hosting & Edge Deployments)',
+    tier: 'Free Tier ($0/month, Global Edge Network)',
+    purpose: 'Hosts the Next.js production storefront, panels, serverless routes, and edge cache.',
     steps: [
-      'Import the repository Sayantan-Sinha-GIT/styleshopZ into your Vercel dashboard.',
-      'Under Environment Variables, supply DATABASE_URL, NEXTAUTH_SECRET, RAZORPAY_KEY_ID, and RAZORPAY_KEY_SECRET.',
-      'Select Framework Preset Next.js and click Deploy.',
-      'Verify live deployment via curl https://styleshopz.vercel.app/api/version.',
+      'Sign in at dash.cloudflare.com → Workers & Pages → Create application → Pages → Connect to Git.',
+      'Select GitHub repository Sayantan-Sinha-GIT/styleshopZ and click Begin setup.',
+      'Under Project name type styleshopz (giving live URL https://styleshopz.pages.dev), Framework: Next.js.',
+      'Under Environment variables, add NODE_VERSION (20.18.0), DATABASE_URL, NEXTAUTH_SECRET, and RAZORPAY keys.',
+      'Click Save and Deploy to trigger the edge build.',
     ],
   },
   {
@@ -41,7 +42,7 @@ const SERVICES = [
     steps: [
       'Sign up at dashboard.razorpay.com and toggle the top bar switch to Test Mode.',
       'Go to Settings → API Keys → Generate Test Key.',
-      'Copy Key ID (starts with rzp_test_) and Key Secret into .env.local and Vercel.',
+      'Copy Key ID (starts with rzp_test_) and Key Secret into .env.local and Cloudflare Pages settings.',
       'Test payment flow using test UPI handle success@razorpay or standard test card 4111-1111-1111-1111.',
     ],
   },
@@ -53,7 +54,7 @@ const SERVICES = [
     steps: [
       'Visit aistudio.google.com and sign in with your Google account.',
       'Click Get API Key and create a key in your project.',
-      'Assign the key to GEMINI_API_KEY in .env.local and Vercel environment variables.',
+      'Assign the key to GEMINI_API_KEY in .env.local and Cloudflare Pages environment variables.',
       'The assistant handles 30 requests per IP per day with a 1,500 character limit.',
     ],
   },
@@ -65,7 +66,7 @@ const SERVICES = [
     steps: [
       'Sign up at console.upstash.com using GitHub.',
       'Create a Redis database in the Singapore (ap-southeast-1) region.',
-      'Copy UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN into environment settings.',
+      'Copy UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN into Cloudflare environment settings.',
     ],
   },
   {
@@ -74,7 +75,7 @@ const SERVICES = [
     tier: 'Open Source (Android Studio free)',
     purpose: 'Wraps the live web app into an installable Android APK with offline fallback support.',
     steps: [
-      'Review capacitor.config.json in the repository root (points to https://styleshopz.vercel.app).',
+      'Review capacitor.config.json in the repository root (points to https://styleshopz.pages.dev).',
       'Run npx cap add android followed by npx cap sync android.',
       'Open the android folder in Android Studio and click Build → Build APK.',
       'Deploy the generated APK to any Android 8.0+ device.',

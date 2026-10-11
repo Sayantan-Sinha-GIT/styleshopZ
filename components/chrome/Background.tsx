@@ -56,13 +56,13 @@ export function Background() {
       canvas.height = Math.round(h * d);
       ctx.setTransform(d, 0, 0, d, 0, 0);
 
-      const count = w < 700 ? 24 : 54;
+      const count = w < 700 ? 12 : 24;
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        s: 4 + Math.random() * 12,
+        s: 4 + Math.random() * 8,
         r: Math.random() * 6,
-        v: 0.15 + Math.random() * 0.5,
+        v: 0.08 + Math.random() * 0.2,
         t: Math.floor(Math.random() * 3),
       }));
 
@@ -72,9 +72,9 @@ export function Background() {
 
     const paint = () => {
       ctx.clearRect(0, 0, w, h);
-      ctx.strokeStyle = `rgba(${tc}, 0.16)`;
-      ctx.fillStyle = `rgba(${tc}, 0.16)`;
-      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = `rgba(${tc}, 0.08)`;
+      ctx.fillStyle = `rgba(${tc}, 0.08)`;
+      ctx.lineWidth = 1;
 
       particles.forEach((p) => {
         ctx.save();

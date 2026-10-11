@@ -7,9 +7,8 @@ import { SiteHeader } from '@/components/chrome/SiteHeader';
 import { THEME_BOOT_SCRIPT } from '@/lib/themeScript';
 import './globals.css';
 
-const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : 'https://styleshopz.vercel.app';
+const siteUrl = process.env.NEXTAUTH_URL
+  || (process.env.CF_PAGES_URL ? `https://${process.env.CF_PAGES_URL}` : 'https://styleshopz.pages.dev');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -36,11 +35,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
-        {/* Google Fonts fallback CDN link for exact Big Shoulders Display weights */}
+        {/* High-end modern geometric display and body typography (Plus Jakarta Sans & Outfit) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=DM+Mono:wght@500&family=Hanken+Grotesk:wght@400;600&family=Instrument+Serif:ital@1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Instrument+Serif:ital@1&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </head>
