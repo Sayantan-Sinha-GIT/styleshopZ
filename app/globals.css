@@ -175,6 +175,30 @@ em, .accent-serif {
   color: var(--dim);
 }
 
+/* Rules canopy (bg-brand) accessibility */
+.rp .m,
+.rp em,
+.rp p,
+.rp span,
+.rp li {
+  color: var(--on-brand) !important;
+}
+
+/* Light theme brand text high-contrast overrides */
+[data-theme='light'] .text-brand {
+  color: var(--ax) !important;
+}
+[data-theme='light'] .hover\:text-brand:hover {
+  color: var(--ax) !important;
+}
+[data-theme='light'] .border-brand {
+  border-color: var(--ax) !important;
+}
+
+.cd {
+  color: var(--ax);
+}
+
 .w {
   padding-left: clamp(20px, 5vw, 72px);
   padding-right: clamp(20px, 5vw, 72px);

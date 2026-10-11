@@ -532,7 +532,7 @@ export default function HomePage() {
                   <dt className="text-dim">Delivery</dt>
                   <dd className="text-right font-medium">Standard or express</dd>
                   <dt className="text-dim">Stock</dt>
-                  <dd className="text-right font-medium text-brand">Held for 15 min</dd>
+                  <dd className="text-right font-medium text-text">Held for 15 min</dd>
                 </dl>
                 <div className="flex flex-wrap gap-1.5 mb-4 text-[11px] font-mono">
                   <span className="px-2 py-0.5 rounded-full border border-line">UPI</span>
@@ -595,7 +595,7 @@ export default function HomePage() {
             <div className="w lp grid grid-cols-1 md:grid-cols-2 gap-10 items-center max-w-7xl mx-auto w-full">
               <div className="lt">
                 <p className="m text-sm font-mono text-dim mb-3">
-                  The loop · step <span id="sn" className="text-brand font-semibold">04</span> of 04
+                  The loop · step <span id="sn" className="text-text font-bold">04</span> of 04
                 </p>
                 <div className="steps relative h-72 sm:h-96 mt-4">
                   <div className="step absolute inset-0">
@@ -705,7 +705,7 @@ export default function HomePage() {
                   Gone when the clock says so
                 </h2>
               </div>
-              <div className="cd d flex text-5xl sm:text-7xl lg:text-9xl text-brand font-mono font-bold tracking-tight" role="timer" aria-label="Time left in today's deals">
+              <div className="cd d flex text-5xl sm:text-7xl lg:text-9xl font-mono font-bold tracking-tight" role="timer" aria-label="Time left in today's deals">
                 <span id="h">{hours}</span>
                 <span>:</span>
                 <span id="mi">{minutes}</span>
@@ -789,7 +789,7 @@ export default function HomePage() {
             {/* LIVE DEALS ITEMS FROM DATABASE */}
             {deals.length > 0 && (
               <div className="mt-12 pt-8 border-t border-line">
-                <h3 className="d text-3xl font-black uppercase mb-6 text-brand">Live Lightning Deals · Claim before timer expires</h3>
+                <h3 className="d text-3xl font-black uppercase mb-6 text-[var(--ax)]">Live Lightning Deals · Claim before timer expires</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {deals.map((deal) => {
                     const discountPercent = Math.round(
@@ -810,7 +810,7 @@ export default function HomePage() {
                           <p className="text-xs text-dim font-mono mb-4">Brand: {deal.brand}</p>
                         </div>
                         <div className="flex items-baseline gap-3 pt-3 border-t border-line/60">
-                          <span className="text-2xl font-bold text-brand">
+                          <span className="text-2xl font-bold text-[var(--ax)]">
                             ₹{(deal.deal_price_paise / 100).toLocaleString('en-IN')}
                           </span>
                           <span className="text-sm line-through text-dim">
@@ -840,7 +840,7 @@ export default function HomePage() {
 
             <div className="ct grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 items-start">
               <div className="tile bg-surface p-7 overflow-hidden min-h-[440px] rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-brand mb-2">1</div>
+                <div className="d text-8xl font-black text-[var(--ax)] mb-2">1</div>
                 <svg viewBox="0 0 200 120" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
                   <rect className="dr" x="10" y="10" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
                   <rect className="dr" x="73" y="10" width="54" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -854,7 +854,7 @@ export default function HomePage() {
               </div>
 
               <div className="tile bg-surface p-7 overflow-hidden min-h-[500px] md:mt-16 rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-brand mb-2">2</div>
+                <div className="d text-8xl font-black text-[var(--ax)] mb-2">2</div>
                 <svg viewBox="0 0 200 140" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
                   <circle className="dr" cx="100" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
                   <path className="dr" d="M100 25v20M30 45h140M30 45v30M100 45v30M170 45v30" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -867,7 +867,7 @@ export default function HomePage() {
               </div>
 
               <div className="tile bg-surface p-7 overflow-hidden min-h-[440px] md:mt-8 rounded-2xl border border-line">
-                <div className="d text-8xl font-black text-brand mb-2">3</div>
+                <div className="d text-8xl font-black text-[var(--ax)] mb-2">3</div>
                 <svg viewBox="0 0 200 150" className="w-full my-4 text-text overflow-visible" aria-hidden="true">
                   <circle className="dr" cx="100" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
                   <path className="dr" d="M100 20v14M40 34h120M40 34v16M100 34v16M160 34v16" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -929,7 +929,7 @@ export default function HomePage() {
                     <u className="block h-3 rounded skeleton w-2/5 no-underline" />
                   </div>
                 </div>
-                <p className="m text-xs font-mono text-brand mt-2" id="wk">
+                <p className="m text-xs font-mono text-dim mt-2" id="wk">
                   Waking up the shop…
                 </p>
               </div>
@@ -970,9 +970,9 @@ export default function HomePage() {
               </div>
               <div className="b a self-start bg-bg rounded-2xl rounded-bl-none p-5 max-w-[92%] border border-line/60" id="ba">
                 <div className="tools flex flex-wrap gap-1.5 mb-3">
-                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-brand text-brand">Search and filter</span>
-                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-brand text-brand">Find deals and coupons</span>
-                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-brand text-brand">Order status</span>
+                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-[var(--ax)] text-[var(--ax)]">Search and filter</span>
+                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-[var(--ax)] text-[var(--ax)]">Find deals and coupons</span>
+                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-full border border-[var(--ax)] text-[var(--ax)]">Order status</span>
                 </div>
                 <div className="res grid gap-3 text-xs sm:text-sm">
                   <div className="rc flex gap-3.5 items-center">
@@ -1013,7 +1013,7 @@ export default function HomePage() {
           </div>
           <div className="rp absolute inset-0 bg-brand text-on-brand flex items-center">
             <div className="ri w-full px-6 sm:px-16 lg:px-28">
-              <p className="m text-xs sm:text-sm font-mono text-on-brand font-semibold mb-2">Hard rules, each with a named test</p>
+              <p className="m text-xs sm:text-sm font-mono text-on-brand font-semibold mb-2" style={{ color: 'var(--on-brand)' }}>Hard rules, each with a named test</p>
               <h2 className="d text-4xl sm:text-7xl lg:text-9xl font-black uppercase mb-8" id="rh">
                 Rules that never break
               </h2>
@@ -1159,9 +1159,9 @@ export default function HomePage() {
                     <div>
                       <div className="flex justify-between items-center text-xs font-mono text-dim mb-2">
                         <span>{p.brand}</span>
-                        <span className="text-brand font-semibold">★ {p.rating}</span>
+                        <span className="text-[var(--ax)] font-semibold">★ {p.rating}</span>
                       </div>
-                      <h4 className="font-semibold text-base line-clamp-2 mb-2 group-hover:text-brand transition-colors">
+                      <h4 className="font-semibold text-base line-clamp-2 mb-2 group-hover:text-[var(--ax)] transition-colors">
                         {p.title}
                       </h4>
                       <p className="text-xs text-dim mb-4">{p.category_name}</p>
