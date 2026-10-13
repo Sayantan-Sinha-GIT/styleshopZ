@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "@phosphor-icons/react";
 import { useStore, api } from "@/components/shop/Store";
+import { useTheme, setTheme as applyTheme } from "@/lib/client/theme";
 export function SiteHeader() {
   const { user, cart, language, switchLanguage } = useStore(),
     router = useRouter(),
@@ -21,8 +22,9 @@ export function SiteHeader() {
     params = useSearchParams();
   const activeQuery = params.get("q") || "";
   const [search, setSearch] = useState(""),
-    [suggestions, setSuggestions] = useState<any[]>([]),
-    [theme, setTheme] = useState("dark");
+    [suggestions, setSuggestions] = useState<any[]>([]);
+  const theme = useTheme();
+  const searchInput = useRef<HTMLInputElement>(null);
   const [searchFocused, setSearchFocused] = useState(false);
   const [department, setDepartment] = useState("");
   const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
@@ -33,10 +35,14 @@ export function SiteHeader() {
     setSearch(pathname === "/search" ? activeQuery : "");
     setDepartment(pathname === "/search" ? params.get("category") || "" : "");
   }, [pathname, activeQuery]);
-  useEffect(
-    () => setTheme(document.documentElement.dataset.theme || "dark"),
-    [],
-  );
+  useEffect(() => {
+    const focusSearch = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || (e.target as HTMLElement).closest('input,textarea,select,[contenteditable]')) return;
+      e.preventDefault(); searchInput.current?.focus({ preventScroll: true });
+    };
+    window.addEventListener('keydown', focusSearch);
+    return () => window.removeEventListener('keydown', focusSearch);
+  }, []);
   useEffect(() => {
     if (search.trim().length < 2) {
       setSuggestions([]);
@@ -60,12 +66,9 @@ export function SiteHeader() {
   const count = cart.items
     .filter((i: any) => !i.saved_for_later)
     .reduce((s: number, i: any) => s + i.quantity, 0);
-  const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
-    document.documentElement.style.colorScheme = next;
-    localStorage.setItem("styleshopz-theme", next);
+  const toggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    applyTheme(theme === "dark" ? "light" : "dark", { x: r.left + r.width / 2, y: r.top + r.height / 2 });
   };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +101,7 @@ export function SiteHeader() {
           <ArrowRight size={12} />
         </Link>
       </div>
-      <header className="shop-header">
+      <header className="shop-header" style={{ viewTransitionName: 'site-header' }}>
         <div className="header-inner">
           <Link href="/" className="brand" aria-label="styleshopZ home">
             <span className="brand-mark">
@@ -114,6 +117,7 @@ export function SiteHeader() {
             </select>
             <MagnifyingGlass size={21} />
             <input
+              ref={searchInput}
               type="search"
               name="q"
               enterKeyHint="search"

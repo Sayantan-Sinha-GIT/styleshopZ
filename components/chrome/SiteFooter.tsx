@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { SpringLetters, Magnetic } from "@/components/fx/more";
 export function SiteFooter() {
   return (
     <footer className="shop-footer">
+      <div className="storefront-wrap footer-scene">
+        <SpringLetters>Find. Buy. <em>Track.</em></SpringLetters>
+        <p>The everyday find, wherever you are. Take styleshopZ with you on Android.</p>
+        <Magnetic><a className="button" href="/downloads/styleshopz-1.2.0.apk">Get the Android app <ArrowUpRight size={20}/></a></Magnetic>
+        <svg className="footer-route" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 65C180 65 220 10 400 35S650 85 800 40 1080 5 1200 40"/><path d="M0 65C180 65 220 10 400 35S650 85 800 40 1080 5 1200 40"/></svg>
+      </div>
       <div className="footer-inner">
         <div>
           <Link href="/" className="brand">

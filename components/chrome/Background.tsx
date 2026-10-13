@@ -23,6 +23,8 @@ export function Background() {
     let raf = 0;
     let vel = 0;
     let lastScroll = window.scrollY;
+    let seed = 7;
+    const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -61,13 +63,14 @@ export function Background() {
       ctx.setTransform(d, 0, 0, d, 0, 0);
 
       const count = w < 700 ? 12 : 24;
+      seed = 7;
       particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        s: 4 + Math.random() * 8,
-        r: Math.random() * 6,
-        v: 0.08 + Math.random() * 0.2,
-        t: Math.floor(Math.random() * 3),
+        x: random() * w,
+        y: random() * h,
+        s: 4 + random() * 8,
+        r: random() * 6,
+        v: 0.08 + random() * 0.2,
+        t: Math.floor(random() * 3),
       }));
 
       tc = getRgb();
@@ -115,12 +118,12 @@ export function Background() {
         p.r += 0.003;
         if (p.y < -20) {
           p.y = h + 20;
-          p.x = Math.random() * w;
+          p.x = random() * w;
         }
       });
 
       paint();
-      raf = requestAnimationFrame(loop);
+      if (!document.hidden) raf = requestAnimationFrame(loop);
     };
 
     window.addEventListener("resize", resize);
@@ -129,10 +132,13 @@ export function Background() {
     if (!reduce) {
       raf = requestAnimationFrame(loop);
     }
+    const visibility = () => { cancelAnimationFrame(raf); if (!document.hidden && !reduce) raf = requestAnimationFrame(loop); };
+    document.addEventListener('visibilitychange', visibility);
 
     return () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange', visibility);
     };
   }, [theme]);
 

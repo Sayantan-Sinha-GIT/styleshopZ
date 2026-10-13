@@ -50,7 +50,7 @@ export function MaskLines({
     { scope: ref },
   );
   return (
-    <Tag ref={ref} className={`${HIDDEN_UNTIL_JS} ${className}`}>
+    <Tag ref={ref} className={className}>
       {children}
     </Tag>
   );
@@ -230,7 +230,7 @@ export function ExpandMedia({
   const ref = useRef<HTMLElement>(null);
   useGSAP(
     () => {
-      gsap.matchMedia().add(MOTION_OK, () => {
+      gsap.matchMedia().add(`(min-width: 768px) and ${MOTION_OK}`, () => {
         gsap
           .timeline({ scrollTrigger: { trigger: ref.current, start: 'top top', end: '+=150%', pin: true, scrub: 0.6 } })
           .fromTo('[data-expand-media]', { clipPath: 'inset(18% 22% 18% 22% round 32px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none' })
@@ -249,7 +249,7 @@ export function ExpandMedia({
         <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />
       </div>
       {children && (
-        <div data-expand-copy className={`relative flex h-full items-end bg-linear-to-t from-ink/80 via-ink/20 to-transparent p-6 sm:p-12 ${HIDDEN_UNTIL_JS}`}>
+        <div data-expand-copy className="relative flex h-full items-end bg-linear-to-t from-ink/80 via-ink/20 to-transparent p-6 sm:p-12">
           {children}
         </div>
       )}

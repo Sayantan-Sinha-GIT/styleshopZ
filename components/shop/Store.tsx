@@ -413,7 +413,7 @@ export function Field({
   return (
     <label className="field">
       <span>{label}</span>
-      <input {...props} />
+      <input aria-label={label} {...props} />
     </label>
   );
 }
@@ -425,7 +425,7 @@ export function SelectField({
   return (
     <label className="field">
       <span>{label}</span>
-      <select {...props}>{children}</select>
+      <select aria-label={label} {...props}>{children}</select>
     </label>
   );
 }

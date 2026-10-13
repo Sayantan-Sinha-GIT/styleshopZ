@@ -1,21 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
+import { Big_Shoulders, Hanken_Grotesk, Instrument_Serif, DM_Mono, Noto_Sans_Devanagari } from "next/font/google";
 import { Suspense } from "react";
 import { StoreProvider } from "@/components/shop/Store";
 import { SiteHeader } from "@/components/chrome/SiteHeader";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { THEME_BOOT_SCRIPT } from "@/lib/themeScript";
+import { Providers } from "@/components/chrome/Providers";
+import { Background } from "@/components/chrome/Background";
+import { PageShell } from "@/components/chrome/PageShell";
 import "./globals.css";
-const body = Plus_Jakarta_Sans({
+import "./storefront.css";
+const body = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
 });
-const display = Outfit({
+const display = Big_Shoulders({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
 });
+const editorial = Instrument_Serif({ weight: "400", style: "italic", subsets: ["latin"], variable: "--font-editorial", display: "swap" });
+const mono = DM_Mono({ weight: "500", subsets: ["latin"], variable: "--font-data", display: "swap" });
+const hindi = Noto_Sans_Devanagari({ subsets: ["devanagari"], variable: "--font-hindi", display: "swap" });
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ||
@@ -45,19 +52,19 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
-      <body className={`${body.variable} ${display.variable}`}>
+      <body className={`${body.variable} ${display.variable} ${editorial.variable} ${mono.variable} ${hindi.variable}`}>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <StoreProvider>
+        <Providers><Background /><StoreProvider>
           <Suspense fallback={null}>
             <SiteHeader />
           </Suspense>
-          <main id="main" className="shop-main">
+          <PageShell className="shop-main">
             {children}
-          </main>
+          </PageShell>
           <SiteFooter />
-        </StoreProvider>
+        </StoreProvider></Providers>
       </body>
     </html>
   );
