@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, CaretLeft, CaretRight, Pause, Play, Package, MagnifyingGlass, ShoppingBag, MapPin, Heart } from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
-import { MaskLines, HorizontalPan, ExpandMedia } from "@/components/fx/scroll";
+import { MaskLines, HorizontalPan } from "@/components/fx/scroll";
 import { Magnetic, Marquee, OpenSheet, SpringLetters } from "@/components/fx/more";
 import { ProductCard, State, useData, useStore, api, type Item } from "./Store";
 import { getCategoryCover } from "@/lib/images";
@@ -103,7 +103,6 @@ export function StorefrontHome() {
       <State loading={products.loading} error={products.error} retry={products.refresh}><div className="product-grid">{products.data?.products.map((p: Item) => <ProductCard product={p} key={p.id}/>)}</div></State>
     </section>
 
-    <ExpandMedia src="/photos/categories/home-kitchen.webp" alt="A bright kitchen with warm wooden surfaces and everyday home essentials" className="home-photo-moment"><div><h2 className="display-section">A home that<br/><em>feels like you.</em></h2><Link href="/search?category=home-kitchen" className="button">Explore home & kitchen <ArrowUpRight size={20}/></Link></div></ExpandMedia>
 
     <section className="storefront-wrap shopping-loop" id="loop">
       <MaskLines className="display-section">Your find. Your way.</MaskLines>
