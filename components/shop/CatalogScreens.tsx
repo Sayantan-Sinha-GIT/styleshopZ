@@ -983,22 +983,28 @@ function Similar({ category, exclude }: { category: string; exclude: string }) {
   ) : null;
 }
 export function CompareScreen() {
-  const p = useSearchParams();
-  const [ids, setIds] = useState(p.get("ids") || ""),
-    [input, setInput] = useState(""),
+  const p = useSearchParams(), router = useRouter();
+  const ids = [...new Set((p.get("ids") || "").split(",").filter(Boolean))].slice(0, 4);
+  const idList = ids.join(",");
+  const [input, setInput] = useState(""),
     [products, setProducts] = useState<Item[]>([]),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [loading, setLoading] = useState(false),
+    [adding, setAdding] = useState(false);
+  const setIds = (next: string[]) => router.replace("/compare" + (next.length ? "?ids=" + next.join(",") : ""), { scroll: false });
   useEffect(() => {
-    Promise.all(
-      ids
-        .split(",")
-        .filter(Boolean)
-        .slice(0, 4)
-        .map((id) => api("products/" + id)),
-    )
-      .then(setProducts)
-      .catch((e) => setError(e.message));
-  }, [ids]);
+    let active = true;
+    setError("");
+    setLoading(true);
+    Promise.allSettled(ids.map((id) => api("products/" + encodeURIComponent(id))))
+      .then((results) => {
+        if (!active) return;
+        setProducts(results.flatMap((r) => r.status === "fulfilled" ? [r.value] : []));
+        if (results.some((r) => r.status === "rejected")) setError("A product could not be loaded. Remove unavailable products or clear the comparison to try again.");
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [idList]);
   return (
     <div className="page">
       <div className="page-title">
@@ -1010,23 +1016,42 @@ export function CompareScreen() {
       </div>
       <form
         className="row"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          const id = input.trim().split("/").pop();
-          if (id && !ids.split(",").includes(id) && ids.split(",").length < 4)
-            setIds(ids ? ids + "," + id : id);
-          setInput("");
+          setError("");
+          let id = input.trim();
+          if (id.includes("/")) {
+            try { id = new URL(id, location.origin).pathname.replace(/\/+$/, "").split("/").pop() || ""; }
+            catch { setError("Paste a product link or product ID from this shop."); return; }
+          }
+          if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) { setError("Paste a product link or product ID from this shop."); return; }
+          if (ids.includes(id)) { setError("That product is already in your comparison."); return; }
+          if (ids.length >= 4) { setError("Compare up to four products. Remove one before adding another."); return; }
+          setAdding(true);
+          try {
+            await api("products/" + id);
+            setIds([...ids, id]);
+            setInput("");
+          } catch (e: any) { setError(e.message); }
+          finally { setAdding(false); }
         }}
       >
         <input
           aria-label="Product link to compare"
+          placeholder="Paste a product link or ID"
+          required
+          maxLength={2048}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           style={{ maxWidth: 500 }}
         />
-        <button className="button secondary">Add product</button>
+        <button className="button secondary" disabled={adding}>{adding ? "Checking…" : "Add product"}</button>
+        {!!ids.length && <button type="button" className="button quiet" onClick={() => setIds([])}>Clear comparison</button>}
       </form>
       <ErrorText error={error} />
+      {!ids.length && <Empty title="Find your favourites, then compare" link="/search" label="Browse products">Open a product and choose Compare, or paste its link above.</Empty>}
+      {ids.some(id => !products.some(d => d.product.id === id)) && !loading && <div className="chips space-top">{ids.filter(id => !products.some(d => d.product.id === id)).map(id => <button key={id} className="button quiet small" onClick={() => setIds(ids.filter(value => value !== id))}>Remove unavailable product</button>)}</div>}
+      <State loading={loading}>
       <div className="product-grid space-top">
         {products.map((d) => (
           <div className="panel" key={d.product.id}>
@@ -1059,9 +1084,11 @@ export function CompareScreen() {
             <Link className="button full" href={"/products/" + d.product.id}>
               View product
             </Link>
+            <button type="button" className="button quiet full space-top" aria-label={"Remove " + d.product.title + " from comparison"} onClick={() => setIds(ids.filter(id => id !== d.product.id))}>Remove from comparison</button>
           </div>
         ))}
       </div>
+      </State>
     </div>
   );
 }

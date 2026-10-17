@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { randomBytes, randomInt, createHmac } from 'node:crypto';
 import { firebaseConfig } from '../firebase-config';
 import { query, transaction } from './db';
-import { assert, text } from './rules';
+import { assert, text, passwordText } from './rules';
 import { cookie, sessionToken, rate, requireUser } from './session';
 
 const keys = createRemoteJWKSet(new URL('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'));
@@ -76,7 +76,8 @@ export async function emailReset(req:Request,b:any) {
   assert(emailReady(),'Password recovery is awaiting the shop owner’s Brevo configuration.',503);
   const [u]=await query("SELECT * FROM users WHERE email=$1 AND deleted_at IS NULL AND role<>'admin'",[email]);
   if(!b.code){if(u)await sendCode(u,'reset');return {ok:true,message:'If this account exists, an eight-digit reset code has been sent.'};}
-  const code=text(b.code,'Reset code',8,8), password=text(b.password,'Password',8,72);
+  const code=text(b.code,'Reset code',8,8), password=passwordText(b.password);
+  assert(/^\d{8}$/.test(code),'Enter the eight-digit code.');
   const hash=await bcrypt.hash(password,10);
   await transaction(async q=>{
     const [r]=u ? await q("SELECT * FROM email_codes WHERE user_id=$1 AND purpose='reset' AND code_hash=$2 AND used_at IS NULL AND expires_at>NOW() FOR UPDATE",[u.id,codeHash(u.id,'reset',code)]) : [];

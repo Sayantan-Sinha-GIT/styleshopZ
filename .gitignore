@@ -28,6 +28,35 @@
 # misc
 .DS_Store
 *.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+key.properties
+
+# Local credentials and owner-only notes
+*[Aa][Pp][Ii]*[Kk][Ee][Yy]*.txt
+*[Ss][Ee][Cc][Rr][Ee][Tt]*.txt
+*[Tt][Oo][Kk][Ee][Nn]*.txt
+*[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]*.txt
+*service-account*.json
+*service_account*.json
+*-firebase-adminsdk-*.json
+credentials*.json
+.dev.vars*
+OWNER_ACCESS.txt
+/.qa/
+/.impeccable/
+/PLAYBOOK.txt
+/START_HERE.txt
+/PROGRESS.md
+/DESIGN_NOTES.md
+/PRODUCT.md
+/DESIGN.md
+/my-design/
+/design-inspire/
+/.reference/
 
 # debug
 npm-debug.log*

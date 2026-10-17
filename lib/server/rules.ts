@@ -35,7 +35,12 @@ export function uuid(value: unknown): string {
       ),
     "Invalid record ID.",
   );
-  return value;
+  return value.toLowerCase();
+}
+export function passwordText(value: unknown): string {
+  const password = text(value, "Password", 8, 72);
+  assert(new TextEncoder().encode(password).length <= 72, "Password must fit within 72 UTF-8 bytes. Use fewer characters.");
+  return password;
 }
 export function integer(
   value: unknown,
@@ -43,6 +48,11 @@ export function integer(
   max: number,
   label = "Quantity",
 ): number {
+  assert(
+    typeof value === "number" ||
+      (typeof value === "string" && value.trim().length > 0),
+    `${label} must be a whole number from ${min} to ${max}.`,
+  );
   const n = Number(value);
   assert(
     Number.isSafeInteger(n) && n >= min && n <= max,
@@ -86,10 +96,13 @@ export function lineItems(
     Array.isArray(value) && value.length > 0 && value.length <= 50,
     "Choose between 1 and 50 items.",
   );
-  const items = value.map((v) => ({
-    variantId: uuid(v.variantId),
-    quantity: integer(v.quantity, 1, 10),
-  }));
+  const items = value.map((v) => {
+    assert(v && typeof v === "object" && !Array.isArray(v), "Choose valid cart items.");
+    return {
+      variantId: uuid(v.variantId),
+      quantity: integer(v.quantity, 1, 10),
+    };
+  });
   assert(
     new Set(items.map((v) => v.variantId)).size === items.length,
     "Combine duplicate variants in your cart.",
@@ -140,4 +153,9 @@ export function safeImage(value: any) {
     "Use a shop image or an uploaded image.",
   );
   return value;
+}
+export function safeShopLink(value: unknown) {
+  const link = text(value, "Link", 1, 200);
+  assert(link.startsWith("/") && !link.startsWith("//") && !/[\\\u0000-\u001f\u007f]/.test(link), "Use an internal shop link.");
+  return link;
 }

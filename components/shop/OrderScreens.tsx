@@ -174,6 +174,7 @@ export function CartScreen() {
                     : "/login?next=/checkout"
                 }
                 aria-disabled={!items.length}
+                onClick={(e) => { if (!items.length) e.preventDefault(); }}
               >
                 {user ? "Continue to checkout" : "Sign in to checkout"}
                 <ArrowRight size={17} />
@@ -347,9 +348,11 @@ function Checkout() {
       active = false;
     };
   }, [delivery]);
-  const subtotal = cart.subtotalPaise,
-    fee = delivery === "express" ? 9900 : subtotal >= 49900 ? 0 : 4000,
-    total = subtotal + fee - (coupon?.discountPaise || 0);
+  const subtotal = pendingOrder?.subtotalPaise ?? cart.subtotalPaise,
+    fee = pendingOrder?.deliveryFeePaise ?? (delivery === "express" ? 9900 : subtotal >= 49900 ? 0 : 4000),
+    visibleCoupon = pendingOrder ? pendingOrder.coupon : coupon,
+    total = pendingOrder?.totalPaise ?? (subtotal + fee - (visibleCoupon?.discountPaise || 0)),
+    summaryItems = pendingOrder?.summaryItems ?? items;
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true);
@@ -377,7 +380,7 @@ function Checkout() {
         batchId: reservation?.batchId,
         idempotencyKey: key.current,
       });
-      setPendingOrder(o);
+      setPendingOrder({ ...o, subtotalPaise: subtotal, deliveryFeePaise: fee, coupon, summaryItems: items });
       await refreshCart(true);
       if (o.paymentMethod === "razorpay") await payRazorpay(o, o.keyId);
       router.push("/orders/" + o.orderId);
@@ -417,7 +420,7 @@ function Checkout() {
         </>
       ) : (
         <form onSubmit={submit} className="two-columns">
-          <div className="stack">
+          <fieldset className="stack" disabled={!!pendingOrder} style={{ padding: 0, margin: 0, border: 0, minWidth: 0 }}>
             <section className="panel">
               <h2>Where should it go?</h2>
               <State
@@ -543,10 +546,10 @@ function Checkout() {
                 )}
               </div>
             </section>
-          </div>
+          </fieldset>
           <aside className="panel summary">
             <h2>Your order</h2>
-            {items.map((i: Item) => (
+            {summaryItems.map((i: Item) => (
               <div className="summary-line" key={i.variant_id}>
                 <span>
                   {i.quantity} × {i.title}
@@ -564,10 +567,10 @@ function Checkout() {
               <span>Delivery</span>
               <span>{money(fee)}</span>
             </div>
-            {coupon && (
+            {visibleCoupon && (
               <div className="summary-line">
-                <span>{coupon.code}</span>
-                <span>−{money(coupon.discountPaise)}</span>
+                <span>{visibleCoupon.code}</span>
+                <span>−{money(visibleCoupon.discountPaise)}</span>
               </div>
             )}
             <div className="summary-line summary-total">
@@ -580,11 +583,13 @@ function Checkout() {
                 aria-label="Coupon code"
                 placeholder="Coupon code"
                 value={code}
+                disabled={!!pendingOrder}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
               />
               <button
                 className="button secondary"
                 type="button"
+                disabled={!!pendingOrder}
                 onClick={async () => {
                   setError("");
                   try {

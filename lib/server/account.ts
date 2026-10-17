@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { randomUUID } from "node:crypto";
 import { query, transaction } from "./db";
-import { assert, text, address, uuid, integer } from "./rules";
+import { assert, text, address, uuid, integer, passwordText } from "./rules";
 import { rate, requireUser, sessionToken, cookie } from "./session";
 import { cartItems, photo, notify } from "./catalog";
 import { demoEnabled } from "./commerce";
@@ -13,7 +13,7 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
     "Enter a valid email address.",
   );
-  const password = text(b.password, "Password", 8, 72);
+  const password = passwordText(b.password);
   await rate(
     `login:${email}:${req.headers.get("cf-connecting-ip") || "local"}`,
     5,
@@ -128,14 +128,15 @@ export async function cartMutation(
         "Cart has too many items.",
       );
       for (const item of entries) {
+        assert(item && typeof item === "object" && !Array.isArray(item), "Choose valid cart items.");
         const variantId = uuid(item.variantId),
           qty = integer(item.quantity ?? 1, 1, 10);
         const [v] = await q(
-          "SELECT v.stock,p.status,p.deleted_at FROM variants v JOIN products p ON p.id=v.product_id WHERE v.id=$1",
+          "SELECT v.stock,p.status,p.deleted_at,s.status seller_status FROM variants v JOIN products p ON p.id=v.product_id JOIN sellers s ON s.id=p.seller_id WHERE v.id=$1",
           [variantId],
         );
         assert(
-          v && v.status === "live" && !v.deleted_at && v.stock > 0,
+          v && v.status === "live" && !v.deleted_at && v.seller_status === "approved" && v.stock > 0,
           "This item is unavailable.",
           409,
         );
@@ -275,7 +276,7 @@ export async function wishlists(
       [u.id],
     );
     const items = await query(
-      `SELECT wi.*,p.title,p.id product_id,c.name category_name,v.price_paise,v.stock,v.options,w.name list_name FROM wishlist_items wi JOIN wishlists w ON w.id=wi.wishlist_id JOIN variants v ON v.id=wi.variant_id JOIN products p ON p.id=v.product_id JOIN categories c ON c.id=p.category_id WHERE w.user_id=$1 ORDER BY wi.created_at DESC`,
+      `SELECT wi.*,p.title,p.id product_id,c.name category_name,v.price_paise,v.stock,v.options,w.name list_name,(p.status='live' AND p.deleted_at IS NULL AND s.status='approved' AND v.stock>0) in_stock FROM wishlist_items wi JOIN wishlists w ON w.id=wi.wishlist_id JOIN variants v ON v.id=wi.variant_id JOIN products p ON p.id=v.product_id JOIN sellers s ON s.id=p.seller_id JOIN categories c ON c.id=p.category_id WHERE w.user_id=$1 ORDER BY wi.created_at DESC`,
       [u.id],
     );
     return { lists, items: items.map(photo) };

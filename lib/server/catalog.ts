@@ -10,8 +10,12 @@ export function photo(row: Row): Row {
       getProductImage(row.title, row.category_name || row.category),
   };
 }
+// A quoted test payment keeps its promotional units until it is paid,
+// cancelled, or expires. Count every customer's pending order, including this
+// customer's other orders; stock holds alone do not reserve a deal price.
+export const pendingDealQuantity = (alias = "deals") => `COALESCE((SELECT SUM(pending_item.quantity) FROM order_items pending_item JOIN orders pending_order ON pending_order.id=pending_item.order_id WHERE pending_item.variant_snapshot->>'deal_id'=${alias}.id::text AND pending_order.status='awaiting_payment' AND pending_order.payment_expires_at>NOW()),0)`;
 export const priceJoins = `JOIN variants v ON v.product_id=p.id
-  LEFT JOIN LATERAL(SELECT id,deal_price_paise,ends_at,quantity_cap,sold_count FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count<quantity_cap ORDER BY deal_price_paise LIMIT 1) d ON TRUE`;
+  LEFT JOIN LATERAL(SELECT id,deal_price_paise,ends_at,quantity_cap,sold_count FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count+${pendingDealQuantity()}<quantity_cap ORDER BY deal_price_paise LIMIT 1) d ON TRUE`;
 export async function catalogue(params: URLSearchParams, q: Query = query): Promise<{products:Row[];count:number;limit:number;offset:number;brands:Row[];fuzzy:boolean}> {
   const values: any[] = [];
   const param = (v: any) => {
@@ -102,7 +106,7 @@ export async function catalogue(params: URLSearchParams, q: Query = query): Prom
 }
 export async function categories() {
   const flat = await query(
-    `WITH RECURSIVE paths AS(SELECT id,id ancestor FROM categories UNION ALL SELECT c.id,p.ancestor FROM categories c JOIN paths p ON c.parent_id=p.id) SELECT c.*,COUNT(DISTINCT p.id)::int product_count FROM categories c LEFT JOIN paths path ON path.ancestor=c.id LEFT JOIN products p ON p.category_id=path.id AND p.status='live' AND p.deleted_at IS NULL GROUP BY c.id ORDER BY c.level,c.name`,
+    `WITH RECURSIVE paths AS(SELECT id,id ancestor FROM categories UNION ALL SELECT c.id,p.ancestor FROM categories c JOIN paths p ON c.parent_id=p.id) SELECT c.*,COUNT(DISTINCT p.id)::int product_count FROM categories c LEFT JOIN paths path ON path.ancestor=c.id LEFT JOIN products p ON p.category_id=path.id AND p.status='live' AND p.deleted_at IS NULL AND EXISTS(SELECT 1 FROM sellers s WHERE s.id=p.seller_id AND s.status='approved') GROUP BY c.id ORDER BY c.level,c.name`,
   );
   return {
     flat,
@@ -161,13 +165,13 @@ export async function productDetail(id: string) {
 }
 export async function cartItems(userId: string, q: Query = query) {
   const rows = await q(
-    `SELECT ci.id cart_item_id,ci.variant_id,ci.quantity,ci.saved_for_later,p.id product_id,p.title,p.brand,c.name category_name,v.options,v.stock,v.price_paise,v.mrp_paise,COALESCE(d.deal_price_paise,v.price_paise) unit_price_paise,(SELECT url FROM product_images WHERE product_id=p.id ORDER BY sort_order LIMIT 1) image_url,p.status product_status FROM cart_items ci JOIN carts cart ON cart.id=ci.cart_id JOIN variants v ON v.id=ci.variant_id JOIN products p ON p.id=v.product_id JOIN categories c ON c.id=p.category_id LEFT JOIN LATERAL(SELECT deal_price_paise FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count<quantity_cap ORDER BY deal_price_paise LIMIT 1)d ON TRUE WHERE cart.user_id=$1 ORDER BY ci.created_at DESC`,
+    `SELECT ci.id cart_item_id,ci.variant_id,ci.quantity,ci.saved_for_later,p.id product_id,p.title,p.brand,c.name category_name,v.options,v.stock,v.price_paise,v.mrp_paise,COALESCE(d.deal_price_paise,v.price_paise) unit_price_paise,(SELECT url FROM product_images WHERE product_id=p.id ORDER BY sort_order LIMIT 1) image_url,p.status product_status,p.deleted_at product_deleted_at,s.status seller_status FROM cart_items ci JOIN carts cart ON cart.id=ci.cart_id JOIN variants v ON v.id=ci.variant_id JOIN products p ON p.id=v.product_id JOIN sellers s ON s.id=p.seller_id JOIN categories c ON c.id=p.category_id LEFT JOIN LATERAL(SELECT deal_price_paise FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count+${pendingDealQuantity()}<quantity_cap ORDER BY deal_price_paise LIMIT 1)d ON TRUE WHERE cart.user_id=$1 ORDER BY ci.created_at DESC`,
     [userId],
   );
   return {
     items: rows.map((r) => ({
       ...photo(r),
-      in_stock: r.product_status === "live" && r.stock >= r.quantity,
+      in_stock: r.product_status === "live" && !r.product_deleted_at && r.seller_status === "approved" && r.stock >= r.quantity,
     })),
     subtotalPaise: rows
       .filter((r) => !r.saved_for_later)

@@ -19,6 +19,7 @@ const display = Big_Shoulders({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  adjustFontFallback: false,
 });
 const editorial = Instrument_Serif({ weight: "400", style: "italic", subsets: ["latin"], variable: "--font-editorial", display: "swap" });
 const mono = DM_Mono({ weight: "500", subsets: ["latin"], variable: "--font-data", display: "swap" });

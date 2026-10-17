@@ -17,13 +17,20 @@ import {
 
 export type Item = Record<string, any>;
 export async function api(path: string, method = "GET", body?: any) {
-  const r = await fetch("/api/" + path, {
-    method,
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-    cache: "no-store",
-  });
-  const data = await r.json();
+  let r: Response;
+  try {
+    r = await fetch("/api/" + path, {
+      method,
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+      cache: "no-store",
+    });
+  } catch {
+    throw new Error("Could not connect to the shop. Check your connection and try again.");
+  }
+  let data;
+  try { data = await r.json(); }
+  catch { throw new Error("The shop is temporarily unavailable. Please try again."); }
   if (!r.ok)
     throw new Error(data.error || "Something went wrong. Please retry.");
   return data;
@@ -32,7 +39,12 @@ const Context = createContext<any>(null);
 const guestKey = "styleshopz.guest.v2";
 function guestItems() {
   try {
-    return JSON.parse(localStorage.getItem(guestKey) || "[]");
+    const saved = JSON.parse(localStorage.getItem(guestKey) || "[]");
+    return Array.isArray(saved) ? saved.filter((item: any) =>
+      item && typeof item.variantId === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.variantId) &&
+      Number.isInteger(item.quantity) && item.quantity >= 1 && item.quantity <= 10
+    ).slice(0, 50) : [];
   } catch {
     return [];
   }
@@ -93,7 +105,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         if (active) setReady(true);
       }
     })();
-    setLanguage(localStorage.getItem("styleshopz.language") || "en");
+    try {
+      const savedLanguage = localStorage.getItem("styleshopz.language") === "hi" ? "hi" : "en";
+      setLanguage(savedLanguage);
+      document.documentElement.lang = savedLanguage;
+    } catch {}
     const update = () => setOffline(!navigator.onLine);
     update();
     window.addEventListener("online", update);
@@ -164,7 +180,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
   const switchLanguage = (lang: string) => {
     setLanguage(lang);
-    localStorage.setItem("styleshopz.language", lang);
+    try { localStorage.setItem("styleshopz.language", lang); } catch {}
     document.documentElement.lang = lang;
   };
   return (

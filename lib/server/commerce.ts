@@ -11,7 +11,7 @@ import {
   transitions,
   canReturn,
 } from "./rules";
-import { notify, audit } from "./catalog";
+import { notify, audit, pendingDealQuantity } from "./catalog";
 
 export const razorpayEnabled = () =>
   /^rzp_test_[A-Za-z0-9]{14}$/.test(process.env.RAZORPAY_KEY_ID || "") &&
@@ -232,7 +232,7 @@ export async function createOrder(userId: string, payload: any) {
       const quantity = items.find((i) => i.variantId === v.id)!.quantity;
       await available(q, v, userId, quantity);
       const [deal] = await q(
-        "SELECT * FROM deals WHERE variant_id=$1 AND starts_at<=NOW() AND ends_at>NOW() AND sold_count+$2<=quantity_cap ORDER BY deal_price_paise LIMIT 1 FOR UPDATE",
+        `SELECT * FROM deals WHERE variant_id=$1 AND starts_at<=NOW() AND ends_at>NOW() AND sold_count+${pendingDealQuantity()}+$2<=quantity_cap ORDER BY deal_price_paise LIMIT 1 FOR UPDATE`,
         [v.id, quantity],
       );
       const price = Number(deal?.deal_price_paise ?? v.price_paise);
@@ -408,11 +408,20 @@ export async function paymentWebhook(req: Request) {
     "Invalid webhook signature.",
     401,
   );
-  const event = JSON.parse(raw);
+  let event;
+  try {
+    event = JSON.parse(raw);
+  } catch {
+    assert(false, "Invalid payment event.");
+  }
+  assert(event && typeof event === "object" && !Array.isArray(event), "Invalid payment event.");
   if (event.event !== "payment.captured") return { ok: true };
   const p = event.payload?.payment?.entity;
   assert(
-    p?.id && p?.order_id && p.currency === "INR" && p.status === "captured",
+    typeof p?.id === "string" && p.id.length > 0 &&
+      typeof p?.order_id === "string" && p.order_id.length > 0 &&
+      Number.isSafeInteger(p.amount) && p.amount >= 0 &&
+      p.currency === "INR" && p.status === "captured",
     "Invalid payment event.",
   );
   return transaction(async (q) => {
@@ -477,6 +486,7 @@ export async function paymentWebhook(req: Request) {
   });
 }
 export async function cancelOrder(userId: string, id: string, reason: string) {
+  const cancellationReason = text(reason, "Reason", 3, 500);
   return transaction(async (q) => {
     await lockUser(q, userId);
     const [o] = await q(
@@ -543,7 +553,7 @@ export async function cancelOrder(userId: string, id: string, reason: string) {
     await q("DELETE FROM stock_holds WHERE order_id=$1", [id]);
     await q(
       `INSERT INTO order_status_events(order_id,status,actor,note) VALUES($1,'cancelled','Customer',$2)`,
-      [id, text(reason, "Reason", 3, 500)],
+      [id, cancellationReason],
     );
     await notify(
       q,
@@ -638,12 +648,12 @@ export async function requestReturn(userId: string, b: any) {
   return transaction(async (q) => {
     await lockUser(q, userId);
     const [i] = await q(
-      `SELECT i.*,o.status order_status,COALESCE(i.delivered_at,(SELECT MIN(created_at) FROM order_status_events WHERE order_id=o.id AND status='delivered')) delivered_at FROM order_items i JOIN orders o ON o.id=i.order_id WHERE i.id=$1 AND o.user_id=$2 FOR UPDATE OF i`,
+      `SELECT i.*,o.status order_status,NOW() eligibility_checked_at,COALESCE(i.delivered_at,(SELECT MIN(created_at) FROM order_status_events WHERE order_id=o.id AND status='delivered')) delivered_at FROM order_items i JOIN orders o ON o.id=i.order_id WHERE i.id=$1 AND o.user_id=$2 FOR UPDATE OF i`,
       [uuid(b.orderItemId), userId],
     );
     assert(i, "Order item not found.", 404);
     assert(
-      canReturn(i.status, i.delivered_at),
+      canReturn(i.status, i.delivered_at, new Date(i.eligibility_checked_at).getTime()),
       "Returns are available within seven days of delivery.",
       409,
     );
@@ -688,9 +698,13 @@ export async function requestReturn(userId: string, b: any) {
 }
 export async function processReturn(u: Row, b: any) {
   return transaction(async (q) => {
+    const returnId = uuid(b.returnId);
+    const [owner] = await q("SELECT user_id FROM returns WHERE id=$1", [returnId]);
+    assert(owner, "Return not found.", 404);
+    await lockUser(q, owner.user_id);
     const [r] = await q(
-      `SELECT r.*,i.order_id,i.variant_id,i.quantity,o.payment_method,o.razorpay_payment_id,o.total_paise,o.subtotal_paise,o.discount_paise FROM returns r JOIN order_items i ON i.id=r.order_item_id JOIN orders o ON o.id=i.order_id WHERE r.id=$1 FOR UPDATE OF r`,
-      [uuid(b.returnId)],
+      `SELECT r.*,i.order_id,i.variant_id,i.quantity,o.payment_method,o.razorpay_payment_id,o.total_paise,o.subtotal_paise,o.discount_paise FROM returns r JOIN order_items i ON i.id=r.order_item_id JOIN orders o ON o.id=i.order_id WHERE r.id=$1 FOR UPDATE OF r,i,o`,
+      [returnId],
     );
     assert(r, "Return not found.", 404);
     assert(
@@ -700,17 +714,23 @@ export async function processReturn(u: Row, b: any) {
     if (!["requested", "pending"].includes(r.status))
       return { ok: true, status: r.status };
     let status = "rejected",
-      refundId = null;
+      refundId = null,
+      refundAmount = Number(r.amount_paise);
     if (b.action === "approve") {
+      const [prior] = await q("SELECT COALESCE(SUM(unit_price_paise*quantity),0)::bigint gross FROM order_items WHERE order_id=$1 AND id<$2", [r.order_id, r.order_item_id]);
+      // Allocate the order discount across stable item positions. Cumulative
+      // rounding makes all item refunds add up exactly, even for odd paise.
+      const gross = Number(r.amount_paise),
+        before = Number(prior.gross),
+        discount = Number(r.discount_paise),
+        subtotal = Math.max(1, Number(r.subtotal_paise)),
+        itemDiscount = Math.round((before + gross) * discount / subtotal) - Math.round(before * discount / subtotal);
       const amount = Math.min(
         Number(r.total_paise),
-        Math.round(
-          Number(r.amount_paise) *
-            (1 -
-              Number(r.discount_paise) / Math.max(1, Number(r.subtotal_paise))),
-        ),
+        Math.max(0, gross - itemDiscount),
       );
-      if (r.payment_method === "razorpay" && r.razorpay_payment_id) {
+      refundAmount = amount;
+      if (amount > 0 && r.payment_method === "razorpay" && r.razorpay_payment_id) {
         const refund = await razorpay(
           `payments/${r.razorpay_payment_id}/refund`,
           { amount, notes: { return_id: r.id } },
@@ -728,9 +748,11 @@ export async function processReturn(u: Row, b: any) {
       ]);
     }
     await q(
-      "UPDATE returns SET status=$2,refund_id=$3,updated_at=NOW() WHERE id=$1",
-      [r.id, status, refundId],
+      "UPDATE returns SET status=$2,refund_id=$3,amount_paise=$4,updated_at=NOW() WHERE id=$1",
+      [r.id, status, refundId, refundAmount],
     );
+    if (status === "refunded")
+      await q("UPDATE payments SET status='refunded' WHERE order_id=$1 AND amount_paise<=(SELECT COALESCE(SUM(r.amount_paise),0) FROM returns r JOIN order_items i ON i.id=r.order_item_id WHERE i.order_id=$1 AND r.status='refunded')", [r.order_id]);
     await notify(
       q,
       r.user_id,

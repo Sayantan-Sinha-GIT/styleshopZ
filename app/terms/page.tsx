@@ -2,8 +2,8 @@ export default function Page() {
   return (
     <article className="page narrow legal">
       <div className="page-title">
-        <h1>A few things before you shop</h1>
-        <p>Updated 11 October 2026 · Demonstration terms</p>
+        <h1>Terms and conditions</h1>
+        <p>Updated 15 October 2026 · Prototype terms</p>
       </div>
       <h2>A portfolio demonstration</h2>
       <p>
@@ -33,6 +33,14 @@ export default function Page() {
         real KYC documents, and do not upload unlawful or abusive material.
         Customer, seller and administrator permissions apply to every protected
         request. Moderation decisions and privileged changes are recorded.
+      </p>
+      <h2>Assistant and address tools</h2>
+      <p>
+        The shopping assistant may use Gemini or Groq. Its answers can be
+        incorrect; check the product page and order details before confirming an
+        action. It cannot arrange a real shipment. Map searches and delivery
+        pins help fill a demonstration address and may be inaccurate. Check the
+        house number, street and pincode yourself, or enter the address manually.
       </p>
       <h2>Availability and support</h2>
       <p>

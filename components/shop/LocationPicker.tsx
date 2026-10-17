@@ -26,7 +26,12 @@ export function LocationPicker({initial,onConfirm}:{initial?:Item;onConfirm:(a:I
     setLocating(true);setError('');
     try{
       let coords;
-      if(Capacitor.isNativePlatform()){const {Geolocation}=await import('@capacitor/geolocation');await Geolocation.requestPermissions();coords=(await Geolocation.getCurrentPosition({enableHighAccuracy:true,timeout:12000})).coords;}
+      if(Capacitor.isNativePlatform()){
+        const {Geolocation}=await import('@capacitor/geolocation');
+        const permission=await Geolocation.requestPermissions();
+        if(permission.location!=='granted' && permission.coarseLocation!=='granted')throw new Error('Location permission denied');
+        coords=(await Geolocation.getCurrentPosition({enableHighAccuracy:permission.location==='granted',timeout:12000})).coords;
+      }
       else coords=(await new Promise<GeolocationPosition>((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:12000,maximumAge:30000}))).coords;
       const p={lat:coords.latitude,lng:coords.longitude};setCenter(p);move(p);
     }catch{setError('Location access was unavailable. Search your address or drag the map to your building.');}finally{setLocating(false);}

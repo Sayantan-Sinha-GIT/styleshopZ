@@ -7,6 +7,7 @@ const base=process.env.TEST_BASE_URL || 'http://localhost:3000';
 const q=neon(process.env.DATABASE_URL).query;
 const email='discovery-'+randomUUID()+'@qa.invalid';
 const password='Fixture!'+randomUUID();
+const sellerUserId=randomUUID(),sellerId=randomUUID(),productId=randomUUID();
 let uid,session,addressId,orderId,stockBefore,variant;
 const checks=[];
 async function call(path,method='GET',body,cookie=session){const res=await fetch(base+'/api/'+path,{method,headers:{...(cookie?{Cookie:cookie}:{}),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});return {status:res.status,body:await res.json(),cookie:res.headers.get('set-cookie')};}
@@ -14,12 +15,18 @@ async function check(label,run){await run();checks.push(label);console.log('PASS
 try{
   const registered=await call('auth/register','POST',{email,password,name:'Discovery Fixture'},null);
   assert.equal(registered.status,200);uid=registered.body.user.id;session=registered.cookie.split(';')[0];
+  const [category]=await q('SELECT id FROM categories WHERE level=3 LIMIT 1');
+  await q("INSERT INTO users(id,email,password_hash,name,role,email_verified_at) VALUES($1::uuid,$1::uuid::text||'@qa.invalid','fixture-disabled','Discovery Seller Fixture','seller',NOW())",[sellerUserId]);
+  await q("INSERT INTO sellers(id,user_id,shop_name,status) VALUES($1,$2,'Discovery Fixture Shop','approved')",[sellerId,sellerUserId]);
+  await q("INSERT INTO products(id,seller_id,category_id,title,brand,description,status) VALUES($1,$2,$3,'Discovery isolated fixture','QA','Disposable QA product','live')",[productId,sellerId,category.id]);
+  variant=randomUUID();
+  await q("INSERT INTO variants(id,product_id,sku,price_paise,mrp_paise,stock) VALUES($1::uuid,$2,$1::uuid::text,100000,120000,2)",[variant,productId]);
   await check('expanded catalogue, synonyms, typo recovery, category isolation and stable pagination',async()=>{
     const all=await call('products');assert(all.body.count>=102);assert(all.body.products.every(p=>! / · \d+$/.test(p.title)));
-    const featured=await call('products?featured=true&limit=60');assert.equal(featured.body.count,102);
+    const featured=await call('products?featured=true&limit=60');assert(featured.body.count>=102);
     const mobile=await call('products?q=mobile');assert(mobile.body.products.some(p=>p.title.includes('smartphone')));
     const typo=await call('products?q=haedphones');assert(typo.body.fuzzy);assert(typo.body.products[0].title.includes('headphones'));
-    const shoes=await call('products?category=running-shoes');assert.equal(shoes.body.count,6);assert(shoes.body.products.every(p=>p.category_slug==='running-shoes'));
+    const shoes=await call('products?category=running-shoes');assert(shoes.body.count>=6);assert(shoes.body.products.every(p=>p.category_slug==='running-shoes'));
     const one=await call('products?q=headphones&limit=3'),two=await call('products?q=headphones&limit=3&offset=3');assert(!one.body.products.some(a=>two.body.products.some(b=>a.id===b.id)));
   });
   await check('Ola endpoints require a session and reject invalid coordinates',async()=>{
@@ -44,7 +51,7 @@ try{
   await check('delivery coordinates persist in saved addresses and order snapshots',async()=>{
     const saved=await call('addresses','POST',address);assert.equal(saved.status,200);addressId=saved.body.id;
     const profile=await call('profile');assert.equal(profile.body.addresses[0].latitude,address.latitude);
-    const product=(await call('products?featured=true&in_stock=true&limit=1')).body.products[0];variant=product.default_variant_id;stockBefore=(await q('SELECT stock FROM variants WHERE id=$1',[variant]))[0].stock;
+    stockBefore=(await q('SELECT stock FROM variants WHERE id=$1',[variant]))[0].stock;
     await call('cart','POST',{variantId:variant,quantity:1});
     const hold=await call('checkout/hold','POST',{items:[{variantId:variant,quantity:1}]});assert.equal(hold.status,200);
     const created=await call('checkout/create-order','POST',{items:[{variantId:variant,quantity:1}],address:profile.body.addresses[0],batchId:hold.body.batchId,idempotencyKey:randomUUID(),paymentMethod:'demo',delivery:'standard'});assert.equal(created.status,200);orderId=created.body.orderId;
@@ -56,4 +63,6 @@ try{
 }finally{
   if(orderId){await call('orders/'+orderId+'/cancel','POST',{reason:'Disposable integration cleanup'}).catch(()=>{});await q('DELETE FROM orders WHERE id=$1',[orderId]);}
   if(uid){await q('DELETE FROM stock_holds WHERE user_id=$1',[uid]);await q('DELETE FROM email_codes WHERE user_id=$1',[uid]);await q('DELETE FROM auth_identities WHERE user_id=$1',[uid]);await q('DELETE FROM users WHERE id=$1',[uid]);}
+  await q('DELETE FROM products WHERE id=$1',[productId]);
+  await q('DELETE FROM users WHERE id=$1',[sellerUserId]);
 }

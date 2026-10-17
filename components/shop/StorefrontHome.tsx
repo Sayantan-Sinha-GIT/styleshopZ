@@ -9,18 +9,26 @@ import { Magnetic, Marquee, OpenSheet, SpringLetters } from "@/components/fx/mor
 import { ProductCard, State, useData, useStore, api, type Item } from "./Store";
 import { getCategoryCover } from "@/lib/images";
 
-const campaigns = [
-  { name: "Sound, your way.", query: "headphones", image: "/photos/banner1.webp", alt: "Black over-ear headphones in warm studio light", link: "/search?q=headphones" },
-  { name: "Make room for ideas.", query: "laptops", image: "/photos/banner2.webp", alt: "Laptop and everyday desk essentials", link: "/search?category=laptops-computers" },
-  { name: "A little more everyday.", query: "smartwatches", image: "/photos/banner3.webp", alt: "Titanium smartwatch with a woven strap", link: "/search?category=smartwatches" },
+type Campaign = { id: string; name: string; query: string; image: string; alt: string; link: string };
+const fallbackCampaigns: Campaign[] = [
+  { id: "audio", name: "Sound, your way.", query: "headphones", image: "/photos/banner1.webp", alt: "Black over-ear headphones in warm studio light", link: "/search?q=headphones" },
+  { id: "desk", name: "Make room for ideas.", query: "laptops", image: "/photos/banner2.webp", alt: "Laptop and everyday desk essentials", link: "/search?category=laptops-computers" },
+  { id: "everyday", name: "A little more everyday.", query: "smartwatches", image: "/photos/banner3.webp", alt: "Titanium smartwatch with a woven strap", link: "/search?category=smartwatches" },
 ];
 
 export function StorefrontHome() {
   const products = useData("products?limit=8&featured=true");
   const cats = useData("categories");
   const deals = useData("deals");
+  const banners = useData("banners");
+  const campaigns: Campaign[] = banners.data?.banners?.length
+    ? banners.data.banners.map((b: Item) => ({ id: b.id, name: b.title, query: "Featured collection", image: b.image_url, alt: b.title, link: b.link_url }))
+    : fallbackCampaigns;
+  const campaignSignature = campaigns.map(c => c.id).join(",");
   const { language } = useStore();
-  const reduced = useReducedMotion();
+  const prefersReduced = useReducedMotion();
+  const [hydrated, setHydrated] = useState(false);
+  const reduced = !hydrated || prefersReduced;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [interacting, setInteracting] = useState(false);
@@ -28,6 +36,8 @@ export function StorefrontHome() {
   const [recent, setRecent] = useState<Item[]>([]);
   const stage = useRef<HTMLElement>(null);
   const touch = useRef<number | null>(null);
+  useEffect(() => { setHydrated(true); }, []);
+  useEffect(() => { setActive(0); }, [campaignSignature]);
   useEffect(() => {
     let live = true;
     try {
@@ -46,11 +56,12 @@ export function StorefrontHome() {
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', visibility); };
   }, []);
   useEffect(() => {
-    if (paused || reduced || interacting || !visible) return;
+    if (paused || reduced || interacting || !visible || campaigns.length < 2) return;
     const timer = setInterval(() => setActive(a => (a + 1) % campaigns.length), 6000);
     return () => clearInterval(timer);
-  }, [paused, reduced, interacting, visible]);
-  const campaign = campaigns[active];
+  }, [paused, reduced, interacting, visible, campaigns.length, campaignSignature]);
+  const activeIndex = active % campaigns.length;
+  const campaign = campaigns[activeIndex];
   const shelf: Item[] = deals.data?.deals?.length ? deals.data.deals.slice(0, 4) : products.data?.products?.slice(0, 4) || [];
   return <div className="storefront">
     <section className="motion-hero storefront-wrap" ref={stage}>
@@ -62,18 +73,18 @@ export function StorefrontHome() {
       <div className="orbit-stage" aria-roledescription="carousel" aria-label="Featured collections"
         onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
         onFocusCapture={() => setInteracting(true)} onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) setInteracting(false); }}
-        onTouchStart={e => { touch.current = e.touches[0].clientX; }} onTouchEnd={e => { if (touch.current !== null) { const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 60) setActive(a => (a + (dx < 0 ? 1 : 2)) % 3); touch.current = null; } }}>
+        onTouchStart={e => { touch.current = e.touches[0].clientX; }} onTouchEnd={e => { if (touch.current !== null) { const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 60) setActive(a => (a + (dx < 0 ? 1 : -1) + campaigns.length) % campaigns.length); touch.current = null; } }}>
         <svg className="orbit-lines" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="284"/><circle cx="300" cy="300" r="240"/><path d="M16 300h44m480 0h44M300 16v44m0 480v44"/></svg>
         <Link className="orbit-query" href={campaign.link}><MagnifyingGlass size={18}/><span>{campaign.query}</span><ArrowUpRight size={16}/></Link>
         <div className="orbit-photograph">
-          {campaigns.map((c, i) => <img key={c.image} src={c.image} alt={i === active ? c.alt : ''} aria-hidden={i !== active} className={i === active ? 'active' : ''} fetchPriority={i === 0 ? 'high' : 'auto'}/>)}
+          {campaigns.map((c, i) => <img key={c.id} src={c.image} alt={i === activeIndex ? c.alt : ''} aria-hidden={i !== activeIndex} className={i === activeIndex ? 'active' : ''} fetchPriority={i === 0 ? 'high' : 'auto'}/>)}
         </div>
-        <div className="orbit-caption" key={active}><Link href={campaign.link}>{campaign.name}<ArrowUpRight size={22}/></Link></div>
+        <div className="orbit-caption" key={campaign.id}><Link href={campaign.link}><span>{campaign.name}</span><ArrowUpRight size={22}/></Link></div>
         <div className="campaign-controls">
-          <button aria-label="Previous collection" onClick={() => setActive(a => (a + 2) % 3)}><CaretLeft size={18}/></button>
-          {campaigns.map((c, i) => <button key={c.name} aria-label={`Show collection ${i + 1}`} aria-pressed={i === active} className="campaign-position" onClick={() => setActive(i)}><span/></button>)}
-          <button aria-label="Next collection" onClick={() => setActive(a => (a + 1) % 3)}><CaretRight size={18}/></button>
-          {!reduced && <button aria-label={paused ? 'Play featured collections' : 'Pause featured collections'} onClick={() => setPaused(p => !p)}>{paused ? <Play size={16}/> : <Pause size={16}/>}</button>}
+          <button aria-label="Previous collection" disabled={campaigns.length < 2} onClick={() => setActive(a => (a + campaigns.length - 1) % campaigns.length)}><CaretLeft size={18}/></button>
+          {campaigns.map((c, i) => <button key={c.id} aria-label={`Show collection ${i + 1}`} aria-pressed={i === activeIndex} className="campaign-position" onClick={() => setActive(i)}><span/></button>)}
+          <button aria-label="Next collection" disabled={campaigns.length < 2} onClick={() => setActive(a => (a + 1) % campaigns.length)}><CaretRight size={18}/></button>
+          {!reduced && campaigns.length > 1 && <button aria-label={paused ? 'Play featured collections' : 'Pause featured collections'} onClick={() => setPaused(p => !p)}>{paused ? <Play size={16}/> : <Pause size={16}/>}</button>}
         </div>
       </div>
       <div className="order-journey" aria-label="Example order journey, simulated delivery">

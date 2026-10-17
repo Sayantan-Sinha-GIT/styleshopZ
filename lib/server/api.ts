@@ -18,6 +18,7 @@ import {
   photo,
   notify,
   audit,
+  pendingDealQuantity,
 } from "./catalog";
 import {
   reserve,
@@ -77,6 +78,7 @@ async function dispatch(req: Request) {
       : await req.json().catch(() => {
           throw new ApiError(400, "Send valid JSON.");
         });
+  assert(b && typeof b === "object" && !Array.isArray(b), "Send a JSON object.");
   if (path === "version")
     return {
       commit:
@@ -146,7 +148,7 @@ async function dispatch(req: Request) {
   if (path === "cart/preview" && m === "POST") {
     const items = lineItems(b.items),
       rows = await query(
-        `SELECT v.id variant_id,v.stock,v.options,v.price_paise,v.mrp_paise,p.id product_id,p.title,p.brand,c.name category_name,COALESCE(d.deal_price_paise,v.price_paise) unit_price_paise FROM variants v JOIN products p ON p.id=v.product_id JOIN categories c ON c.id=p.category_id LEFT JOIN LATERAL(SELECT deal_price_paise FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count<quantity_cap ORDER BY deal_price_paise LIMIT 1)d ON TRUE WHERE v.id=ANY($1::uuid[]) AND p.status='live' AND p.deleted_at IS NULL`,
+        `SELECT v.id variant_id,v.stock,v.options,v.price_paise,v.mrp_paise,p.id product_id,p.title,p.brand,c.name category_name,COALESCE(d.deal_price_paise,v.price_paise) unit_price_paise FROM variants v JOIN products p ON p.id=v.product_id JOIN sellers s ON s.id=p.seller_id JOIN categories c ON c.id=p.category_id LEFT JOIN LATERAL(SELECT deal_price_paise FROM deals WHERE variant_id=v.id AND starts_at<=NOW() AND ends_at>NOW() AND sold_count+${pendingDealQuantity()}<quantity_cap ORDER BY deal_price_paise LIMIT 1)d ON TRUE WHERE v.id=ANY($1::uuid[]) AND p.status='live' AND p.deleted_at IS NULL AND s.status='approved'`,
         [items.map((i) => i.variantId)],
       );
     return {
@@ -234,7 +236,7 @@ async function dispatch(req: Request) {
     assert(order, "Order not found.", 404);
     const [items, events, returns] = await Promise.all([
       query(
-        "SELECT i.*,s.shop_name seller_name FROM order_items i LEFT JOIN sellers s ON s.id=i.seller_id WHERE order_id=$1",
+        "SELECT i.*,NOW() eligibility_checked_at,s.shop_name seller_name FROM order_items i LEFT JOIN sellers s ON s.id=i.seller_id WHERE order_id=$1",
         [id],
       ),
       query(
@@ -298,6 +300,7 @@ async function dispatch(req: Request) {
         return_eligible: canReturn(
           i.status,
           i.delivered_at || delivered?.created_at,
+          new Date(i.eligibility_checked_at).getTime(),
         ),
       })),
       events,

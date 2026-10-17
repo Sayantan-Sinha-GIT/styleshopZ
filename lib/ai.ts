@@ -1,4 +1,5 @@
-// Tried in order; the first provider that answers wins. Hide AI features if none set.
+// Keep both attempts within the assistant request's time budget.
+const providerTimeoutMs = 8_000;
 async function gemini(system: string, prompt: string): Promise<string> {
   const model = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -9,25 +10,27 @@ async function gemini(system: string, prompt: string): Promise<string> {
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.2, maxOutputTokens: 400 },
     }),
-    signal: AbortSignal.timeout(12_000),
+    signal: AbortSignal.timeout(providerTimeoutMs),
   });
-  if (!res.ok) throw new Error(`Gemini ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  if (!res.ok) throw new Error(`Gemini request failed (${res.status})`);
   const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
   return (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
 }
 async function groq(system: string, prompt: string): Promise<string> {
+  const model = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: process.env.GROQ_MODEL || 'openai/gpt-oss-20b',
+      model,
+      ...(model.startsWith('openai/gpt-oss-') ? { reasoning_effort: 'low' } : {}),
       temperature: 0.2,
       max_tokens: 1024,
       messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
     }),
-    signal: AbortSignal.timeout(12_000),
+    signal: AbortSignal.timeout(providerTimeoutMs),
   });
-  if (!res.ok) throw new Error(`Groq ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  if (!res.ok) throw new Error(`Groq request failed (${res.status})`);
   const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
   return data.choices?.[0]?.message?.content ?? '';
 }

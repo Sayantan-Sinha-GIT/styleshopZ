@@ -55,12 +55,13 @@ public class MainActivity extends BridgeActivity {
       Uri uri=Uri.parse(url);
       if(!"https".equals(uri.getScheme())||!"styleshopz.srimantasutapa123.workers.dev".equals(uri.getHost()))return;
       try{
-        String name="styleshopz-"+System.currentTimeMillis()+(mime!=null&&mime.contains("pdf")?".pdf":".json");
+        boolean isApk=uri.getPath()!=null&&uri.getPath().endsWith(".apk");
+        String name="styleshopz-"+System.currentTimeMillis()+(isApk?".apk":mime!=null&&mime.contains("pdf")?".pdf":".json");
         DownloadManager.Request request=new DownloadManager.Request(uri);
         String cookies=CookieManager.getInstance().getCookie(url);
         if(cookies!=null)request.addRequestHeader("Cookie",cookies);
         request.addRequestHeader("User-Agent",userAgent);
-        request.setMimeType(mime);request.setTitle(name);
+        request.setMimeType(isApk?"application/vnd.android.package-archive":mime);request.setTitle(name);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalFilesDir(this,Environment.DIRECTORY_DOWNLOADS,name);
         ((DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);

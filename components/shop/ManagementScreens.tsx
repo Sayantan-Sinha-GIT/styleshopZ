@@ -357,7 +357,7 @@ function SellerWorkspace() {
                 <div className="stats">
                   <div className="stat">
                     <strong>{money(d.data.stats.delivered_paise)}</strong>
-                    <span>Delivered gross sales</span>
+                    <span>Delivered sales after discounts</span>
                   </div>
                   <div className="stat">
                     <strong>

@@ -464,6 +464,7 @@ function Assistant() {
           </span>
           <button
             className="button quiet small"
+            disabled={busy}
             onClick={() =>
               api("assistant/chat", "DELETE")
                 .then(() => setMessages([]))

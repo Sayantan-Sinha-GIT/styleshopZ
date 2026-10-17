@@ -615,7 +615,8 @@ function Wishlists() {
   const d = useData("wishlists"),
     { add, setNotice } = useStore(),
     [selected, setSelected] = useState(""),
-    [name, setName] = useState("");
+    [name, setName] = useState(""),
+    [moving, setMoving] = useState("");
   return (
     <>
       <div className="page-title">
@@ -700,11 +701,21 @@ function Wishlists() {
                 </Link>
                 <span>{money(i.price_paise)}</span>
                 <span className="small muted">
-                  {i.list_name} · {i.stock > 0 ? "In stock" : "Out of stock"}
+                  {i.list_name} · {i.in_stock ? "In stock" : "Currently unavailable"}
                 </span>
+                {d.data.lists.length > 1 && <SelectField label={"Saved list for " + i.title} value={i.wishlist_id} disabled={moving === i.id} onChange={async (e) => {
+                  setMoving(i.id);
+                  try {
+                    await api("wishlists", "POST", { listId: e.target.value, variantId: i.variant_id });
+                    await api("wishlists?id=" + i.id, "DELETE");
+                    d.refresh();
+                    setNotice("Saved find moved to your list.");
+                  } catch (e: any) { setNotice(e.message); }
+                  finally { setMoving(""); }
+                }}>{d.data.lists.map((list: Item) => <option value={list.id} key={list.id}>{list.name}</option>)}</SelectField>}
                 <button
                   className="button"
-                  disabled={!i.stock}
+                  disabled={!i.in_stock}
                   onClick={() =>
                     add(i.variant_id)
                       .then(() => api("wishlists?id=" + i.id, "DELETE"))
@@ -808,8 +819,9 @@ export function SettingsScreen() {
   );
 }
 function Settings() {
-  const { user, language, switchLanguage, setNotice } = useStore(),
+  const { user, setUser, language, switchLanguage, setNotice } = useStore(),
     [error, setError] = useState(""),
+    [saving, setSaving] = useState(false),
     [deleting, setDeleting] = useState(false),
     [confirmation, setConfirmation] = useState("");
   return (
@@ -839,21 +851,25 @@ function Settings() {
           onSubmit={async (e) => {
             e.preventDefault();
             const form = new FormData(e.currentTarget);
+            const preferences = {
+              language,
+              email: user.preferences?.email !== false,
+              orders: form.has("orders"),
+              offers: form.has("offers"),
+            };
+            setSaving(true);
+            setError("");
             try {
               await api("profile", "PATCH", {
                 name: user.name,
                 phone: user.phone,
-                preferences: {
-                  language,
-                  email: form.has("email"),
-                  orders: form.has("orders"),
-                  offers: form.has("offers"),
-                },
+                preferences,
               });
+              setUser({ ...user, preferences });
               setNotice("Preferences saved.");
             } catch (e: any) {
               setError(e.message);
-            }
+            } finally { setSaving(false); }
           }}
         >
           <h2>Updates you care about</h2>
@@ -874,10 +890,11 @@ function Settings() {
             Offers in the app
           </label>
           <p className="small muted">
-            Push and email delivery are disabled until the owner configures
-            those providers. Your in-app inbox remains available.
+            These preferences control your in-app inbox. Push notifications and
+            promotional emails are not included. Account verification and
+            password-reset emails are separate.
           </p>
-          <button className="button secondary">Save preferences</button>
+          <button className="button secondary" disabled={saving}>{saving ? "Saving…" : "Save preferences"}</button>
         </form>
         <section className="panel stack">
           <h2>Your data</h2>

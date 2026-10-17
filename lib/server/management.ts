@@ -1,7 +1,7 @@
 import { query, transaction } from "./db";
 import { requireUser } from "./session";
-import { assert, text, uuid, integer, safeImage } from "./rules";
-import { audit, notify, photo } from "./catalog";
+import { assert, text, uuid, integer, safeImage, safeShopLink } from "./rules";
+import { audit, notify, photo, pendingDealQuantity } from "./catalog";
 import { randomUUID } from "node:crypto";
 
 export async function sellerData() {
@@ -24,7 +24,7 @@ export async function sellerData() {
       [seller.id],
     ),
     query(
-      `SELECT COUNT(*)::int item_count,COALESCE(SUM(unit_price_paise*quantity) FILTER(WHERE i.status IN('delivered','returned')),0)::bigint delivered_paise,COALESCE(SUM(unit_price_paise*quantity) FILTER(WHERE i.status IN('placed','packed','shipped','out_for_delivery')),0)::bigint pending_paise FROM order_items i JOIN orders o ON o.id=i.order_id WHERE i.seller_id=$1 AND o.status<>'awaiting_payment'`,
+      `SELECT COUNT(*)::int item_count,COALESCE(SUM(net.amount) FILTER(WHERE i.status IN('delivered','returned')),0)::bigint delivered_paise,COALESCE(SUM(net.amount) FILTER(WHERE i.status IN('placed','packed','shipped','out_for_delivery')),0)::bigint pending_paise FROM order_items i JOIN orders o ON o.id=i.order_id LEFT JOIN LATERAL(SELECT COALESCE(SUM(j.unit_price_paise*j.quantity),0)::numeric gross FROM order_items j WHERE j.order_id=i.order_id AND j.id<i.id) prior ON TRUE CROSS JOIN LATERAL(SELECT i.unit_price_paise*i.quantity-(ROUND((prior.gross+i.unit_price_paise*i.quantity)*o.discount_paise/GREATEST(o.subtotal_paise,1))-ROUND(prior.gross*o.discount_paise/GREATEST(o.subtotal_paise,1))) amount) net WHERE i.seller_id=$1 AND o.status<>'awaiting_payment'`,
       [seller.id],
     ),
   ]);
@@ -116,6 +116,7 @@ export async function saveProduct(
       [id, u.seller_id, categoryId, title, brand, description, status],
     );
     for (const v of variants) {
+      assert(v && typeof v === "object" && !Array.isArray(v), "Add valid product variants.");
       const price = integer(v.price_paise, 100, 100000000, "Price in paise"),
         mrp = integer(v.mrp_paise, price, 100000000, "MRP in paise"),
         stock = integer(v.stock, 0, 100000, "Stock"),
@@ -216,7 +217,7 @@ export async function adminData(section: string) {
       ),
     };
   const [stats] = await query(
-    `SELECT (SELECT COUNT(*)::int FROM users WHERE deleted_at IS NULL) users,(SELECT COUNT(*)::int FROM products WHERE status='live' AND deleted_at IS NULL) products,(SELECT COUNT(*)::int FROM orders WHERE status NOT IN('cancelled','awaiting_payment')) orders,(SELECT COALESCE(SUM(total_paise),0)::bigint FROM orders WHERE status='delivered') delivered_paise,(SELECT COUNT(*)::int FROM support_tickets WHERE status IN('open','in_progress')) tickets,(SELECT COUNT(*)::int FROM sellers WHERE status='pending') pending_sellers`,
+    `SELECT (SELECT COUNT(*)::int FROM users WHERE deleted_at IS NULL) users,(SELECT COUNT(*)::int FROM products WHERE status='live' AND deleted_at IS NULL) products,(SELECT COUNT(*)::int FROM orders WHERE status NOT IN('cancelled','awaiting_payment')) orders,(SELECT COALESCE(SUM(o.total_paise-COALESCE((SELECT SUM(r.amount_paise) FROM returns r JOIN order_items i ON i.id=r.order_item_id WHERE i.order_id=o.id AND r.status='refunded'),0)),0)::bigint FROM orders o WHERE o.status='delivered') delivered_paise,(SELECT COUNT(*)::int FROM support_tickets WHERE status IN('open','in_progress')) tickets,(SELECT COUNT(*)::int FROM sellers WHERE status='pending') pending_sellers`,
   );
   return { stats };
 }
@@ -302,8 +303,15 @@ export async function adminMutation(section: string, b: any) {
         );
       } else if (b.type === "deal") {
         const variant = uuid(b.variant_id);
-        const [v] = await q("SELECT * FROM variants WHERE id=$1", [variant]);
+        const [v] = await q("SELECT * FROM variants WHERE id=$1 FOR UPDATE", [variant]);
         assert(v, "Variant not found.");
+        const [existingDeal] = await q("SELECT * FROM deals WHERE id=$1 FOR UPDATE", [id]);
+        assert(!existingDeal || existingDeal.variant_id === variant, "Create a new offer to change its product variant.");
+        const quantityCap = integer(b.quantity_cap ?? 50, 1, 100000);
+        if (existingDeal) {
+          const [pending] = await q(`SELECT ${pendingDealQuantity("d")} quantity FROM deals d WHERE d.id=$1`, [id]);
+          assert(quantityCap >= Number(existingDeal.sold_count) + Number(pending.quantity), "Offer quantity cannot be lower than sold or reserved promotional units.");
+        }
         const price = integer(
           b.deal_price_paise,
           100,
@@ -317,16 +325,12 @@ export async function adminMutation(section: string, b: any) {
             id,
             variant,
             price,
-            integer(b.quantity_cap || 50, 1, 100000),
+            quantityCap,
             b.ends_at,
           ],
         );
       } else if (b.type === "banner") {
-        const link = text(b.link_url, "Link", 1, 200);
-        assert(
-          link.startsWith("/") && !link.startsWith("//"),
-          "Use an internal shop link.",
-        );
+        const link = safeShopLink(b.link_url);
         await q(
           "INSERT INTO banners(id,title,image_url,link_url,sort_order,is_active) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(id) DO UPDATE SET title=EXCLUDED.title,image_url=EXCLUDED.image_url,link_url=EXCLUDED.link_url,sort_order=EXCLUDED.sort_order,is_active=EXCLUDED.is_active",
           [
