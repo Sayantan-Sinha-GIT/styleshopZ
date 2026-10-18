@@ -12,12 +12,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceResponse;
+import android.view.View;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.graphics.Insets;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebViewClient;
 public class MainActivity extends BridgeActivity {
@@ -44,6 +48,17 @@ public class MainActivity extends BridgeActivity {
   }
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Android 15+ draws WebViews behind the system bars. Keep the whole shop,
+    // including its sticky header and bottom navigation, inside the safe area.
+    WindowCompat.setDecorFitsSystemWindows(getWindow(),false);
+    View root=findViewById(android.R.id.content);
+    ViewCompat.setOnApplyWindowInsetsListener(root,(view,windowInsets)->{
+      int types=WindowInsetsCompat.Type.systemBars()|WindowInsetsCompat.Type.displayCutout();
+      Insets bars=windowInsets.getInsets(types);
+      view.setPadding(bars.left,bars.top,bars.right,bars.bottom);
+      return new WindowInsetsCompat.Builder(windowInsets).setInsets(types,Insets.NONE).build();
+    });
+    root.post(()->ViewCompat.requestApplyInsets(root));
     darkSystemBars();
     // Hosted Next.js deployments replace hashed assets. A cached document from the
     // previous build can otherwise render without its CSS or JavaScript after update.

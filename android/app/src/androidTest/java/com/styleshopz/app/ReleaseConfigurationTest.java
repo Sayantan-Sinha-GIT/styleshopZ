@@ -3,10 +3,16 @@ package com.styleshopz.app;
 import static org.junit.Assert.*;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.graphics.Point;
+import android.view.View;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.ByteArrayOutputStream;
@@ -85,5 +91,26 @@ public class ReleaseConfigurationTest {
         assertNotNull(provider);
         assertFalse(provider.exported);
         assertTrue(provider.grantUriPermissions);
+    }
+
+    @Test
+    public void shopContentStaysInsideSystemBars() {
+        Intent intent = new Intent(context(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainActivity activity = (MainActivity) InstrumentationRegistry.getInstrumentation().startActivitySync(intent);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        View root = activity.findViewById(android.R.id.content);
+        WindowInsetsCompat windowInsets = ViewCompat.getRootWindowInsets(root);
+        assertNotNull(windowInsets);
+        Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+        assertTrue("Status bar inset should be present", bars.top > 0);
+        int[] origin = new int[2];
+        root.getLocationOnScreen(origin);
+        assertTrue("Content must start below the status bar: origin=" + origin[1] + " padding=" + root.getPaddingTop(),
+                origin[1] + root.getPaddingTop() >= bars.top);
+        Point screen = new Point();
+        activity.getWindowManager().getDefaultDisplay().getRealSize(screen);
+        assertTrue("Content must finish above navigation",
+                origin[1] + root.getHeight() - root.getPaddingBottom() <= screen.y - bars.bottom);
+        activity.finish();
     }
 }

@@ -3,7 +3,7 @@
 ## Open the app
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Android download: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.3.1.apk
+Android download: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.3.2.apk
 
 The APK is for direct Android installation. Download it on the phone, open it and allow that browser/file app to install the package if Android asks. Android 8 or later and an internet connection are required. The website also works directly in a phone browser.
 
@@ -45,9 +45,9 @@ The release signing key is outside the repository at C:/Users/Sayantan Sinha/.co
 
 Use JDK 21, Android SDK platform 36 and the Gradle wrapper. Set STYLESHOPZ_KEYSTORE to the key path and STYLESHOPZ_STORE_PASSWORD to its password. The key alias is styleshopz. Run npx cap sync android, then android/gradlew.bat assembleRelease from the android directory. On this Windows host set JDK_JAVA_OPTIONS to -Djdk.net.unixdomain.tmpdir pointing to a short existing temporary directory; the packaged host's default temporary path is too long for Java's Unix-domain socket path.
 
-The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner, copy it to public/downloads/styleshopz-1.3.1.apk, then build/deploy the worker. APK files and keystores are excluded from Git. The public download is included in the deployed static assets; GitHub releases can provide a public APK backup; server credentials and signing keys remain private.
+The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner, copy it to public/downloads/styleshopz-1.3.2.apk, then build/deploy the worker. APK files and keystores are excluded from Git. The public download is included in the deployed static assets; GitHub releases can provide a public APK backup; server credentials and signing keys remain private.
 
-Release 1.3.1 uses versionCode 5 and includes native Google sign-in, location permission support and fresh network loading after a hosted update. Its signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. Re-register the new certificate with Firebase if a future release uses a different signing key. GPS is optional; shoppers can search the map or enter an address manually. Every order still requires a complete written Indian delivery address.
+Release 1.3.2 uses versionCode 6. It retains native Google sign-in, optional location support and fresh loading after a hosted update, and now pads the WebView within Android status, navigation and display-cutout insets. Its signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. Re-register the new certificate with Firebase if a future release uses a different signing key. GPS is optional; shoppers can search the map or enter an address manually. Every order still requires a complete written Indian delivery address.
 
 ## Data boundaries
 
