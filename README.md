@@ -3,7 +3,7 @@
 An Indian marketplace demonstration with a responsive Next.js website and a signed Android application. Hosted on Cloudflare Workers with a Neon PostgreSQL database.
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Android: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.3.0.apk
+Android: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.3.1.apk
 
 ## What works
 

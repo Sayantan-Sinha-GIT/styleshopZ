@@ -1,4 +1,4 @@
-# styleshopZ 1.3.0 — prototype verification
+# styleshopZ 1.3.1 — prototype verification
 
 Verified 18 October 2026. This release provides a working prototype website and directly installable signed Android APK. Payments and fulfilment are demonstrations; no live charges, shipping integration, seller payouts or Play Store publication are included.
 
@@ -35,17 +35,18 @@ The browser suite covers desktop and phone layouts, both themes, reduced motion,
 - Admin categories, coupons, deals, banner publication/disable, internal links, Q&A answers, review votes/reports/moderation and scoped notifications.
 - Upload size/type restrictions, private file ownership, credential-free account export, deletion confirmation and session invalidation.
 
-The owner separately confirmed successful Google sign-in on the website and their physical Android phone, and receipt of both real Brevo verification and password-reset emails. The dispatched codes were exercised against the application; expired/incorrect/reused codes and old sessions were rejected.
+The owner separately confirmed successful Google sign-in on the website and their physical Android phone with the preceding 1.3.0 APK, and receipt of both real Brevo verification and password-reset emails. Release 1.3.1 retains the same signing certificate and Google login plugin. The dispatched codes were exercised against the application; expired/incorrect/reused codes and old sessions were rejected.
 
 The deployed release also passed an actual Razorpay sandbox card payment, browser callback and provider-generated captured webhook, followed by invoice download and a full cancellation/refund through the UI. Razorpay independently reported one processed refund for the full 33,900 paise, and stock returned exactly once. The initial refund was rejected because the sandbox needed a virtual balance reserve; one separate fake payment supplied that reserve. No real money was involved. The live Gemini assistant returned a relevant answer with catalogue product cards, and live Ola search saved delivery coordinates.
 
 ## Android artifact
 
-- File: `styleshopz-1.3.0.apk`
-- Version name/code: `1.3.0` / `4`
-- SHA-256: `7000378ab000d58612f8a615ebc32f921a20b3eb952025f277668c4e86abc4fa`
+- File: `styleshopz-1.3.1.apk`
+- Version name/code: `1.3.1` / `5`
+- SHA-256: `4798d9d074979bee52ea9724d452989f32cf211776a0a86bd36d9d80433c03c0`
 - Existing release signing certificate retained; signature verified.
-- Emulator checks include installation/update, email login, session persistence, navigation, offline recovery and authenticated PDF/JSON downloads. The owner also completed native Google sign-in on their phone.
+- Emulator checks include installation/update, email login, session persistence, navigation, offline recovery and authenticated PDF/JSON downloads. The owner completed native Google sign-in on their phone with 1.3.0.
+- The 1.3.1 APK installed over 1.3.0 with the same signing certificate and loaded the styled live shop. An older installation had reproduced a stale unstyled document after a hosted deployment; the Android WebView now clears its HTTP cache and reloads online at startup, while the service worker fetches navigation documents without cache reuse. The emulator also confirmed matching dark Android system bars with legible white icons.
 - A follow-up 360/390 px mobile pass verified the shortened header and campaign, merchandise near the first screen, search, product details, sign-in, cart, checkout gate and footer without horizontal overflow or browser errors. The installed app hides its own APK download links.
 - APK downloads retain their `.apk` extension. HTTPS-only settings, disabled backups/debugging and location permission configuration are verified.
 - Native lint: zero errors, 27 resource/dependency advisories.

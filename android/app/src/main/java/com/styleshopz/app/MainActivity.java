@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
+import android.webkit.WebSettings;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceResponse;
@@ -16,9 +17,18 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
+import androidx.core.view.WindowCompat;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebViewClient;
 public class MainActivity extends BridgeActivity {
+  private void darkSystemBars(){
+    WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).setAppearanceLightStatusBars(false);
+    WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).setAppearanceLightNavigationBars(false);
+  }
+  @Override public void onResume(){
+    super.onResume();
+    getWindow().getDecorView().post(this::darkSystemBars);
+  }
   private boolean networkConnected() {
     ConnectivityManager manager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkCapabilities capabilities=manager.getNetworkCapabilities(manager.getActiveNetwork());
@@ -34,6 +44,15 @@ public class MainActivity extends BridgeActivity {
   }
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    darkSystemBars();
+    // Hosted Next.js deployments replace hashed assets. A cached document from the
+    // previous build can otherwise render without its CSS or JavaScript after update.
+    WebView webView=bridge.getWebView();
+    webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+    if(networkConnected()){
+      webView.clearCache(true);
+      webView.reload();
+    }
     bridge.setWebViewClient(new BridgeWebViewClient(bridge){
       @Override @SuppressWarnings("deprecation") public void onReceivedError(WebView view,int code,String description,String failingUrl){showRecovery(view);}
       @Override public void onReceivedError(WebView view,WebResourceRequest request,WebResourceError error){
@@ -44,6 +63,7 @@ public class MainActivity extends BridgeActivity {
       }
       @Override public void onPageFinished(WebView view,String url){
         super.onPageFinished(view,url);
+        darkSystemBars();
         if(url.startsWith("chrome-error:"))showRecovery(view);
       }
     });
