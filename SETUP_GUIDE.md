@@ -25,6 +25,8 @@ FIREBASE_WEB_API_KEY is public application configuration returned by /api/config
 
 Razorpay accepts TEST keys only and requires RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET and RAZORPAY_WEBHOOK_SECRET. Configure a payment.captured webhook at https://styleshopz.srimantasutapa123.workers.dev/api/payments/webhook using the same webhook secret. Demo payment and simulated COD remain available. No real payment or courier integration is included.
 
+Razorpay refunds require enough available sandbox balance, including the effect of provider fees. A first isolated test payment can therefore be captured successfully while its full refund receives a generic provider error. The final hosted test confirmed this: a separate fake reserve payment allowed the original full refund to process. The prototype keeps a virtual test reserve; do not add real funds or switch to live keys. If a future sandbox refund fails, the app preserves the active order and stock until the provider accepts the refund. Check the test dashboard balance before retrying.
+
 ## Local maintenance
 
 Use Node.js 24. Install dependencies with npm ci. Configure .env.local from .env.example. DATABASE_URL must use TLS. AUTH_SECRET must be a random secret of at least 32 characters; changing it signs everyone out. Keep DEMO_MODE=true for this release.

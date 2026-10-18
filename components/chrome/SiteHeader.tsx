@@ -93,9 +93,12 @@ export function SiteHeader() {
   return (
     <>
       <div className="demo-strip">
-        {language === "hi"
+        <span className="demo-strip-full">{language === "hi"
           ? "डेमो स्टोर · असली पैसे या डिलीवरी नहीं"
-          : "A demonstration shop. No real payments or deliveries."}
+          : "A demonstration shop. No real payments or deliveries."}</span>
+        <span className="demo-strip-compact">{language === "hi"
+          ? "डेमो स्टोर · असली भुगतान या डिलीवरी नहीं"
+          : "Demo shop · No real payments or deliveries"}</span>
         <Link href="/help">
           {language === "hi" ? "कैसे काम करता है" : "How it works"}
           <ArrowRight size={12} />
@@ -131,7 +134,7 @@ export function SiteHeader() {
               placeholder={
                 language === "hi"
                   ? "आप क्या ढूंढ रहे हैं?"
-                  : "What are you looking for?"
+                  : "Search products"
               }
               maxLength={100}
               value={search}

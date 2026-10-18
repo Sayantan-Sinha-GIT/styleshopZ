@@ -67,7 +67,7 @@ export function StorefrontHome() {
     <section className="motion-hero storefront-wrap" ref={stage}>
       <div className="motion-hero-copy">
         <h1 className="display-title"><span>{language === 'hi' ? 'खोजें। चुनें।' : 'Find it. Buy it.'}</span><em>{language === 'hi' ? 'अपना बनाएं।' : 'Watch it come.'}</em></h1>
-        <p>Tech, style and everyday essentials. Find your next favourite, then follow every step of your demo order.</p>
+        <p>Tech, style and everyday essentials. Find a good fit, then follow every step of your demo order.</p>
         <div className="hero-link-row"><Magnetic><Link className="button" href="/search">Explore the shop <ArrowUpRight size={20}/></Link></Magnetic><Link className="plain-action" href="/deals">Today’s deals <ArrowRight size={18}/></Link></div>
       </div>
       <div className="orbit-stage" aria-roledescription="carousel" aria-label="Featured collections"

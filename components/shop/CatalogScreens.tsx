@@ -551,7 +551,7 @@ export function ProductScreen({ id }: { id: string }) {
                     aria-label="Zoom product photo"
                   />
                 </div>
-                <div className="gallery-thumbs">
+                {d.data.images.length > 1 && <div className="gallery-thumbs">
                   {d.data.images.map((i: Item, n: number) => (
                     <button
                       key={n}
@@ -561,7 +561,7 @@ export function ProductScreen({ id }: { id: string }) {
                       <img src={i.url} alt="" />
                     </button>
                   ))}
-                </div>
+                </div>}
                 <dialog
                   ref={zoom}
                   className="panel"

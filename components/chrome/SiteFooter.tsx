@@ -6,8 +6,8 @@ export function SiteFooter() {
     <footer className="shop-footer">
       <div className="storefront-wrap footer-scene">
         <SpringLetters>Find. Buy. <em>Track.</em></SpringLetters>
-        <p>The everyday find, wherever you are. Take styleshopZ with you on Android.</p>
-        <Magnetic><a className="button" href="/downloads/styleshopz-1.3.0.apk">Get the Android app <ArrowUpRight size={20}/></a></Magnetic>
+        <p>The everyday find, wherever you are.</p>
+        <div className="android-download"><Magnetic><a className="button" href="/downloads/styleshopz-1.3.0.apk">Get the Android app <ArrowUpRight size={20}/></a></Magnetic></div>
         <svg className="footer-route" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 65C180 65 220 10 400 35S650 85 800 40 1080 5 1200 40"/><path d="M0 65C180 65 220 10 400 35S650 85 800 40 1080 5 1200 40"/></svg>
       </div>
       <div className="footer-inner">
@@ -38,7 +38,7 @@ export function SiteFooter() {
           <h3>Behind the shop</h3>
           <Link href="/seller">Seller workspace</Link>
           <Link href="/admin">Admin workspace</Link>
-          <a href="/downloads/styleshopz-1.3.0.apk">
+          <a className="android-download" href="/downloads/styleshopz-1.3.0.apk">
             Get the Android app <ArrowUpRight size={14} />
           </a>
         </div>

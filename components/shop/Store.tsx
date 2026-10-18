@@ -7,6 +7,7 @@ import {
   useCallback,
 } from "react";
 import Link from "next/link";
+import { Capacitor } from "@capacitor/core";
 import {
   ShoppingBag,
   Heart,
@@ -72,6 +73,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [user],
   );
   useEffect(() => {
+    document.documentElement.dataset.appPlatform = Capacitor.isNativePlatform() ? "native" : "web";
     let active = true;
     (async () => {
       try {
