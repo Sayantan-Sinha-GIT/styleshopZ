@@ -335,6 +335,7 @@ em { font-family:var(--font-editorial),var(--font-hindi),serif; color:var(--edit
   .editorial-heading { margin-bottom:19px; }
   .department-section { padding-top:45px; }
   .department-pan>div { padding-inline:20px; scroll-padding-inline:20px; }
+  .department-pan>div::-webkit-scrollbar { display:none; }
   .department-portrait:nth-child(even) { padding-top:0; }
   .department-portrait h3 { font-size:clamp(32px,9vw,40px); }
   .shopping-loop { padding-block:50px; }
