@@ -200,11 +200,17 @@ em { font-family:var(--font-editorial),var(--font-hindi),serif; color:var(--edit
 @keyframes journey-travel { 0%,8% { transform:translateX(-50%); left:0; } 85%,100% { transform:translateX(-50%); left:100%; } }
 @keyframes footer-route { to { stroke-dashoffset:-1390; } }
 @supports (animation-timeline:view()) {
-  @media(prefers-reduced-motion:no-preference) {
+  @media (prefers-reduced-motion:no-preference) and (min-width:768px) and (hover:hover) and (pointer:fine) {
     .home-shelf .product-card,.shopping-loop-grid article,.footer-inner>div,.page-title { animation:shop-arrive linear both; animation-timeline:view(); animation-range:entry 0% entry 80%; }
   }
 }
 @keyframes shop-arrive { from { opacity:.45; transform:translateY(24px); } to { opacity:1; transform:none; } }
+@media (max-width:767px), (hover:none), (pointer:coarse) {
+  body::after { display:none; }
+  .shop-header { background:var(--bg); backdrop-filter:none; }
+  .assistant-story { clip-path:none!important; }
+  ::view-transition-old(.page),::view-transition-new(.page) { animation-duration:160ms; animation-delay:0ms; }
+}
 @media(min-width:1600px) { .header-saved { display:grid; } }
 @media(max-width:1100px) {
   .header-inner { gap:18px; } .header-account>span { display:none; }

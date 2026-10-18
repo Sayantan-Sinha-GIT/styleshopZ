@@ -1,8 +1,8 @@
 'use client';
 
 // Scroll moments (PART 9A). Each one is a client leaf: GSAP owns these elements, so never
-// animate the same element with motion/react too. Every effect switches itself off for
-// prefers-reduced-motion, and the markup still reads well without it.
+// animate the same element with motion/react too. Scroll effects run on fine-pointer
+// desktops; touch and reduced-motion users see readable markup without them.
 import Image from 'next/image';
 import { useRef } from 'react';
 import { gsap } from 'gsap';
@@ -12,7 +12,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
-const MOTION_OK = '(prefers-reduced-motion: no-preference)';
+const MOTION_OK = '(prefers-reduced-motion: no-preference) and (min-width: 768px) and (hover: hover) and (pointer: fine)';
 const HIDDEN_UNTIL_JS = 'invisible opacity-0 motion-reduce:visible motion-reduce:opacity-100';
 
 /** Headline whose lines rise from behind a mask when it scrolls into view. */

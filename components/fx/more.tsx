@@ -1,8 +1,8 @@
 'use client';
 
 // The rest of the page moves too (PART 9A.8): effects for the sections between and after the
-// big scroll moments, down to the footer. Every effect switches itself off for
-// prefers-reduced-motion and then shows its final state. Colours: the PART 7.1 tokens.
+// big scroll moments, down to the footer. Scroll effects run only with a fine
+// desktop pointer; touch and reduced-motion users see the final state.
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,7 +11,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
-const MOTION_OK = '(prefers-reduced-motion: no-preference)';
+const MOTION_OK = '(prefers-reduced-motion: no-preference) and (min-width: 768px) and (hover: hover) and (pointer: fine)';
 const MOUSE = '(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)';
 
 /** Headline whose letters spring up, word by word, when it scrolls into view. */

@@ -9,13 +9,12 @@ import { useEffect } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-// Smooth, weighted scrolling (skipped for reduced motion) driven by GSAP's clock, so pinned
-// and scrubbed ScrollTriggers move in step with it, plus a global motion policy.
+// Keep native touch scrolling on phones; desktop scroll scenes use Lenis and GSAP's clock.
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Positions change when the web fonts arrive; measure every ScrollTrigger again.
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px)").matches) return;
     const lenis = new Lenis({ lerp: 0.11, anchors: { offset: -90 } });
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
@@ -25,6 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
+      (window as unknown as { __lenis?: Lenis }).__lenis = undefined;
     };
   }, []);
 

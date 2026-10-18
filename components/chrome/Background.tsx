@@ -6,7 +6,8 @@ import { useTheme } from "@/lib/client/theme";
 /**
  * Living canvas background from my-design/home.html:
  * Subtle geometric particles (squares with crosses, plus signs, nodes) that drift,
- * rotate, and react gently to scroll velocity and theme changes.
+ * rotate, and react gently to scroll velocity and theme changes on desktop.
+ * Touch devices get one painted frame to keep scrolling smooth.
  */
 export function Background() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,8 +26,8 @@ export function Background() {
     let lastScroll = window.scrollY;
     let seed = 7;
     const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+    const staticScene = window.matchMedia(
+      "(prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px)",
     ).matches;
 
     interface Particle {
@@ -74,7 +75,7 @@ export function Background() {
       }));
 
       tc = getRgb();
-      if (reduce) paint();
+      if (staticScene) paint();
     };
 
     const paint = () => {
@@ -129,10 +130,10 @@ export function Background() {
     window.addEventListener("resize", resize);
     resize();
 
-    if (!reduce) {
+    if (!staticScene) {
       raf = requestAnimationFrame(loop);
     }
-    const visibility = () => { cancelAnimationFrame(raf); if (!document.hidden && !reduce) raf = requestAnimationFrame(loop); };
+    const visibility = () => { cancelAnimationFrame(raf); if (!document.hidden && !staticScene) raf = requestAnimationFrame(loop); };
     document.addEventListener('visibilitychange', visibility);
 
     return () => {

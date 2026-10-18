@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, CaretLeft, CaretRight, Pause, Play, Package, MagnifyingGlass, ShoppingBag, MapPin, Heart } from "@phosphor-icons/react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { MaskLines, HorizontalPan } from "@/components/fx/scroll";
 import { Magnetic, Marquee, OpenSheet, SpringLetters } from "@/components/fx/more";
 import { ProductCard, State, useData, useStore, api, type Item } from "./Store";
@@ -122,7 +122,7 @@ export function StorefrontHome() {
           { title: 'Find.', text: 'Search by product, brand or budget. Compare the details before you choose.', href: '/search', action: 'Find your next favourite', icon: MagnifyingGlass },
           { title: 'Save.', text: 'Keep the things you love together. Your wishlist is ready when you are.', href: '/wishlists', action: 'Your saved finds', icon: Heart },
           { title: 'Track.', text: 'Follow your demo order from placed to delivered. Every update, in one place.', href: '/orders', action: 'Your orders', icon: Package },
-        ].map(({ title, text, href, action }) => <motion.article key={title} initial={false} whileInView={{ opacity: 1 }} viewport={{ once: true }}><h3>{title}</h3><p>{text}</p><Link className="plain-action" href={href}>{action}<ArrowRight size={18}/></Link></motion.article>)}
+        ].map(({ title, text, href, action }) => <article key={title}><h3>{title}</h3><p>{text}</p><Link className="plain-action" href={href}>{action}<ArrowRight size={18}/></Link></article>)}
       </div>
     </section>
 
