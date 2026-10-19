@@ -3,9 +3,9 @@
 ## Open the app
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Android download: https://styleshopz.srimantasutapa123.workers.dev/downloads/styleshopz-1.3.2.apk
+Native Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.0.0/styleshopz-flutter-1.0.0.apk
 
-The APK is for direct Android installation. Download it on the phone, open it and allow that browser/file app to install the package if Android asks. Android 8 or later and an internet connection are required. The website also works directly in a phone browser.
+The APK is for direct Android installation. Download it on the phone, open it and allow that browser/file app to install the package if Android asks. The Flutter app requires Android 7 or later and an internet connection. The website also works directly in a phone browser.
 
 Private administrator and seller access is in OWNER_ACCESS.txt on the owner's computer. It is excluded from Git. There are no published default administrator passwords. Customers can create their own accounts. Preserve the private owner file and Android signing key in a secure backup.
 
@@ -38,6 +38,10 @@ Run npm test, npm run lint, npm audit --audit-level=high, npm run test:integrati
 Deploy with npm run build:cloudflare followed by npx wrangler deploy. Supply DATABASE_URL and AUTH_SECRET using Wrangler secrets. Set APP_COMMIT and APP_BUILT_AT to the deployed source revision/build time when releasing. /api/version identifies the deployed build. GitHub Actions performs verification; it does not automatically publish deployments or hold production secrets.
 
 ## Android maintenance
+
+The current native shopper app is in `flutter_app`. It has its own package (`com.styleshopz.styleshopz_flutter`) and can coexist with the older Capacitor app. Its catalogue, customer accounts, orders, assistant, and Ola address search use the same hosted API. Seller and administrator tools remain on the website. Build instructions are in [flutter_app/README.md](flutter_app/README.md). Publish the signed APK as a GitHub Release asset and update the website download link when its version changes.
+
+The older Capacitor WebView app is in `android`. The instructions below apply to that legacy app and its `/downloads/styleshopz-1.3.2.apk` archive.
 
 The Android project is in android and loads the URL in capacitor.config.json. UI/server fixes deploy to the website and are picked up by the app. Changes to native behaviour, permissions, icons or the server URL need a new signed APK and a higher Android versionCode.
 
