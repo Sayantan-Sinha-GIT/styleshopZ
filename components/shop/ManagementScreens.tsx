@@ -871,8 +871,8 @@ function AdminWorkspace() {
     <>
       <div className="page-title row between">
         <div>
-          <h1>Keep the good finds coming.</h1>
-          <p>The shop, its people and the details that make it work.</p>
+          <h1>Shop operations.</h1>
+          <p>Manage orders, sellers, products and customer support.</p>
         </div>
         <button className="button quiet small" onClick={d.refresh}>
           <ArrowClockwise size={17} />

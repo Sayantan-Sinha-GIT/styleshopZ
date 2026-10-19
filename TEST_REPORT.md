@@ -1,4 +1,25 @@
-# styleshopZ 1.3.2 — prototype verification
+# styleshopZ 1.4.0 — prototype verification
+
+Verified 19 October 2026 on the live Cloudflare Worker and an Android 15 emulator. This release adds a separate native Flutter seller workspace alongside the shopper app. The Capacitor APK is now labelled and presented as an owner-only admin console; shoppers and sellers should install the Flutter APK.
+
+| Current release check | Result |
+| --- | --- |
+| Next.js production build and TypeScript | Passed |
+| Vitest | 35 tests across 9 files passed |
+| Flutter analyzer and widget tests | Clean; 9 tests passed |
+| Live API/database integration | 24 shopper/order checks, 11 management checks, 5 discovery/location checks passed |
+| Full live browser flow | 23 scenarios passed; no page errors |
+| Android 15 seller UI | Email sign-in, product/variant creation and editing, photo picker and upload, search, shop profile, and placed → packed → shipped → out for delivery → delivered passed |
+| Android 15 admin UI | Signed owner login, overview/users tabs, hidden consumer navigation, and status-bar clearance checked |
+| Signed release APKs | Flutter 1.1.0 and admin 1.4.0 installed; package IDs, versions, signatures and secret scans verified |
+
+The seller tracking dialog initially failed after shipping because its text controller was disposed during a navigation update. I reproduced it in a widget test, corrected the dialog state, and replayed the full fulfilment sequence on the emulator. The first web build exhausted Windows resources while scanning generated Flutter binaries; explicit Tailwind source paths resolved it. Both final APK scans found no server-side credentials, owner password or signing password.
+
+The Flutter shopper/seller APK SHA-256 is `0080a74137f79d7000909a9135d08d46fc2354ead565d123bfb11ee57e9068b5`. The owner-only Capacitor APK SHA-256 is `54783919da5e08780979cfde049dc517417f556b4f6e926ba24f8ed64f2d8387`.
+
+All checkout, delivery, refund and seller payout flows remain simulations. Google sign-in was confirmed by the owner on their Android phone before this seller expansion; the new signed APK retained the same Firebase project and signing certificate, but the Google account chooser was not rerun on a physical phone for this exact build. Emulator and automated tests do not establish compatibility with every Android device or future provider outage.
+
+## Earlier release evidence (1.3.2)
 
 Verified 18 October 2026. This release provides a working prototype website and directly installable signed Android APK. Payments and fulfilment are demonstrations; no live charges, shipping integration, seller payouts or Play Store publication are included. The broad integration results below were completed for the preceding release; the 1.3.2 changes were checked with the focused mobile, build, regression and native tests described here.
 

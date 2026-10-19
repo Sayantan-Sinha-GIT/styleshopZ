@@ -1,9 +1,11 @@
 # styleshopZ
 
-An Indian marketplace demonstration with a responsive Next.js website and a separate native Flutter shopper app. The website runs on Cloudflare Workers with a Neon PostgreSQL database; seller and administrator tools stay on the web.
+An Indian marketplace demonstration with a responsive Next.js website, a native Flutter shopper/seller app, and a separate owner-only Capacitor admin app. The website runs on Cloudflare Workers with a Neon PostgreSQL database.
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Native Android: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.0.0/styleshopz-flutter-1.0.0.apk
+Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk
+
+The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it.
 
 ## What works
 
@@ -17,7 +19,7 @@ Native Android: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/downlo
 - Seller onboarding and approval, catalogue editing, CSV drafts, stock management and sequential fulfilment with tracking.
 - Admin moderation, users, sellers, orders, returns, coupons, deals, banners, categories, support replies and append-only audit records.
 - A Gemini shopping assistant with Groq fallback for products, offers, orders, cart actions and policy questions. Mutations require a signed, single-use confirmation.
-- The Flutter shopper app has native navigation, catalogue search, email/Google sign-in, a bag, Ola-assisted addresses, demo checkout with coupons, order history and the shopping assistant. Its source and build instructions are in [flutter_app](flutter_app/README.md).
+- The Flutter app has native navigation, catalogue search, customer email/Google sign-in, a bag, Ola-assisted addresses, demo checkout, orders and the shopping assistant. Sellers can manage their shop, listings, photos, inventory and simulated fulfilment. Its source and build instructions are in [flutter_app](flutter_app/README.md).
 
 ## Release scope
 
@@ -49,7 +51,7 @@ Integration tests require the configured prototype database and a running app. T
 
 GitHub Actions verifies dependencies, rules, TypeScript and the Cloudflare build on pushes and pull requests. Deployment is performed through authenticated Wrangler; the workflow does not store deployment credentials.
 
-The current native shopper APK is built from `flutter_app` and distributed through GitHub Releases. Signing keys and Firebase client configuration stay outside the repository. The earlier Capacitor WebView project remains in `android` as a separate legacy build. See SETUP_GUIDE.md.
+The current shopper and seller APK is built from `flutter_app` and distributed through GitHub Releases. The Capacitor project in `android` builds a separate owner-only admin APK. Signing keys and Firebase client configuration stay outside the repository. See SETUP_GUIDE.md.
 
 Generated image prompts and asset origins are recorded in IMAGE_PROMPTS.txt and embedded in raster metadata.
 

@@ -1,10 +1,10 @@
 {
   "appId": "com.styleshopz.app",
-  "appName": "styleshopZ",
+  "appName": "styleshopZ Admin",
   "webDir": "native-web",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://styleshopz.srimantasutapa123.workers.dev",
+    "url": "https://styleshopz.srimantasutapa123.workers.dev/admin",
     "cleartext": false,
     "androidScheme": "https",
     "errorPath": "offline.html"

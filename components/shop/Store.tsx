@@ -330,16 +330,18 @@ export function AuthGate({
   if (!user)
     return (
       <Empty
-        title="Make yourself at home"
+        title={role === "admin" ? "Owner access" : "Make yourself at home"}
         link={
           "/login?next=" +
           encodeURIComponent(
             typeof window !== "undefined" ? location.pathname : "/",
           )
         }
-        label="Sign in"
+        label={role === "admin" ? "Owner sign-in" : "Sign in"}
       >
-        Sign in to keep your bag, orders and saved finds together.
+        {role === "admin"
+          ? "Sign in with the owner's email and password to manage the shop."
+          : "Sign in to keep your bag, orders and saved finds together."}
       </Empty>
     );
   if (role && user.role !== role)

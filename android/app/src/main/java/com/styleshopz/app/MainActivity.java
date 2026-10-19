@@ -48,8 +48,8 @@ public class MainActivity extends BridgeActivity {
   }
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Android 15+ draws WebViews behind the system bars. Keep the whole shop,
-    // including its sticky header and bottom navigation, inside the safe area.
+    // Android 15+ draws WebViews behind system bars. Keep the owner console
+    // and its sticky controls inside the unobscured area.
     WindowCompat.setDecorFitsSystemWindows(getWindow(),false);
     View root=findViewById(android.R.id.content);
     ViewCompat.setOnApplyWindowInsetsListener(root,(view,windowInsets)->{
@@ -66,7 +66,8 @@ public class MainActivity extends BridgeActivity {
     webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
     if(networkConnected()){
       webView.clearCache(true);
-      webView.reload();
+      // Always enter the privileged workspace, including after an app upgrade.
+      webView.loadUrl("https://styleshopz.srimantasutapa123.workers.dev/admin");
     }
     bridge.setWebViewClient(new BridgeWebViewClient(bridge){
       @Override @SuppressWarnings("deprecation") public void onReceivedError(WebView view,int code,String description,String failingUrl){showRecovery(view);}
@@ -80,6 +81,7 @@ public class MainActivity extends BridgeActivity {
         super.onPageFinished(view,url);
         darkSystemBars();
         if(url.startsWith("chrome-error:"))showRecovery(view);
+        ViewCompat.requestApplyInsets(findViewById(android.R.id.content));
       }
     });
     if(!networkConnected())showRecovery(bridge.getWebView());

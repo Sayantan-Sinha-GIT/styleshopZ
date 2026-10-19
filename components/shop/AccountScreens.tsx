@@ -104,7 +104,9 @@ export function LoginScreen() {
         <p className="muted small">
           {mode === "signup"
             ? "Create your styleshopZ account."
-            : "Your everyday finds are waiting."}
+            : adminOnly
+              ? "Manage orders, sellers and the catalogue."
+              : "Your everyday finds are waiting."}
         </p>
         {!adminOnly && !["forgot", "reset"].includes(mode) && (
           <div className="tabs" style={{ margin: 0 }}>

@@ -1,6 +1,6 @@
-# styleshopZ native shopper app
+# styleshopZ native shopper and seller app
 
-This is the separate Flutter Android shopper app. It connects to the existing styleshopZ Cloudflare API and shares the live catalogue, customer accounts, bag, addresses, orders, and shopping assistant. Seller and administrator work stays on the website.
+This is the Flutter Android app for shoppers and sellers. It connects to the existing styleshopZ Cloudflare API and shares the live catalogue, accounts, orders and seller workspace. Admin control stays on the website and in a separate owner-only Capacitor app.
 
 ## What shoppers can do
 
@@ -10,7 +10,13 @@ This is the separate Flutter Android shopper app. It connects to the existing st
 - See order history and tracking events, cancel eligible orders, and use the shopping assistant.
 - Apply live shop coupons at checkout; the server checks eligibility and calculates the discount.
 
-The Flutter app does not ship a seller or admin dashboard. The backend, service keys, and storefront website remain in the parent project. The native map uses OpenStreetMap tiles with attribution; Ola location lookup runs through the parent project's server so its private key stays there.
+## What sellers can do
+
+- Create a seller account with a shop name, sign in by email, and see approval status.
+- Update shop and optional demo KYC details, select a product photo, create and edit products, variants, prices and stock, and archive listings.
+- Review simulated order items and advance fulfilment step by step with a tracking ID. See returns and simulated ledger totals.
+
+The Flutter app does not accept admin accounts. The separate Capacitor APK is for owner/admin control only; shoppers and sellers should not download it. The backend, service keys, and storefront website remain in the parent project. The native map uses OpenStreetMap tiles with attribution; Ola location lookup runs through the parent's server so its private key stays there.
 
 ## Build locally
 
@@ -18,4 +24,4 @@ Install Flutter and the Android SDK, then run `flutter pub get`, `flutter analyz
 
 For a debug APK run `flutter build apk --debug --dart-define-from-file=.secrets/flutter.json`. For a release APK set `STYLESHOPZ_KEYSTORE` to a private Android signing keystore path and `STYLESHOPZ_STORE_PASSWORD` to its password, then run `flutter build apk --release --dart-define-from-file=.secrets/flutter.json`. Output is under `build/app/outputs/flutter-apk/`. Never commit `.secrets`, keystores, or APKs.
 
-The native app has its own Android package, so it can coexist with the earlier Capacitor APK. It uses the hosted API URL in `lib/shop_api.dart`; change that only when intentionally connecting it to a different deployment. Checkout is a demonstration: no real money is charged or parcel sent.
+The native app has its own Android package, so it can coexist with the owner-only Capacitor APK. It uses the hosted API URL in `lib/shop_api.dart`; change that only when intentionally connecting it to a different deployment. Checkout and seller fulfilment are demonstrations: no real money is charged, parcel sent or seller payout made.

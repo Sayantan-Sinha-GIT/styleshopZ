@@ -295,6 +295,48 @@ em { font-family:var(--font-editorial),var(--font-hindi),serif; color:var(--edit
   .mobile-nav { background:var(--surface); border-top-color:var(--line); }
   .mobile-nav a { min-height:54px; font-size:12px; }
 }
+
+/* The separately signed Capacitor build is the owner's admin console. */
+.footer-scene .footer-app-note { max-width:55ch; margin:12px 0 0; color:var(--dim); font-size:12px; line-height:1.45; }
+:root[data-app-platform='native'] .demo-strip,
+:root[data-app-platform='native'] .shop-header,
+:root[data-app-platform='native'] .shop-footer,
+:root[data-app-platform='native'] .mobile-nav,
+:root[data-app-platform='native'] .footer-scene { display:none!important; }
+:root[data-app-platform='native'] body::before {
+  content:'Sz  /  ADMIN CONTROL';
+  position:sticky;
+  top:0;
+  z-index:45;
+  display:flex;
+  align-items:center;
+  min-height:54px;
+  padding:0 20px;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);
+  color:var(--brand);
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.08em;
+}
+:root[data-app-platform='native'] .page { padding:24px 20px 60px; }
+:root[data-app-platform='native'] .page-title { display:block; margin-bottom:24px; }
+:root[data-app-platform='native'] .page-title h1 { font-size:32px; line-height:1.05; }
+:root[data-app-platform='native'] .page-title p { margin-top:8px; font-size:13px; }
+:root[data-app-platform='native'] .page-title>.button { margin-top:16px; }
+:root[data-app-platform='native'] .tabs { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding:3px 1px 11px; margin:20px 0 18px; scrollbar-width:none; scroll-snap-type:x proximity; }
+:root[data-app-platform='native'] .tabs::-webkit-scrollbar { display:none; }
+:root[data-app-platform='native'] .tabs button { flex:none; min-height:44px; padding:10px 16px; font-size:13px; scroll-snap-align:start; }
+:root[data-app-platform='native'] .stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+:root[data-app-platform='native'] .stat { min-width:0; padding:18px 10px; }
+:root[data-app-platform='native'] .stat strong { font-size:clamp(22px,7vw,31px); overflow-wrap:anywhere; }
+:root[data-app-platform='native'] .panel { padding:20px; }
+:root[data-app-platform='native'] .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+:root[data-app-platform='native'] .table-wrap table { min-width:650px; }
+:root[data-app-platform='native'] .auth-wrap { display:block; margin:24px 20px 40px; }
+:root[data-app-platform='native'] .auth-picture { display:none; }
+:root[data-app-platform='native'] .auth-form { padding:26px 22px; }
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; }
   .orbit-photograph img { transform:none; }

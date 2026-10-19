@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
+@source '../app';
+@source '../components';
+@source '../lib';
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 @import 'leaflet/dist/leaflet.css';
 :root,[data-theme='dark']{--bg:#111316;--surface:#1b1e23;--surface-2:#252a30;--text:#f4f3ef;--dim:#b4b9c1;--faint:#959ca7;--line:#353b43;--brand:#f0b429;--on-brand:#201a0d;--brand-soft:#302719;--ok:#67d8a7;--danger:#ff9dab;--sh:0 12px 32px #0003;color-scheme:dark}

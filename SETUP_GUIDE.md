@@ -3,7 +3,9 @@
 ## Open the app
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Native Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.0.0/styleshopz-flutter-1.0.0.apk
+Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk
+
+The separate Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it.
 
 The APK is for direct Android installation. Download it on the phone, open it and allow that browser/file app to install the package if Android asks. The Flutter app requires Android 7 or later and an internet connection. The website also works directly in a phone browser.
 
@@ -39,9 +41,9 @@ Deploy with npm run build:cloudflare followed by npx wrangler deploy. Supply DAT
 
 ## Android maintenance
 
-The current native shopper app is in `flutter_app`. It has its own package (`com.styleshopz.styleshopz_flutter`) and can coexist with the older Capacitor app. Its catalogue, customer accounts, orders, assistant, and Ola address search use the same hosted API. Seller and administrator tools remain on the website. Build instructions are in [flutter_app/README.md](flutter_app/README.md). Publish the signed APK as a GitHub Release asset and update the website download link when its version changes.
+The current native shopper and seller app is in `flutter_app`. It has its own package (`com.styleshopz.styleshopz_flutter`) and can coexist with the owner-only Capacitor app. Customers use the catalogue, accounts, orders, assistant and Ola-assisted addresses; sellers use their native shop, product and fulfilment screens. Build instructions are in [flutter_app/README.md](flutter_app/README.md). Publish the signed APK as a GitHub Release asset and update the website download link when its version changes.
 
-The older Capacitor WebView app is in `android`. The instructions below apply to that legacy app and its `/downloads/styleshopz-1.3.2.apk` archive.
+The owner-only Capacitor WebView app is in `android`. It launches `/admin`, requires the fixed admin email/password, and is not linked from the public storefront. Do not distribute it as a shopper or seller app.
 
 The Android project is in android and loads the URL in capacitor.config.json. UI/server fixes deploy to the website and are picked up by the app. Changes to native behaviour, permissions, icons or the server URL need a new signed APK and a higher Android versionCode.
 
@@ -49,9 +51,9 @@ The release signing key is outside the repository at C:/Users/Sayantan Sinha/.co
 
 Use JDK 21, Android SDK platform 36 and the Gradle wrapper. Set STYLESHOPZ_KEYSTORE to the key path and STYLESHOPZ_STORE_PASSWORD to its password. The key alias is styleshopz. Run npx cap sync android, then android/gradlew.bat assembleRelease from the android directory. On this Windows host set JDK_JAVA_OPTIONS to -Djdk.net.unixdomain.tmpdir pointing to a short existing temporary directory; the packaged host's default temporary path is too long for Java's Unix-domain socket path.
 
-The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner, copy it to public/downloads/styleshopz-1.3.2.apk, then build/deploy the worker. APK files and keystores are excluded from Git. The public download is included in the deployed static assets; GitHub releases can provide a public APK backup; server credentials and signing keys remain private.
+The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner and distribute it separately with an **owner/admin only** label. Do not copy it into the website's public downloads. APK files and keystores are excluded from Git; server credentials and signing keys remain private.
 
-Release 1.3.2 uses versionCode 6. It retains native Google sign-in, optional location support and fresh loading after a hosted update, and now pads the WebView within Android status, navigation and display-cutout insets. Its signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. Re-register the new certificate with Firebase if a future release uses a different signing key. GPS is optional; shoppers can search the map or enter an address manually. Every order still requires a complete written Indian delivery address.
+Admin release 1.4.0 uses versionCode 7 and opens the admin workspace. It pads the WebView within Android status, navigation and display-cutout insets and refreshes after hosted updates. The signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. The Flutter shopper/seller app retains Google sign-in and optional location support; admin authentication is email/password only.
 
 ## Data boundaries
 
