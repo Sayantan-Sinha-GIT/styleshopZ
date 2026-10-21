@@ -62,6 +62,10 @@ Generated image prompts and asset origins are recorded in IMAGE_PROMPTS.txt and 
 
 Detailed coverage, fixes, APK metadata and testing limits are recorded in [TEST_REPORT.md](TEST_REPORT.md).
 
+## Build credits
+
+Project owner and repository author: Sayantan Sinha. Coding agents used to build styleshopZ: Gemini 3.1 Pro (Antigravity) and GPT-6 sol (Codex).
+
 ## License
 
 The original styleshopZ source and documentation are available under the [MIT License](LICENSE). Bundled Flutter fonts retain their separate [Hanken Grotesk](flutter_app/assets/fonts/OFL-Hanken.txt) and [Big Shoulders](flutter_app/assets/fonts/OFL-BigShoulders.txt) SIL Open Font Licenses. Pre-existing catalogue photos whose original sources were not recorded are identified in [IMAGE_PROMPTS.txt](IMAGE_PROMPTS.txt); no MIT rights are claimed over those photos. Third-party dependencies retain their own licenses.
