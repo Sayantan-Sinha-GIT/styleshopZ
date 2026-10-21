@@ -176,10 +176,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setNotice("Saved to your wishlist.");
   };
   const logout = async () => {
+    const destination = user?.role === "admin" ? "/4632/admin/login" : "/";
     await api("auth/logout", "POST", {});
     setUser(null);
     setCart({ items: [], subtotalPaise: 0 });
-    location.assign("/");
+    location.assign(destination);
   };
   const switchLanguage = (lang: string) => {
     setLanguage(lang);

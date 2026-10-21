@@ -20,7 +20,7 @@
 # production
 /build
 *.apk
-!/releases/styleshopz-admin-1.5.0.apk
+!/releases/styleshopz-admin-1.5.1.apk
 
 # open-next & cloudflare
 .open-next

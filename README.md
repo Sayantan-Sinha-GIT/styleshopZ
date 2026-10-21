@@ -4,7 +4,7 @@ An Indian marketplace demonstration with a responsive Next.js website, a native 
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
 Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk
-Owner-only Android APK: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
+Owner-only Android APK: [releases/styleshopz-admin-1.5.1.apk](releases/styleshopz-admin-1.5.1.apk)
 
 The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Its dedicated sign-in URL is not linked from the public storefront; the owner role and password, rather than an obscure URL, enforce access. Credentials and signing keys are excluded from Git.
 

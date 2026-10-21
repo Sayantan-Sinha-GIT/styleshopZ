@@ -4,7 +4,7 @@
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
 Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk
-Owner-only Android download: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
+Owner-only Android download: [releases/styleshopz-admin-1.5.1.apk](releases/styleshopz-admin-1.5.1.apk)
 
 The separate Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Owner sign-in is at the dedicated `/4632/admin/login` route; the public `/login` page accepts shopper and seller accounts only. The route is present in public source and the APK, so its name is not a security boundary. Password, role checks, short owner sessions, throttling, origin checks and security headers protect the account.
 
@@ -52,9 +52,9 @@ The release signing key is outside the repository at C:/Users/Sayantan Sinha/.co
 
 Use JDK 21, Android SDK platform 36 and the Gradle wrapper. Set STYLESHOPZ_KEYSTORE to the key path and STYLESHOPZ_STORE_PASSWORD to its password. The key alias is styleshopz. Run npx cap sync android, then android/gradlew.bat assembleRelease from the android directory. On this Windows host set JDK_JAVA_OPTIONS to -Djdk.net.unixdomain.tmpdir pointing to a short existing temporary directory; the packaged host's default temporary path is too long for Java's Unix-domain socket path.
 
-The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner and distribute it separately with an **owner/admin only** label. Do not copy it into the website's public downloads. The verified owner APK is committed at `releases/styleshopz-admin-1.5.0.apk`; signing keys, server credentials and owner credentials remain private.
+The output is android/app/build/outputs/apk/release/app-release.apk. Verify it with Android build-tools apksigner and distribute it separately with an **owner/admin only** label. Do not copy it into the website's public downloads. The verified owner APK is committed at `releases/styleshopz-admin-1.5.1.apk`; signing keys, server credentials and owner credentials remain private.
 
-Admin release 1.5.0 uses versionCode 8 and opens the owner sign-in route. It pads the WebView within Android status, navigation and display-cutout insets and refreshes after hosted updates. The signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. The Flutter shopper/seller app retains Google sign-in and optional location support; admin authentication is email/password only.
+Admin release 1.5.1 uses versionCode 9 and opens the owner sign-in route. It pads the WebView within Android status, navigation and display-cutout insets and refreshes after hosted updates. The signing certificate SHA-1 is 7fc5c6f3abedcf4f7771edec6b8ed6ca15aa2836. The Flutter shopper/seller app retains Google sign-in and optional location support; admin authentication is email/password only.
 
 ## Data boundaries
 

@@ -104,6 +104,12 @@ try{
     await noOverflow(page);
     await seller.close();
   });
+  await check('owner sign-out returns to the private owner entrance',async()=>{
+    await ap.getByRole('button',{name:'Sign out'}).click();
+    await ap.waitForURL(base+'/4632/admin/login');
+    await ap.getByRole('heading',{name:'Owner sign-in'}).waitFor();
+    assert.equal(await ap.getByRole('heading',{name:/Find it\. Buy it\./}).count(),0);
+  });
   await fs.writeFile('.qa/support-browser-results.json',JSON.stringify({base,at:new Date().toISOString(),checks},null,2));
   console.log(JSON.stringify({passed:checks.length}));
 } finally {
