@@ -7,14 +7,14 @@ This is the Flutter Android app for shoppers and sellers. It connects to the exi
 - Browse an automatically rotating collection, search and filter the catalogue, inspect variants and reviews, and save products locally.
 - Add items to a guest bag, sign in with email or Google, and merge the guest bag with the account bag.
 - Verify an email, request a Brevo password-reset code, save an Indian delivery address using Ola place search and reverse geocoding, and place simulated demo/COD orders.
-- See order history and tracking events, cancel eligible orders, and use the shopping assistant.
+- See order history and tracking events, cancel eligible orders, contact support about an order, attach private evidence, and use the shopping assistant.
 - Apply live shop coupons at checkout; the server checks eligibility and calculates the discount.
 
 ## What sellers can do
 
 - Create a seller account with a shop name, sign in by email, and see approval status.
 - Update shop and optional demo KYC details, select a product photo, create and edit products, variants, prices and stock, and archive listings.
-- Review simulated order items and advance fulfilment step by step. Demo Courier creates a test tracking number automatically when an item ships. See returns and simulated ledger totals.
+- Review simulated order items and advance fulfilment step by step. Demo Courier creates a test tracking number automatically when an item ships. See returns and simulated ledger totals, and open seller support conversations.
 
 The Flutter app does not accept admin accounts. The separate Capacitor APK is for owner/admin control only; shoppers and sellers should not download it. The backend, service keys, and storefront website remain in the parent project. The native map uses OpenStreetMap tiles with attribution; Ola location lookup runs through the parent's server so its private key stays there.
 

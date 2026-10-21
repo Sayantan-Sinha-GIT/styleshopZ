@@ -1,4 +1,22 @@
-# styleshopZ 1.6.0 — catalogue, seller photos and demo courier
+# styleshopZ 1.7.0 — support and return-evidence release
+
+Verified 21 October 2026 against the live Cloudflare Worker (code commit `9fec00b`), Neon, local production build, headless Chrome at phone/desktop widths and an Android 15 emulator. The feature and adversarial case inventory is in [QA_MATRIX.md](QA_MATRIX.md). Both APKs were installed: the new signed Flutter shopper/seller app and the existing owner-only Capacitor app, which picks up the hosted owner console.
+
+| Release check | Result |
+| --- | --- |
+| Support API | 10 scenario groups passed locally and on the live Worker: order ownership, eight categories, private evidence, cross-account denial, internal-note secrecy, triage/status, seller cases, 37-ticket pagination, 11th-ticket rate limit, simultaneous replies |
+| Support browser | 5 scenarios passed locally and live: phone case creation with private image and XSS text, owner priority and private/public replies, customer visibility and reopening, phone owner layout, seller case |
+| Shopping API/browser | 24 shopper/order integration and 23 full browser scenarios passed locally and live, including a 50-buyer stock race and private return-photo ownership |
+| Other regressions | 12 management and 5 discovery/location integration scenarios, 35 Vitest tests, 10 Flutter widget tests, TypeScript, Flutter analyzer, Next/OpenNext production builds passed |
+| Security/release | `npm audit --audit-level=high`: 0 vulnerabilities; 314 tracked files and both APKs scanned against 11 private values: no matches |
+| Android emulator | Flutter customer signed in, created/replied/resolved/reopened a live support case; owner APK signed in, opened the live support queue and conversation. Status and navigation bars remained clear. |
+| Signed Flutter APK | Version 1.3.0 (code 4), Android package `com.styleshopz.styleshopz_flutter`, v2 signature verified, SHA-256 `ac102528b5c5021a460b505644493891711d3080fd4e3f006cb6b4fb188e7c55` |
+
+The return proof upload now stays private to its customer and the owner. Support adds categorized, order-linked conversations, evidence, search/filter/pagination, priority, private owner notes, notifications, deliberate close/reopen flow and a native Flutter conversation screen. The owner APK binary remains 1.5.0 because its WebView loads the newly deployed console; it is not a shopper download.
+
+Google sign-in and Brevo delivery were previously confirmed by the owner; they were not repeated with a physical Google account or inbox in this run. The emulator, test providers and finite case matrix cannot prove every future device or provider outage. Payments, courier tracking and refunds remain prototype simulations or Razorpay test-mode transactions; no live money or parcels are involved.
+
+## Previous release: 1.6.0 — catalogue, seller photos and demo courier
 
 Verified 21 October 2026 against the Neon database, local production build, headless Chrome at desktop and phone widths, and an Android emulator running the signed Flutter APK. The owner account was rotated to the requested credentials outside Git, and its old session and email sign-in were rejected. Credentials are kept in the ignored `OWNER_ACCESS.txt` on the owner's machine.
 
