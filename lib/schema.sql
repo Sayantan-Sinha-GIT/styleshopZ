@@ -280,6 +280,9 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   subject TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'other' CHECK (category IN ('order_delivery','payment_refund','return_replacement','product_issue','account_access','seller_shop','technical_issue','other')),
+  order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
+  priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal','urgent')),
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -291,6 +294,8 @@ CREATE TABLE IF NOT EXISTS support_messages (
   sender_id UUID NOT NULL REFERENCES users(id),
   sender_role TEXT NOT NULL,
   message TEXT NOT NULL,
+  attachment_urls JSONB NOT NULL DEFAULT '[]'::jsonb,
+  is_internal BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

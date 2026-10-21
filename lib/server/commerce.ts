@@ -673,7 +673,7 @@ export async function requestReturn(userId: string, b: any) {
         "Attach a photo uploaded through this shop.",
       );
       const [upload] = await q(
-        "SELECT id FROM uploads WHERE id=$1 AND user_id=$2",
+        "SELECT id FROM uploads WHERE id=$1 AND user_id=$2 AND private=TRUE",
         [url.split("/").pop(), userId],
       );
       assert(upload, "Invalid return photo.");

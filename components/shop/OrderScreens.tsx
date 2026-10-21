@@ -779,6 +779,7 @@ async function uploadPhotos(files: FileList | null) {
       throw new Error("Each image must be under 5 MB.");
     const form = new FormData();
     form.append("file", file);
+    form.append("private", "true");
     const r = await fetch("/api/uploads", { method: "POST", body: form });
     const b = await r.json();
     if (!r.ok) throw new Error(b.error);

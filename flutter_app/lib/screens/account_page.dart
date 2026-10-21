@@ -10,6 +10,7 @@ import '../shop_widgets.dart';
 import 'address_page.dart';
 import 'cart_page.dart';
 import 'product_page.dart';
+import 'support_page.dart';
 
 String _status(dynamic value) => '$value'
     .split('_')
@@ -109,6 +110,16 @@ class AccountPage extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const AssistantPage()),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.support_agent_outlined),
+            title: const Text('Contact support'),
+            subtitle: const Text('Orders, account, products and seller help'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SupportPage()),
             ),
           ),
         ],
@@ -921,6 +932,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       child: const Text('Cancel order'),
                     ),
                   ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SupportPage(orderId: widget.id)),
+                    ),
+                    icon: const Icon(Icons.support_agent_outlined),
+                    label: const Text('Get help with this order'),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   'Demo fulfilment is simulated. No parcel is shipped.',

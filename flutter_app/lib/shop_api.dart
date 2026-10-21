@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +47,7 @@ class ShopApi {
     Map<String, String>? query,
   ]) => request('DELETE', path, query: query);
 
-  Future<String> uploadImage(XFile file) async {
+  Future<String> uploadImage(XFile file, {bool private = false}) async {
     final bytes = await file.readAsBytes();
     if (bytes.isEmpty || bytes.length > 5 * 1024 * 1024) {
       throw const ShopApiError('Choose an image under 5 MB.', 400);
@@ -61,6 +62,7 @@ class ShopApi {
     request.files.add(
       http.MultipartFile.fromBytes('file', bytes, filename: file.name),
     );
+    if (private) request.fields['private'] = 'true';
     final response = await http.Response.fromStream(
       await _client.send(request).timeout(const Duration(seconds: 30)),
     );
@@ -72,6 +74,20 @@ class ShopApi {
       );
     }
     return '${data['url']}';
+  }
+
+  Future<Uint8List> privateImageBytes(String path) async {
+    if (!RegExp(r'^/uploads/[0-9a-fA-F-]{36}$').hasMatch(path)) {
+      throw const ShopApiError('Invalid support photo.', 400);
+    }
+    final response = await _client.get(
+      imageUri(path),
+      headers: _session == null ? {} : {'Cookie': 'styleshopz_session=$_session'},
+    ).timeout(const Duration(seconds: 22));
+    if (response.statusCode != 200) {
+      throw ShopApiError('Could not open this support photo.', response.statusCode);
+    }
+    return response.bodyBytes;
   }
 
   Future<Map<String, dynamic>> request(

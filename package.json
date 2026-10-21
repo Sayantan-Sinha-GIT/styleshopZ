@@ -1,6 +1,6 @@
 {
   "name": "styleshopz",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -17,6 +17,9 @@
     "postinstall": "node scripts/patch-opennext.mjs",
     "test:integration": "node scripts/integration.mjs",
     "test:discovery": "node scripts/discovery-integration.mjs",
+    "test:support": "node scripts/support-integration.mjs",
+    "test:support:browser": "node scripts/support-browser.mjs",
+    "test:browser": "node scripts/full-browser.mjs",
     "db:upgrade": "node scripts/apply-migrations.mjs",
     "test:management": "node scripts/management-integration.mjs"
   },

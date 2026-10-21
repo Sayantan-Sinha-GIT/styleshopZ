@@ -3,9 +3,10 @@ import { randomUUID } from "node:crypto";
 import { query, transaction } from "./db";
 import { assert, text, address, uuid, integer, passwordText } from "./rules";
 import { rate, requireUser, sessionToken, cookie } from "./session";
-import { cartItems, photo, notify } from "./catalog";
+import { cartItems, photo, notify, audit } from "./catalog";
 import { demoEnabled } from "./commerce";
 import { emailReady, sendCode } from './identity';
+import { supportCategories } from "../support";
 
 export async function authenticate(req: Request, b: any, signup: boolean, ownerOnly = false) {
   const email = text(b.email, "Email", 5, 254).toLowerCase();
@@ -334,30 +335,45 @@ export async function wishlists(
   });
 }
 export async function support(method: string, b: any, params: URLSearchParams) {
-  const u = await requireUser(),
-    id = params.get("id") || b.ticketId;
+  assert(["GET", "POST", "PATCH"].includes(method), "This method is not supported.", 405);
+  const u = await requireUser();
+  const id = params.get("id") || b.ticketId;
+  const categories: readonly string[] = supportCategories.map(([key]) => key);
   if (method === "GET") {
     if (id) {
       const [ticket] = await query(
-        "SELECT * FROM support_tickets WHERE id=$1 AND ($2='admin' OR user_id=$3)",
+        "SELECT t.*,u.name customer_name,u.email customer_email FROM support_tickets t JOIN users u ON u.id=t.user_id WHERE t.id=$1 AND ($2='admin' OR t.user_id=$3)",
         [uuid(id), u.role, u.id],
       );
       assert(ticket, "Ticket not found.", 404);
       return {
         ticket,
         messages: await query(
-          "SELECT m.*,u.name sender_name FROM support_messages m JOIN users u ON u.id=m.sender_id WHERE ticket_id=$1 ORDER BY m.created_at",
-          [id],
+          "SELECT m.*,u.name sender_name FROM support_messages m JOIN users u ON u.id=m.sender_id WHERE m.ticket_id=$1 AND ($2='admin' OR m.is_internal=FALSE) ORDER BY m.created_at,m.id",
+          [ticket.id, u.role],
         ),
       };
     }
+    const offset = integer(params.get("offset") || 0, 0, 100000, "Page");
+    const status = params.get("status") || "all";
+    const category = params.get("category") || "all";
+    const search = (params.get("q") || "").trim();
+    assert(["all", "open", "in_progress", "resolved", "closed"].includes(status), "Invalid ticket status filter.");
+    assert(category === "all" || categories.includes(category), "Invalid support category filter.");
+    assert(search.length <= 100, "Search must be 100 characters or fewer.");
+    const args = [u.role, u.id, status, category, search];
+    const where = "($1='admin' OR t.user_id=$2) AND ($3='all' OR t.status=$3) AND ($4='all' OR t.category=$4) AND ($5='' OR t.subject ILIKE '%'||$5||'%' OR t.id::text ILIKE '%'||$5||'%' OR ($1='admin' AND (owner.name ILIKE '%'||$5||'%' OR owner.email ILIKE '%'||$5||'%')))";
+    const [count] = await query(`SELECT COUNT(*)::int total FROM support_tickets t JOIN users owner ON owner.id=t.user_id WHERE ${where}`, args);
     return {
       tickets: await query(
-        "SELECT t.*,u.name customer_name FROM support_tickets t JOIN users u ON u.id=t.user_id WHERE $1='admin' OR t.user_id=$2 ORDER BY t.updated_at DESC LIMIT 100",
-        [u.role, u.id],
+        `SELECT t.*,owner.name customer_name,owner.email customer_email FROM support_tickets t JOIN users owner ON owner.id=t.user_id WHERE ${where} ORDER BY CASE WHEN t.status IN('open','in_progress') THEN 0 ELSE 1 END,CASE WHEN t.priority='urgent' THEN 0 ELSE 1 END,t.updated_at DESC,t.id LIMIT 30 OFFSET $6`,
+        [...args, offset],
       ),
+      total: count.total,
+      offset,
     };
   }
+  if (method === "PATCH") assert(id, "Choose a ticket.");
   return transaction(async (q) => {
     let ticket;
     if (id)
@@ -366,33 +382,58 @@ export async function support(method: string, b: any, params: URLSearchParams) {
         [uuid(id), u.role, u.id],
       );
     else {
+      assert(u.role !== "admin", "Owner accounts cannot open customer tickets.", 403);
       await rate("ticket:" + u.id, 10, 3600, q);
+      const category = text(b.category || "other", "Category", 2, 40);
+      assert(categories.includes(category), "Choose a support category.");
+      const orderId = b.orderId ? uuid(b.orderId) : null;
+      if (orderId) {
+        const [order] = await q(
+          "SELECT o.id FROM orders o WHERE o.id=$1 AND (o.user_id=$2 OR ($3='seller' AND EXISTS(SELECT 1 FROM order_items i JOIN sellers s ON s.id=i.seller_id WHERE i.order_id=o.id AND s.user_id=$2)))",
+          [orderId, u.id, u.role],
+        );
+        assert(order, "Order not found for this account.", 404);
+      }
       [ticket] = await q(
-        "INSERT INTO support_tickets(user_id,subject) VALUES($1,$2) RETURNING *",
-        [u.id, text(b.subject, "Subject", 4, 150)],
+        "INSERT INTO support_tickets(user_id,subject,category,order_id) VALUES($1,$2,$3,$4) RETURNING *",
+        [u.id, text(b.subject, "Subject", 4, 150), category, orderId],
       );
     }
     assert(ticket, "Ticket not found.", 404);
     if (method === "PATCH") {
-      assert(
-        ["open", "resolved", "closed"].includes(b.status),
-        "Invalid ticket status.",
-      );
+      assert(b.status !== undefined || b.priority !== undefined, "Choose a change to save.");
+      const status = b.status === undefined ? ticket.status : text(b.status, "Status", 4, 20);
+      const priority = b.priority === undefined ? ticket.priority : text(b.priority, "Priority", 4, 20);
+      assert(["open", "in_progress", "resolved", "closed"].includes(status), "Invalid ticket status.");
+      assert(["normal", "urgent"].includes(priority), "Invalid ticket priority.");
+      assert(u.role === "admin" || (b.priority === undefined && ["open", "resolved", "closed"].includes(status)), "Only the owner can triage a ticket.", 403);
       await q(
-        "UPDATE support_tickets SET status=$2,updated_at=NOW() WHERE id=$1",
-        [ticket.id, b.status],
+        "UPDATE support_tickets SET status=$2,priority=$3,updated_at=NOW() WHERE id=$1",
+        [ticket.id, status, priority],
       );
+      if (u.role === "admin") await audit(q, u, "support_triage", "support_ticket", ticket.id, { status, priority });
     } else {
+      assert(!["resolved", "closed"].includes(ticket.status), "Reopen this ticket before replying.", 409);
+      assert(!b.isInternal || u.role === "admin", "Only the owner can write an internal note.", 403);
       const message = text(b.message, "Message", 2, 2000);
+      const photoUrls = b.photoUrls === undefined ? [] : b.photoUrls;
+      assert(Array.isArray(photoUrls) && photoUrls.length <= 4, "Attach at most four photos.");
+      const unique = new Set<string>();
+      for (const url of photoUrls) {
+        assert(typeof url === "string" && /^\/uploads\/[0-9a-f-]{36}$/i.test(url), "Attach a photo uploaded through this shop.");
+        const uploadId = uuid(url.slice(9));
+        assert(!unique.has(uploadId), "Attach each photo once.");
+        unique.add(uploadId);
+        const [upload] = await q("SELECT id FROM uploads WHERE id=$1 AND user_id=$2 AND private=TRUE", [uploadId, u.id]);
+        assert(upload, "Choose a private support photo you uploaded.");
+      }
+      await rate("support-message:" + u.id, 40, 3600, q);
       await q(
-        "INSERT INTO support_messages(ticket_id,sender_id,sender_role,message) VALUES($1,$2,$3,$4)",
-        [ticket.id, u.id, u.role, message],
+        "INSERT INTO support_messages(ticket_id,sender_id,sender_role,message,attachment_urls,is_internal) VALUES($1,$2,$3,$4,$5::jsonb,$6)",
+        [ticket.id, u.id, u.role, message, JSON.stringify(photoUrls), !!b.isInternal],
       );
-      await q(
-        "UPDATE support_tickets SET updated_at=NOW(),status=CASE WHEN $2='admin' THEN 'in_progress' ELSE 'open' END WHERE id=$1",
-        [ticket.id, u.role],
-      );
-      if (u.role === "admin")
+      await q("UPDATE support_tickets SET updated_at=NOW(),status=CASE WHEN $2='admin' THEN 'in_progress' ELSE 'open' END WHERE id=$1", [ticket.id, u.role]);
+      if (u.role === "admin" && !b.isInternal)
         await notify(
           q,
           ticket.user_id,

@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowUp, ChatCircle } from "@phosphor-icons/react";
+import { ArrowUp } from "@phosphor-icons/react";
+import { SupportWorkspace } from "./SupportConsole";
 import {
   useStore,
   useData,
@@ -25,216 +26,8 @@ export function SupportScreen() {
     </div>
   );
 }
-export function SupportWorkspace() {
-  const list = useData("support"),
-    { user, setNotice } = useStore(),
-    [ticket, setTicket] = useState(""),
-    [creating, setCreating] = useState(false),
-    [error, setError] = useState(""),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
-  const detail = useData(ticket ? "support?id=" + ticket : null);
-  useEffect(() => {
-    if (!ticket) return;
-    const t = setInterval(detail.refresh, 8000);
-    return () => clearInterval(t);
-  }, [ticket, detail.refresh]);
-  return (
-    <>
-      <div className="page-title row between">
-        <div>
-          <h1>
-            {user?.role === "admin"
-              ? "A little help, from the shop"
-              : "Here for the little things, too."}
-          </h1>
-          <p>Your questions, orders and conversations in one place.</p>
-        </div>
-        <button className="button" onClick={() => setCreating(!creating)}>
-          New ticket
-        </button>
-      </div>
-      {creating && (
-        <form
-          className="panel stack"
-          style={{ marginBottom: 25 }}
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setBusy(true);
-            setError("");
-            try {
-              const b = Object.fromEntries(new FormData(e.currentTarget));
-              const r = await api("support", "POST", b);
-              setTicket(r.ticketId);
-              setCreating(false);
-              list.refresh();
-            } catch (e: any) {
-              setError(e.message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          <Field
-            label="Subject"
-            name="subject"
-            required
-            minLength={4}
-            maxLength={150}
-          />
-          <textarea
-            name="message"
-            aria-label="How can we help?"
-            placeholder="Tell us a little about what happened."
-            required
-            minLength={2}
-            maxLength={2000}
-          />
-          <button className="button" disabled={busy}>
-            {busy ? "Sending…" : "Send to support"}
-          </button>
-          <ErrorText error={error} />
-        </form>
-      )}
-      <State
-        loading={list.loading && !list.data}
-        error={list.error}
-        retry={list.refresh}
-      >
-        {list.data?.tickets.length ? (
-          <div className="ticket-grid">
-            <aside className="ticket-list">
-              {list.data.tickets.map((t: Item) => (
-                <button
-                  key={t.id}
-                  className={ticket === t.id ? "active" : ""}
-                  onClick={() => setTicket(t.id)}
-                >
-                  <strong>{t.subject}</strong>
-                  <p className="small muted">
-                    {t.status.replaceAll("_", " ")} · {date(t.updated_at)}
-                  </p>
-                  {user?.role === "admin" && (
-                    <span className="small muted">{t.customer_name}</span>
-                  )}
-                </button>
-              ))}
-            </aside>
-            <div>
-              {ticket ? (
-                <State
-                  loading={detail.loading && !detail.data}
-                  error={detail.error}
-                  retry={detail.refresh}
-                >
-                  {detail.data && (
-                    <section className="panel">
-                      <div className="row between">
-                        <h2>{detail.data.ticket.subject}</h2>
-                        <button
-                          className="button quiet small"
-                          onClick={() =>
-                            api("support", "PATCH", {
-                              ticketId: ticket,
-                              status:
-                                detail.data.ticket.status === "resolved"
-                                  ? "open"
-                                  : "resolved",
-                            })
-                              .then(() => {
-                                detail.refresh();
-                                list.refresh();
-                              })
-                              .catch((e) => setNotice(e.message))
-                          }
-                        >
-                          {detail.data.ticket.status === "resolved"
-                            ? "Reopen ticket"
-                            : "Mark resolved"}
-                        </button>
-                      </div>
-                      <div className="messages" aria-live="polite">
-                        {detail.data.messages.map((m: Item) => (
-                          <div
-                            className={
-                              "message " +
-                              (m.sender_id === user.id ? "own" : "")
-                            }
-                            key={m.id}
-                          >
-                            <small>
-                              {m.sender_name} · {m.sender_role} ·{" "}
-                              {date(m.created_at)}
-                            </small>
-                            {m.message}
-                          </div>
-                        ))}
-                      </div>
-                      <form
-                        className="chat-form"
-                        onSubmit={async (e) => {
-                          e.preventDefault();
-                          setBusy(true);
-                          setError("");
-                          try {
-                            await api("support", "POST", {
-                              ticketId: ticket,
-                              message,
-                            });
-                            setMessage("");
-                            detail.refresh();
-                            list.refresh();
-                          } catch (e: any) {
-                            setError(e.message);
-                          } finally {
-                            setBusy(false);
-                          }
-                        }}
-                      >
-                        <textarea
-                          aria-label="Reply to ticket"
-                          placeholder="Write a reply…"
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          required
-                          minLength={2}
-                          maxLength={2000}
-                        />
-                        <button className="button" disabled={busy}>
-                          Send
-                        </button>
-                      </form>
-                      <ErrorText error={error} />
-                      <p className="small muted space-top">
-                        Messages refresh every eight seconds. You can leave and
-                        return to this conversation.
-                      </p>
-                    </section>
-                  )}
-                </State>
-              ) : (
-                <div className="empty">
-                  <ChatCircle size={44} />
-                  <h2>A conversation starts here.</h2>
-                  <p>Choose a ticket to see its history and reply.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <Empty
-            title="Nothing to untangle yet"
-            link="/help"
-            label="Visit the help centre"
-          >
-            Create a ticket whenever you need a hand. It will stay here with its
-            replies.
-          </Empty>
-        )}
-      </State>
-    </>
-  );
-}
+export { SupportWorkspace } from "./SupportConsole";
+
 export function AssistantScreen() {
   return (
     <div className="page narrow">
@@ -502,7 +295,19 @@ export function HelpScreen() {
     ],
     [
       "Where are my messages?",
-      "Support tickets and replies are saved in your account. Open Contact support to read or continue a conversation.",
+      "Support tickets and replies are saved in your account. Open Contact support to read or continue a conversation. The owner handles the support inbox.",
+    ],
+    [
+      "What if an item seems missing, damaged or incorrect?",
+      "Open Contact support, choose Order or delivery or Product issue, link your demo order and attach up to four photos. No real parcel is sent; the owner can investigate the simulated order and reply in the same conversation.",
+    ],
+    [
+      "How do payment or refund problems get help?",
+      "Choose Payment or refund in Contact support and link the order. Include the order reference, but never card numbers or passwords. Razorpay payments and refunds here use test mode only.",
+    ],
+    [
+      "Can sellers contact the owner?",
+      "Yes. Sellers can open a Seller shop support case from their account or the website. The owner sees it in the same support queue.",
     ],
     [
       "Can I use real card details?",

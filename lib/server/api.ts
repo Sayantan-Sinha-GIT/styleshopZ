@@ -443,21 +443,22 @@ async function dispatch(req: Request) {
             : null;
     assert(mime, "Only JPEG, PNG and WebP images are supported.");
     const [up] = await query(
-      "INSERT INTO uploads(user_id,mime,data) VALUES($1,$2,$3) RETURNING id",
-      [u.id, mime, buffer.toString("base64")],
+      "INSERT INTO uploads(user_id,mime,data,private) VALUES($1,$2,$3,$4) RETURNING id",
+      [u.id, mime, buffer.toString("base64"), form.get("private") === "true"],
     );
     return { url: "/uploads/" + up.id };
   }
   if (path === "account/export") {
     const u = await requireUser();
-    const [addresses, orders, lists, tickets] = await Promise.all([
+    const [addresses, orders, lists, tickets, supportMessages] = await Promise.all([
       query("SELECT * FROM addresses WHERE user_id=$1", [u.id]),
       query("SELECT * FROM orders WHERE user_id=$1", [u.id]),
       query("SELECT * FROM wishlists WHERE user_id=$1", [u.id]),
       query("SELECT * FROM support_tickets WHERE user_id=$1", [u.id]),
+      query("SELECT m.* FROM support_messages m JOIN support_tickets t ON t.id=m.ticket_id WHERE t.user_id=$1 AND m.is_internal=FALSE ORDER BY m.created_at", [u.id]),
     ]);
     return Response.json(
-      { profile: u, addresses, orders, wishlists: lists, tickets },
+      { profile: u, addresses, orders, wishlists: lists, tickets, supportMessages },
       {
         headers: {
           "Content-Disposition": 'attachment; filename="styleshopz-data.json"',

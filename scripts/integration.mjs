@@ -353,10 +353,27 @@ try {
     );
   });
   await test("return refund restores stock exactly once", async () => {
+    const proof = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZlS8AAAAASUVORK5CYII=', 'base64');
+    async function proofUpload(privatePhoto, cookie) {
+      const form = new FormData();
+      form.set('file', new File([proof], 'return-proof.png', {type:'image/png'}));
+      if (privatePhoto) form.set('private', 'true');
+      const response = await fetch(base+'/api/uploads', {method:'POST',headers:{Cookie:cookie},body:form});
+      assert.equal(response.status,200);
+      return (await response.json()).url;
+    }
+    const publicPhoto = await proofUpload(false,a);
+    const otherPhoto = await proofUpload(true,b);
+    const privatePhoto = await proofUpload(true,a);
+    assert.equal((await api('returns','POST',{orderItemId:itemId,reason:'Photo must be private',photoUrls:[publicPhoto]},a)).status,400);
+    assert.equal((await api('returns','POST',{orderItemId:itemId,reason:'Photo belongs to someone else',photoUrls:[otherPhoto]},a)).status,400);
+    assert.equal((await fetch(base+privatePhoto,{headers:{Cookie:a}})).status,200);
+    assert.equal((await fetch(base+privatePhoto,{headers:{Cookie:adm}})).status,200);
+    assert.equal((await fetch(base+privatePhoto,{headers:{Cookie:b}})).status,404);
     const ret = await api(
       "returns",
       "POST",
-      { orderItemId: itemId, reason: "QA item return request" },
+      { orderItemId: itemId, reason: "QA item return request", photoUrls:[privatePhoto] },
       a,
     );
     assert.equal(ret.status, 200, JSON.stringify(ret.body));

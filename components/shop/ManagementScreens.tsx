@@ -888,10 +888,10 @@ function AdminWorkspace() {
           <h1>{tab[0].toUpperCase() + tab.slice(1)}</h1>
           <p>{adminDescriptions[tab]}</p>
         </div>
-        <button className="button quiet small" type="button" onClick={d.refresh} disabled={d.loading}>
+        {tab !== "support" && <button className="button quiet small" type="button" onClick={d.refresh} disabled={d.loading}>
           <ArrowClockwise size={17} />
           {d.loading ? "Refreshing…" : "Refresh"}
-        </button>
+        </button>}
       </div>
       <div className="admin-section-picker" onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
         <span>Section</span>

@@ -3,7 +3,7 @@
 ## Open the app
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.2.0/styleshopz-flutter-1.2.0.apk
+Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk
 Owner-only Android download: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
 
 The separate Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Owner sign-in is at the dedicated `/4632/admin/login` route; the public `/login` page accepts shopper and seller accounts only. The route is present in public source and the APK, so its name is not a security boundary. Password, role checks, short owner sessions, throttling, origin checks and security headers protect the account.
@@ -36,7 +36,7 @@ Use Node.js 24. Install dependencies with npm ci. Configure .env.local from .env
 
 npm run migrate applies the baseline and upgrade migrations. npm run db:upgrade applies only the upgrades. Back up a database before running a migration against a different environment. The development seed is explicitly gated, skips a populated non-seed catalogue and does not overwrite existing passwords.
 
-Run npm test, npm run lint, npm audit --audit-level=high, npm run test:integration and npm run test:discovery with a running local app. The integration runners also accept TEST_BASE_URL for the deployed worker. They create and clean up their own fixtures; administrator audit records remain. Upgrades are recorded in schema_migrations and are applied once.
+Run npm test, npm run lint, npm audit --audit-level=high, npm run test:integration, npm run test:management, npm run test:discovery and npm run test:support with a running local app. Browser suites are npm run test:browser and npm run test:support:browser (Chrome required). The integration runners also accept TEST_BASE_URL for the deployed worker. They create and clean up their own fixtures; administrator audit records remain. The release case inventory is in [QA_MATRIX.md](QA_MATRIX.md). Upgrades are recorded in schema_migrations and are applied once.
 
 Deploy with npm run build:cloudflare followed by npx wrangler deploy. Supply DATABASE_URL and AUTH_SECRET using Wrangler secrets. Set APP_COMMIT and APP_BUILT_AT to the deployed source revision/build time when releasing. /api/version identifies the deployed build. GitHub Actions performs verification; it does not automatically publish deployments or hold production secrets.
 
