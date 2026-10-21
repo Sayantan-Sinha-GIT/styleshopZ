@@ -2,15 +2,19 @@
 
 An Indian marketplace demonstration with a responsive Next.js website, a native Flutter shopper/seller app, and a separate owner-only Capacitor admin app. The website runs on Cloudflare Workers with a Neon PostgreSQL database.
 
-Website: https://styleshopz.srimantasutapa123.workers.dev
-Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk
-Owner-only Android APK: [releases/styleshopz-admin-1.5.1.apk](releases/styleshopz-admin-1.5.1.apk)
+| Open or install | Audience | Link |
+| --- | --- | --- |
+| Website | Shoppers, sellers and owner | [Open styleshopZ](https://styleshopz.srimantasutapa123.workers.dev) |
+| Flutter Android app 1.3.0 | Shoppers and sellers | [Download the signed APK](https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk) |
+| Capacitor Android app 1.5.1 | Owner only | [Download the signed APK](https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/admin-v1.5.1/styleshopz-admin-1.5.1.apk) |
+
+[See the complete 1.7.0 release](https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/tag/v1.7.0) for both Android files and their checksums.
 
 The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Its dedicated sign-in URL is not linked from the public storefront; the owner role and password, rather than an obscure URL, enforce access. Credentials and signing keys are excluded from Git.
 
 ## What works
 
-- Department-aware search, synonyms, typo recovery, brand/price filters, sorting, pagination, product variants, image galleries, comparison and deals. The catalogue has 153 sample products across 17 ranges.
+- Department-aware search, synonyms, typo recovery, brand/price filters, sorting, pagination, product variants, image galleries, comparison and deals. The catalogue has more than 150 sample products across 17 ranges.
 - Automatic promotional carousel with pause controls, richer collection photography, responsive motion and reduced-motion support.
 - Customer Google sign-in and email/password accounts; fixed owner credentials use a separate owner sign-in. Brevo verification and recovery use expiring, single-use email codes.
 - Ola address search, movable map pin and optional GPS, with saved delivery coordinates and manual address entry.

@@ -4,7 +4,8 @@
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
 Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.3.0/styleshopz-flutter-1.3.0.apk
-Owner-only Android download: [releases/styleshopz-admin-1.5.1.apk](releases/styleshopz-admin-1.5.1.apk)
+Owner-only Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/admin-v1.5.1/styleshopz-admin-1.5.1.apk
+Complete release with both signed APKs: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/tag/v1.7.0
 
 The separate Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Owner sign-in is at the dedicated `/4632/admin/login` route; the public `/login` page accepts shopper and seller accounts only. The route is present in public source and the APK, so its name is not a security boundary. Password, role checks, short owner sessions, throttling, origin checks and security headers protect the account.
 
@@ -48,7 +49,7 @@ The owner-only Capacitor WebView app is in `android`. It launches the dedicated 
 
 The Android project is in android and loads the URL in capacitor.config.json. UI/server fixes deploy to the website and are picked up by the app. Changes to native behaviour, permissions, icons or the server URL need a new signed APK and a higher Android versionCode.
 
-The release signing key is outside the repository at C:/Users/Sayantan Sinha/.codex/styleshopz-release/styleshopz.jks. Its password is stored privately alongside it. Losing the key prevents installing future updates over this signed application. Do not publish either file.
+The owner's release signing key and password are stored outside the repository. Losing the key prevents installing future updates over this signed application. Do not publish either file.
 
 Use JDK 21, Android SDK platform 36 and the Gradle wrapper. Set STYLESHOPZ_KEYSTORE to the key path and STYLESHOPZ_STORE_PASSWORD to its password. The key alias is styleshopz. Run npx cap sync android, then android/gradlew.bat assembleRelease from the android directory. On this Windows host set JDK_JAVA_OPTIONS to -Djdk.net.unixdomain.tmpdir pointing to a short existing temporary directory; the packaged host's default temporary path is too long for Java's Unix-domain socket path.
 

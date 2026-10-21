@@ -1,48 +1,37 @@
-# styleshopZ — release 1.2
+# styleshopZ — prototype release 1.7.0
 
 ## Product and audience
 
-A practical Amazon/Flipkart-style demonstration marketplace for Indian shoppers, sellers and an owner administrator. Prioritise finding products, understanding prices and completing recoverable shopping tasks. Use warm, readable charcoal/amber interfaces, light/dark themes, responsive grids, richer photography and purposeful animation that respects reduced-motion preferences.
+styleshopZ is an Indian marketplace demonstration for shoppers, sellers and one owner administrator. It is a working software prototype with sample merchandise. The experience should make product discovery, checkout, order follow-up and support understandable on both phones and desktop screens. The visual language uses warm charcoal and amber, clear typography, product photography, purposeful motion and reduced-motion support.
 
-This document records the release boundary. Cloudflare and Neon host the app. A dedicated Firebase project supplies Google identity, Ola supplies address lookup, and Brevo supplies verification/recovery email when the owner adds its credentials.
+The website is hosted on Cloudflare Workers with Neon PostgreSQL. A native Flutter app serves shoppers and sellers. A separate Capacitor app opens the owner console. Both Android APKs are distributed directly through GitHub Releases; there is no Play Store listing.
 
-## Customer journey
+## Shopper journey
 
-Browse the sample catalogue without an account. Home highlights curated products and animated campaigns; full catalogue and department pages provide discovery beyond home. Search supports department scope, suggestions, recent searches, weighted full-text matching, common shopping synonyms and labelled typo recovery. Filter by category, brand, price, rating, discount and stock; sort and paginate results. Release 1.2 adds 102 curated products, 17 ranges and five leaf categories. Inspect variants, images, illustrative specifications, price observations, reviews and questions. Compare products, save items and use multiple wishlists.
+Visitors can browse more than 150 sample products across 17 catalogue ranges, inspect variants and reviews, compare items, and use category-aware search, synonyms, typo recovery, suggestions, sorting and filters. Curated collections and an automatically rotating campaign carousel support discovery without making the home page the entire catalogue.
 
-Register or sign in using Google or email/password to persist the bag, saved items, addresses and preferences. Google identities are verified server-side. Email verification and password recovery use expiring, rate-limited, single-use Brevo codes; delivery awaits owner credentials. Once enabled, new email accounts must verify before checkout. The fixed owner account uses its private password and has no Google access.
+Shoppers can register with email/password or Google. Email verification and password recovery use expiring, single-use codes delivered through Brevo. Signed-in shoppers can keep a bag, saved items, wishlists, addresses and notification preferences. Every order needs a complete address; Ola search, reverse lookup, a movable map pin and optional GPS assist entry, while manual entry remains available.
 
-Every order requires a complete delivery address. Ola search, reverse lookup, a movable map pin and optional GPS help fill the address; coordinates persist with the address and order snapshot. Manual entry remains available if location services fail. The server validates availability, holds exact quantities for 15 minutes and calculates prices and discounts from database records. Checkout supports clearly labelled demo payment and simulated cash on delivery. An idempotency key protects repeated submissions.
-
-Customers can view their own orders, item-level fulfilment and tracking, cancel eligible orders, download invoices, submit verified demo-purchase reviews after delivery, and request a return within seven days of item delivery. Support conversations persist and can receive administrator replies. Account export and customer deletion are available.
+The server calculates prices and discounts, reserves exact stock quantities, and uses idempotency keys to protect checkout retries. The prototype offers demo and simulated cash-on-delivery checkout plus Razorpay test-mode checkout. Shoppers can follow orders, download invoices, cancel eligible orders, review delivered purchases, request eligible returns with private evidence, and export or delete their account.
 
 ## Seller and owner journeys
 
-New sellers require administrator approval. Approved sellers can create and edit products/variants, manage stock, import up to 50 CSV rows as drafts, upload sample verification material and progress their own order items through the permitted fulfilment sequence. The ledger describes demonstration sales, not transferred money.
+Sellers can apply, submit sample verification details, upload their own product photos, maintain listings and variants, import CSV drafts, edit inventory and handle their order items. Demo Courier creates a simulated tracking number at shipment and reflects later delivery stages to the shopper. The seller workspace is available on the website and in the Flutter app.
 
-Administrators can approve sellers and products, moderate reviews, manage catalogue categories/promotions/banners, inspect orders, resolve returns and support tickets, manage users and view immutable audit records. Return approval and cancellation restore inventory only once.
+The owner uses a separate email/password entrance and role-checked console on the website or owner-only Capacitor app. The owner can review sellers and products, moderate feedback, manage catalogue categories and campaigns, inspect orders and returns, respond to support, manage users and inspect the audit trail. Owner credentials and Android signing material stay outside the public repository.
 
-## Trust and correctness
+## Support and assistant
 
-Use HTTP-only signed sessions with expiry and session revocation; hash passwords; enforce server-side ownership and role checks. Check origin on mutations, validate uploads by type/size, restrict private verification uploads, rate-limit authentication and keep secrets on the server. Lock inventory inside a shared database transaction; disregard client-supplied prices. Purchase checks control reviews, and return eligibility is calculated per delivered item.
+Shoppers and sellers can open categorized support cases, optionally link an owned order, attach private evidence, reply and resolve or reopen the conversation. The owner can search and filter a paginated queue, set priority, send public replies and keep internal notes hidden from customers. Cross-account case access and private-file access are denied by the server.
 
-The catalogue is sample content. Generated images and descriptions are illustrative; imported seed reviews and Q&A are visibly labelled. Demo payment never charges a card. Seller tracking and delivery are manually simulated. No real shipping, payouts or tax-compliance service is represented.
+The shopping assistant answers catalogue, offer, order and policy questions using the configured Gemini provider with Groq fallback. Supported cart mutations require explicit, signed, single-use confirmation. The guided catalogue assistant remains available when an AI provider is unavailable.
 
-## Assistant
+## Trust and release boundary
 
-Without provider keys, the guided assistant searches the real catalogue, shows offers and the signed-in customer's orders, explains policies and proposes supported cart actions. It requires explicit signed confirmation before mutation. Open-ended chat is unavailable until Gemini or Groq is configured. Daily request limits and persisted chat history apply.
+Sessions are signed, HTTP-only and revocable; passwords are hashed; server checks roles, ownership, origin, input and upload limits. Prices and stock are authoritative on the server. Private verification and return images are access-controlled. Authentication and support creation are rate-limited. The sample catalogue, photographs, specifications, feedback and seller data are illustrative.
 
-## Website and Android
+No real card charges, carrier bookings, seller payouts or warranties are offered. Razorpay uses test credentials; delivery and refunds are prototype simulations. A real commercial launch would need production KYC, tax, carrier, payment-settlement and operational processes. Provider availability and quotas still apply.
 
-Ship the responsive website and a signed release APK for Android 8 or later. The Capacitor application loads the same deployed HTTPS app, supports hardware-back navigation, handles authenticated PDF/JSON downloads and offers a bundled recovery screen when the server cannot load. Shopping and checkout require connectivity. The APK is distributed directly; Play Store publication is outside this release.
+## Acceptance and verification
 
-## Deferred integrations and features
-
-- Gemini/Groq open-ended chat: pending owner keys and live provider validation.
-- Brevo email delivery: verification/recovery implementation complete; pending owner API key, verified sender and actual email delivery validation.
-- Razorpay test checkout: guarded test-key/webhook configuration; pending external verification. Live-money processing is deliberately disabled.
-- Real carrier booking/tracking, seller settlements, real GST invoicing, production KYC, phone OTP, push notifications, biometric login, loyalty programmes and complete Hindi translation are future work.
-
-## Acceptance
-
-Pass server rule tests, TypeScript, dependency audit, production Cloudflare build, role/ownership checks, checkout/cancellation/return integration tests and a 50-buyer/10-unit inventory race. Verify desktop/mobile customer screens, actual browser checkout and the installed signed Android release. Record observed results and remaining external dependencies in TEST_REPORT.md.
+The release must pass TypeScript, unit and Flutter widget tests, Android builds and signature checks, Cloudflare production build, dependency audit, role/ownership checks, checkout/cancellation/return integrations, the 50-buyer stock race, customer/seller/owner browser journeys, and support edge cases. Install both APKs on an Android emulator, inspect the screens and system bars, and exercise native support and owner sign-out. The actual case inventory, observed results and limits are in [QA_MATRIX.md](QA_MATRIX.md) and [TEST_REPORT.md](TEST_REPORT.md).
