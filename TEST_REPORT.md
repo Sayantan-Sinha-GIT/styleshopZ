@@ -1,18 +1,19 @@
 # styleshopZ 1.7.0 — support and return-evidence release
 
-Verified 21 October 2026 against the live Cloudflare Worker (code commit `9fec00b`), Neon, local production build, headless Chrome at phone/desktop widths and an Android 15 emulator. The feature and adversarial case inventory is in [QA_MATRIX.md](QA_MATRIX.md). Both APKs were installed: the new signed Flutter shopper/seller app and the existing owner-only Capacitor app, which picks up the hosted owner console.
+Verified 21 October 2026 against the live Cloudflare Worker (code commit `dfeea64`), Neon, local production build, headless Chrome at phone/desktop widths and an Android 15 emulator. The feature and adversarial case inventory is in [QA_MATRIX.md](QA_MATRIX.md). Both signed APKs were installed: the Flutter shopper/seller app and the owner-only Capacitor app, which picks up the hosted owner console.
 
 | Release check | Result |
 | --- | --- |
 | Support API | 10 scenario groups passed locally and on the live Worker: order ownership, eight categories, private evidence, cross-account denial, internal-note secrecy, triage/status, seller cases, 37-ticket pagination, 11th-ticket rate limit, simultaneous replies |
-| Support browser | 5 scenarios passed locally and live: phone case creation with private image and XSS text, owner priority and private/public replies, customer visibility and reopening, phone owner layout, seller case |
+| Support browser | 6 scenarios passed locally and live: phone case creation with private image and XSS text, owner priority and private/public replies, customer visibility and reopening, phone owner layout, seller case, owner sign-out returning to private sign-in |
 | Shopping API/browser | 24 shopper/order integration and 23 full browser scenarios passed locally and live, including a 50-buyer stock race and private return-photo ownership |
 | Other regressions | 12 management and 5 discovery/location integration scenarios, 35 Vitest tests, 10 Flutter widget tests, TypeScript, Flutter analyzer, Next/OpenNext production builds passed |
 | Security/release | `npm audit --audit-level=high`: 0 vulnerabilities; 314 tracked files and both APKs scanned against 11 private values: no matches |
-| Android emulator | Flutter customer signed in, created/replied/resolved/reopened a live support case; owner APK signed in, opened the live support queue and conversation. Status and navigation bars remained clear. |
+| Android emulator | Flutter customer signed in, created/replied/resolved/reopened a live support case; owner APK signed in, opened the live support queue and conversation, and signed out to the private owner entrance. Status and navigation bars remained clear. |
 | Signed Flutter APK | Version 1.3.0 (code 4), Android package `com.styleshopz.styleshopz_flutter`, v2 signature verified, SHA-256 `ac102528b5c5021a460b505644493891711d3080fd4e3f006cb6b4fb188e7c55` |
+| Signed owner APK | Version 1.5.1 (code 9), Android package `com.styleshopz.app`, v2 signature verified, SHA-256 `ca7d1d168062b3c447338556132fc6aa7740f7ffe32b7bc763fae8af48cf4510` |
 
-The return proof upload now stays private to its customer and the owner. Support adds categorized, order-linked conversations, evidence, search/filter/pagination, priority, private owner notes, notifications, deliberate close/reopen flow and a native Flutter conversation screen. The owner APK binary remains 1.5.0 because its WebView loads the newly deployed console; it is not a shopper download.
+The return proof upload now stays private to its customer and the owner. Support adds categorized, order-linked conversations, evidence, search/filter/pagination, priority, private owner notes, notifications, deliberate close/reopen flow and a native Flutter conversation screen. The owner APK is 1.5.1: an emulator replay exposed sign-out incorrectly opening the storefront, so the owner session now returns to `/4632/admin/login`. It is an owner-only download.
 
 Google sign-in and Brevo delivery were previously confirmed by the owner; they were not repeated with a physical Google account or inbox in this run. The emulator, test providers and finite case matrix cannot prove every future device or provider outage. Payments, courier tracking and refunds remain prototype simulations or Razorpay test-mode transactions; no live money or parcels are involved.
 
