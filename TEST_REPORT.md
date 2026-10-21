@@ -1,4 +1,23 @@
-# styleshopZ 1.5.0 — owner console and security verification
+# styleshopZ 1.6.0 — catalogue, seller photos and demo courier
+
+Verified 21 October 2026 against the Neon database, local production build, headless Chrome at desktop and phone widths, and an Android emulator running the signed Flutter APK. The owner account was rotated to the requested credentials outside Git, and its old session and email sign-in were rejected. Credentials are kept in the ignored `OWNER_ACCESS.txt` on the owner's machine.
+
+| Release check | Result |
+| --- | --- |
+| Catalogue expansion | 51 new sample products across all 17 leaf categories; 153 live product detail APIs, 22 distinct image URLs, valid prices and nonnegative stock checked |
+| Seller photo | Own public photo uploaded and displayed on a shopper product page; another seller's photo and private KYC photo rejected |
+| Browser journey | 23/23 scenarios passed with no page errors: shopping, checkout, owner/seller views, mobile layouts, returns, support and Razorpay test checkout |
+| API/database integration | 24 shopper/order, 12 management and 5 discovery/location scenarios passed |
+| TypeScript, Vitest, Flutter | TypeScript passed, 35 Vitest tests passed, Flutter analyzer clean and 9 widget tests passed |
+| Dependencies | `npm audit --audit-level=high`: 0 vulnerabilities |
+| Android emulator | Flutter 1.2.0 installed and launched; home and search screens inspected, with clear system bars and no overlap |
+| Signed APK | v2 signature verified; SHA-256 `2f476f53c642ff9f7762df5425b23f29020d9802f2e3fa253133dc662fe743d4` |
+
+The built-in Demo Courier assigns a tracking ID when a seller marks an item shipped. The seller can progress it through out-for-delivery and delivered; the shopper sees the same status. This is a simulation and no real parcel is booked. Razorpay uses **test mode**: the hosted checkout widget opens and provider test transactions were previously captured and refunded, but no real money can be accepted with these keys. Seller image ownership is enforced server-side, including a ban on using private uploads as public product photos.
+
+The Flutter shopper/seller APK is versionName 1.2.0, versionCode 3, package `com.styleshopz.styleshopz_flutter`. The owner-only Capacitor APK remains 1.5.0 and is committed under `releases/`; it loads the hosted owner console. The APKs have separate purposes. The web and phone screens were inspected, but this verification cannot prove behavior on every Android device or future provider availability.
+
+## Previous release: 1.5.0
 
 Verified 21 October 2026 against the live Cloudflare Worker, a real Neon test fixture set, headless Chrome at 390 px and 1365 px, and an Android 15 emulator running the signed owner APK. The public storefront signs in shoppers and sellers; owner email/password sign-in is at `/4632/admin/login`, and the old `/admin` page returns 404. The route is visible in public source, so role authorization, password validation and rate limiting remain the security boundary.
 

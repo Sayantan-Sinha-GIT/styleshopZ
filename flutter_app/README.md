@@ -14,7 +14,7 @@ This is the Flutter Android app for shoppers and sellers. It connects to the exi
 
 - Create a seller account with a shop name, sign in by email, and see approval status.
 - Update shop and optional demo KYC details, select a product photo, create and edit products, variants, prices and stock, and archive listings.
-- Review simulated order items and advance fulfilment step by step with a tracking ID. See returns and simulated ledger totals.
+- Review simulated order items and advance fulfilment step by step. Demo Courier creates a test tracking number automatically when an item ships. See returns and simulated ledger totals.
 
 The Flutter app does not accept admin accounts. The separate Capacitor APK is for owner/admin control only; shoppers and sellers should not download it. The backend, service keys, and storefront website remain in the parent project. The native map uses OpenStreetMap tiles with attribution; Ola location lookup runs through the parent's server so its private key stays there.
 

@@ -896,7 +896,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   return ListTile(
                     title: Text('${snapshot?['title'] ?? 'Product'}'),
                     subtitle: Text(
-                      '${_status(item['status'])} · Qty ${item['quantity']}',
+                      '${_status(item['status'])} · Qty ${item['quantity']}${item['tracking_id'] == null ? '' : '\nDemo courier tracking: ${item['tracking_id']}'}',
                     ),
                   );
                 }),

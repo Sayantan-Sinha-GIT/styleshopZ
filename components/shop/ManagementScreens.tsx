@@ -749,14 +749,13 @@ export function ShipmentTable({
   admin?: boolean;
 }) {
   const { setNotice } = useStore(),
-    [busy, setBusy] = useState(""),
-    [tracking, setTracking] = useState<Record<string, string>>({});
+    [busy, setBusy] = useState("");
   return (
     <div className="panel table-wrap">
       <h2>Orders to move along</h2>
       <p className="small muted">
-        Shipping is simulated. Advance one step at a time; enter a tracking ID
-        when shipping.
+        Demo courier: advance one step at a time. A test tracking number is
+        created automatically when you mark an item shipped. No parcel moves.
       </p>
       <table>
         <thead>
@@ -785,22 +784,12 @@ export function ShipmentTable({
               <td data-label="State">
                 {statusName(i.status)}
                 {i.tracking_id && (
-                  <small style={{ display: "block" }}>{i.tracking_id}</small>
+                  <small style={{ display: "block" }}>Demo courier · {i.tracking_id}</small>
                 )}
               </td>
               <td data-label="Next step">
                 {nextStatus[i.status] && (
                   <div className="stack" style={{ gap: 8 }}>
-                    {i.status === "packed" && (
-                      <input
-                        placeholder="Tracking ID"
-                        aria-label={"Tracking ID for " + i.id}
-                        value={tracking[i.id] || ""}
-                        onChange={(e) =>
-                          setTracking({ ...tracking, [i.id]: e.target.value })
-                        }
-                      />
-                    )}
                     <button
                       className="button secondary small"
                       disabled={busy === i.id}
@@ -813,7 +802,6 @@ export function ShipmentTable({
                             {
                               orderItemId: i.id,
                               newStatus: nextStatus[i.status],
-                              trackingId: tracking[i.id],
                             },
                           );
                           refresh();

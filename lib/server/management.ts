@@ -157,6 +157,14 @@ export async function saveProduct(
     }
     if (b.imageUrl) {
       safeImage(b.imageUrl);
+      if (b.imageUrl.startsWith("/uploads/")) {
+        const uploadId = uuid(b.imageUrl.slice("/uploads/".length));
+        const [upload] = await q(
+          "SELECT id FROM uploads WHERE id=$1 AND user_id=$2 AND private=FALSE",
+          [uploadId, u.id],
+        );
+        assert(upload, "Choose a product photo you uploaded.");
+      }
       await q("DELETE FROM product_images WHERE product_id=$1", [id]);
       await q(
         "INSERT INTO product_images(product_id,url,alt_text) VALUES($1,$2,$3)",

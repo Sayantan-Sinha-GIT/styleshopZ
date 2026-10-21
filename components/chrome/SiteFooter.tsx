@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { SpringLetters, Magnetic } from "@/components/fx/more";
-const androidApkUrl = "https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk";
+const androidApkUrl = "https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.2.0/styleshopz-flutter-1.2.0.apk";
 export function SiteFooter() {
   return (
     <footer className="shop-footer">

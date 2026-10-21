@@ -594,7 +594,9 @@ export async function fulfil(u: Row, b: any) {
     );
     const tracking =
       b.newStatus === "shipped"
-        ? text(b.trackingId, "Tracking ID", 4, 80)
+        ? b.trackingId
+          ? text(b.trackingId, "Tracking ID", 4, 80)
+          : `SZDEMO${randomUUID().replaceAll("-", "").slice(0, 14).toUpperCase()}`
         : i.tracking_id;
     await q("UPDATE order_items SET status=$2,tracking_id=$3,delivered_at=CASE WHEN $2='delivered' THEN COALESCE(delivered_at,NOW()) ELSE delivered_at END WHERE id=$1", [
       i.id,

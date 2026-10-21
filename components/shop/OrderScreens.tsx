@@ -925,7 +925,7 @@ function Order({ id }: { id: string }) {
                         </p>
                         {i.tracking_id && (
                           <p className="small muted">
-                            Tracking: {i.tracking_id}
+                            Demo courier tracking: {i.tracking_id}
                           </p>
                         )}
                         <div className="row space-top">

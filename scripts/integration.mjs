@@ -329,10 +329,16 @@ try {
       const r = await api(
         "seller/orders",
         "POST",
-        { orderItemId: itemId, newStatus, trackingId: "QA-TRACK" },
+        { orderItemId: itemId, newStatus },
         sel,
       );
       assert.equal(r.status, 200, JSON.stringify(r.body));
+      if(newStatus==="shipped"){
+        const [shipment]=await q("SELECT tracking_id FROM order_items WHERE id=$1",[itemId]);
+        assert.match(shipment.tracking_id,/^SZDEMO[A-F0-9]{14}$/);
+        const order=await api("orders/"+orderId,"GET",undefined,a);
+        assert.equal(order.body.items[0].tracking_id,shipment.tracking_id);
+      }
     }
     assert.equal(
       (

@@ -490,44 +490,12 @@ class _SellerOrdersState extends State<SellerOrders> {
     final id = '${item['id']}';
     final status = next['${item['status']}'];
     if (status == null || busyId != null) return;
-    String? tracking;
-    if (status == 'shipped') {
-      var draftTracking = '';
-      tracking = await showDialog<String>(
-        context: context,
-        builder: (context) => StatefulBuilder(
-          builder: (context, setDialogState) => AlertDialog(
-            title: const Text('Add a tracking ID'),
-            content: TextField(
-              onChanged: (value) => setDialogState(() => draftTracking = value),
-              autofocus: true,
-              maxLength: 80,
-              decoration: const InputDecoration(labelText: 'Tracking ID'),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: draftTracking.trim().length < 4
-                    ? null
-                    : () => Navigator.pop(context, draftTracking.trim()),
-                child: const Text('Mark shipped'),
-              ),
-            ],
-          ),
-        ),
-      );
-      if (tracking == null) return;
-    }
     if (!mounted) return;
     setState(() => busyId = id);
     try {
       await ShopScope.of(context).api.post('seller/orders', {
         'orderItemId': id,
         'newStatus': status,
-        'trackingId': ?tracking,
       });
       await widget.onRefresh();
     } catch (e) {
@@ -545,7 +513,7 @@ class _SellerOrdersState extends State<SellerOrders> {
         Text('DEMO ORDERS.', style: Theme.of(context).textTheme.displayMedium),
         const SizedBox(height: 8),
         const Text(
-          'Advance each item one step at a time. Shipping and delivery are simulated.',
+          'Demo courier creates a test tracking number when you mark an item shipped. No parcel moves.',
         ),
         const SizedBox(height: 18),
         if (items.isEmpty) const _EmptyLine('No order items yet.'),
@@ -570,7 +538,7 @@ class _SellerOrdersState extends State<SellerOrders> {
                     'Destination: ${(item['address_snapshot'] as Map?)?['name'] ?? '—'}, ${(item['address_snapshot'] as Map?)?['city'] ?? '—'} ${(item['address_snapshot'] as Map?)?['pincode'] ?? ''}',
                   ),
                   Text(
-                    'Status: ${_label(item['status'])}${item['tracking_id'] == null ? '' : ' · ${item['tracking_id']}'}',
+                    'Status: ${_label(item['status'])}${item['tracking_id'] == null ? '' : ' · Demo courier ${item['tracking_id']}'}',
                   ),
                   if (next.containsKey('${item['status']}'))
                     Padding(

@@ -53,7 +53,24 @@ try{
     assert.equal((await api("seller/products","POST",{...productPayload,variants:[null]},seller)).status,400);
     assert.equal((await api("seller/products","POST",{...productPayload,variants:[{...productPayload.variants[0],price_paise:1.5}]},seller)).status,400);
     const created=await api("seller/products","POST",productPayload,seller);assert.equal(created.status,200,JSON.stringify(created.body));productId=created.body.id;await manifest();
-    const detail=await api("products/"+productId);assert.equal(detail.status,200);variantId=detail.body.variants[0].id;assert.deepEqual(detail.body.variants[0].options,{Color:"Amber"});
+    const detail=await api("products/"+productId);assert.equal(detail.status,200);variantId=detail.body.variants[0].id;productPayload.variants[0].id=variantId;assert.deepEqual(detail.body.variants[0].options,{Color:"Amber"});
+  });
+  await test("seller product photo upload is public only when owned and not private",async()=>{
+    const ownPhoto=await upload(seller),foreignPhoto=await upload(customer),privatePhoto=await upload(seller);
+    await q("UPDATE uploads SET private=TRUE WHERE id=$1",[privatePhoto.split('/').pop()]);
+    for(const imageUrl of [foreignPhoto,privatePhoto]){
+      const rejected=await api("seller/products","POST",{...productPayload,id:productId,imageUrl},seller);
+      assert.equal(rejected.status,400,JSON.stringify(rejected.body));
+    }
+    const saved=await api("seller/products","POST",{...productPayload,id:productId,imageUrl:ownPhoto},seller);
+    assert.equal(saved.status,200,JSON.stringify(saved.body));
+    const detail=await api("products/"+productId);
+    assert.equal(detail.body.images[0].url,ownPhoto);
+    const image=await fetch(base+ownPhoto);
+    assert.equal(image.status,200);
+    assert.equal(image.headers.get('content-type'),'image/png');
+    assert.equal((await image.arrayBuffer()).byteLength,png.byteLength);
+    productPayload={...productPayload,imageUrl:ownPhoto};
   });
   await test("seller inventory updates respect active holds and visibility",async()=>{
     const hold=await api("checkout/hold","POST",{items:[{variantId,quantity:2}]});assert.equal(hold.status,200);

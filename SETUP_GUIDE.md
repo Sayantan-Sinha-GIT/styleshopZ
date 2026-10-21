@@ -3,7 +3,7 @@
 ## Open the app
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk
+Shopper and seller Android download: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.2.0/styleshopz-flutter-1.2.0.apk
 Owner-only Android download: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
 
 The separate Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Owner sign-in is at the dedicated `/4632/admin/login` route; the public `/login` page accepts shopper and seller accounts only. The route is present in public source and the APK, so its name is not a security boundary. Password, role checks, short owner sessions, throttling, origin checks and security headers protect the account.
@@ -14,7 +14,7 @@ Private administrator and seller access is in OWNER_ACCESS.txt on the owner's co
 
 ## Services and costs
 
-The deployed app uses Cloudflare Workers and Neon PostgreSQL. Customer Google sign-in uses a dedicated Firebase project, styleshopz-market-2026. Ola handles address lookup through the server; the map uses attributed OpenStreetMap tiles. Dispatch and the owner's other projects are unchanged. Provider quotas still apply. This release uses demonstration payments and manually simulated fulfilment.
+The deployed app uses Cloudflare Workers and Neon PostgreSQL. Customer Google sign-in uses a dedicated Firebase project, styleshopz-market-2026. Ola handles address lookup through the server; the map uses attributed OpenStreetMap tiles. Dispatch and the owner's other projects are unchanged. Provider quotas still apply. This release uses demonstration payments and built-in Demo Courier tracking for simulated fulfilment.
 
 ## Provider configuration
 
@@ -26,7 +26,7 @@ BREVO_API_KEY and MAIL_FROM enable email verification and password reset. MAIL_F
 
 FIREBASE_WEB_API_KEY is public application configuration returned by /api/config; the Ola key remains server-side. The dedicated Firebase project is styleshopz-market-2026. The web domain and release signing certificate are registered there. No Play Store account is needed for direct APK installation.
 
-Razorpay accepts TEST keys only and requires RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET and RAZORPAY_WEBHOOK_SECRET. Configure a payment.captured webhook at https://styleshopz.srimantasutapa123.workers.dev/api/payments/webhook using the same webhook secret. Demo payment and simulated COD remain available. No real payment or courier integration is included.
+Razorpay accepts TEST keys only and requires RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET and RAZORPAY_WEBHOOK_SECRET. Configure a payment.captured webhook at https://styleshopz.srimantasutapa123.workers.dev/api/payments/webhook using the same webhook secret. Demo payment and simulated COD remain available. Test payments do not move real money. Seller fulfilment uses the built-in Demo Courier: marking an item shipped assigns a test tracking number, and subsequent status updates appear to the shopper. It never books a real carrier or moves a parcel.
 
 Razorpay refunds require enough available sandbox balance, including the effect of provider fees. A first isolated test payment can therefore be captured successfully while its full refund receives a generic provider error. The final hosted test confirmed this: a separate fake reserve payment allowed the original full refund to process. The prototype keeps a virtual test reserve; do not add real funds or switch to live keys. If a future sandbox refund fails, the app preserves the active order and stock until the provider accepts the refund. Check the test dashboard balance before retrying.
 

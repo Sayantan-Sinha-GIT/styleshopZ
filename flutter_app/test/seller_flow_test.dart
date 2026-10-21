@@ -63,9 +63,11 @@ class FakeShopApi extends ShopApi {
       return {'user': account};
     }
     if (path == 'seller/orders') {
-      orderItems.firstWhere((item) => item['id'] == body['orderItemId'])
-        ..['status'] = body['newStatus']
-        ..['tracking_id'] = body['trackingId'];
+      final item = orderItems.firstWhere((item) => item['id'] == body['orderItemId']);
+      item['status'] = body['newStatus'];
+      if (body['newStatus'] == 'shipped') {
+        item['tracking_id'] = 'SZDEMO1234567890AB';
+      }
       return {'ok': true};
     }
     throw StateError('Unexpected POST $path');
@@ -161,7 +163,7 @@ void main() {
     state.dispose();
   });
 
-  testWidgets('seller advances an order through the tracking dialog', (
+  testWidgets('seller ships an order with automatic demo courier tracking', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -204,13 +206,9 @@ void main() {
     expect(find.text('Mark Shipped'), findsOneWidget);
     await tester.tap(find.text('Mark Shipped'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField).last, 'QA-TRACK-001');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Mark shipped'));
-    await tester.pumpAndSettle();
     expect(api.orderItems.first['status'], 'shipped');
-    expect(api.orderItems.first['tracking_id'], 'QA-TRACK-001');
-    expect(find.text('Status: Shipped · QA-TRACK-001'), findsOneWidget);
+    expect(api.orderItems.first['tracking_id'], 'SZDEMO1234567890AB');
+    expect(find.text('Status: Shipped · Demo courier SZDEMO1234567890AB'), findsOneWidget);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
     state.dispose();

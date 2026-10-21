@@ -3,21 +3,21 @@
 An Indian marketplace demonstration with a responsive Next.js website, a native Flutter shopper/seller app, and a separate owner-only Capacitor admin app. The website runs on Cloudflare Workers with a Neon PostgreSQL database.
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
-Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk
+Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.2.0/styleshopz-flutter-1.2.0.apk
 Owner-only Android APK: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
 
 The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Its dedicated sign-in URL is not linked from the public storefront; the owner role and password, rather than an obscure URL, enforce access. Credentials and signing keys are excluded from Git.
 
 ## What works
 
-- Department-aware search, synonyms, typo recovery, brand/price filters, sorting, pagination, product variants, image galleries, comparison and deals. Release 1.2 adds 102 curated sample products across 17 ranges.
+- Department-aware search, synonyms, typo recovery, brand/price filters, sorting, pagination, product variants, image galleries, comparison and deals. The catalogue has 153 sample products across 17 ranges.
 - Automatic promotional carousel with pause controls, richer collection photography, responsive motion and reduced-motion support.
 - Customer Google sign-in and email/password accounts; fixed owner credentials use a separate owner sign-in. Brevo verification and recovery use expiring, single-use email codes.
 - Ola address search, movable map pin and optional GPS, with saved delivery coordinates and manual address entry.
 - Customer registration and login, guest bag merge, saved items, multiple wishlists, addresses, profile, notification preferences and data export.
 - Server-priced checkout with expiring stock reservations, idempotent orders, coupons, demo payment and simulated cash on delivery.
 - Order tracking, cancellation, downloadable invoices, purchase-gated reviews and return requests with proof uploads.
-- Seller onboarding and approval, catalogue editing, CSV drafts, stock management and sequential fulfilment with tracking.
+- Seller onboarding and approval, photo uploads, catalogue editing, CSV drafts, stock management and sequential fulfilment with automatic Demo Courier tracking.
 - Admin moderation, users, sellers, orders, returns, coupons, deals, banners, categories, support replies and append-only audit records in a compact phone-friendly owner console.
 - A Gemini shopping assistant with Groq fallback for products, offers, orders, cart actions and policy questions. Mutations require a signed, single-use confirmation.
 - The Flutter app has native navigation, catalogue search, customer email/Google sign-in, a bag, Ola-assisted addresses, demo checkout, orders and the shopping assistant. Sellers can manage their shop, listings, photos, inventory and simulated fulfilment. Its source and build instructions are in [flutter_app](flutter_app/README.md).
