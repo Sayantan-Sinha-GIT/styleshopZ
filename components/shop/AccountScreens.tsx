@@ -31,11 +31,13 @@ import {
 } from "./Store";
 import { LocationPicker } from './LocationPicker';
 import { googleLoginToken } from '@/lib/google-login';
+import { OWNER_CONSOLE_PATH } from '@/lib/owner-routes';
+import { OwnerBar } from './OwnerBar';
 
-export function LoginScreen() {
+export function LoginScreen({ ownerOnly = false }: { ownerOnly?: boolean }) {
   const params = useSearchParams(),
-    { setUser, setNotice, config } = useStore();
-  const adminOnly=params.get('admin')==='1' || params.get('next')?.startsWith('/admin');
+    { user, setUser, setNotice, config } = useStore();
+  const adminOnly=ownerOnly;
   const [mode, setMode] = useState(
       params.get("signup") && !adminOnly ? "signup" : "login",
     ),
@@ -44,11 +46,14 @@ export function LoginScreen() {
     [busy, setBusy] = useState(false),
     [success, setSuccess] = useState("");
   const [resetEmail,setResetEmail]=useState('');
+  useEffect(() => {
+    if (adminOnly && user?.role === 'admin') location.replace(OWNER_CONSOLE_PATH);
+  }, [adminOnly, user?.role]);
   const finishLogin=async(r:any)=>{
     setUser(r.user);
-    try{const guest=JSON.parse(localStorage.getItem('styleshopz.guest.v2') || '[]');if(guest.length){await api('cart','POST',{items:guest});localStorage.removeItem('styleshopz.guest.v2');}}catch{setNotice('Some guest items could not be merged. Your guest bag is still saved on this device.');}
+    if(r.user.role==='customer')try{const guest=JSON.parse(localStorage.getItem('styleshopz.guest.v2') || '[]');if(guest.length){await api('cart','POST',{items:guest});localStorage.removeItem('styleshopz.guest.v2');}}catch{setNotice('Some guest items could not be merged. Your guest bag is still saved on this device.');}
     const next=params.get('next');
-    const destination=next?.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')?next:r.user.role==='seller'?'/seller':r.user.role==='admin'?'/admin':'/';
+    const destination=adminOnly?OWNER_CONSOLE_PATH:next?.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')?next:r.user.role==='seller'?'/seller':'/';
     location.assign(r.verificationSent?'/verify-email?next='+encodeURIComponent(destination):destination);
   };
   const signGoogle=async()=>{
@@ -73,7 +78,7 @@ export function LoginScreen() {
         return;
       }
       const r = await api(
-        "auth/" + (mode === "signup" ? "register" : "login"),
+        adminOnly ? "auth/owner-login" : "auth/" + (mode === "signup" ? "register" : "login"),
         "POST",
         { ...fields, role },
       );
@@ -84,8 +89,10 @@ export function LoginScreen() {
       setBusy(false);
     }
   };
+  if(adminOnly && user?.role==='admin')return <div className="owner-surface"><OwnerBar/><div className="owner-loading" role="status">Opening owner console…</div></div>;
   return (
-    <div className="auth-wrap">
+    <div className={adminOnly ? "auth-wrap owner-surface owner-login" : "auth-wrap"}>
+      {adminOnly && <OwnerBar/>}
       <div className="auth-picture">
         <img src="/photos/banner1.webp" alt="Headphones in soft studio light" />
         <h2>Good finds start here.</h2>
@@ -238,7 +245,7 @@ export function LoginScreen() {
           </button>
         )}
         <p className="small muted">
-          {adminOnly?'Owner access is limited to the preconfigured email and password.':'Demonstration shop · Google sign-in verifies your email automatically.'}
+          {adminOnly?'This entrance accepts only the owner account. Access is checked on every request.':'Demonstration shop · Google sign-in verifies your email automatically.'}
         </p>
       </div>
     </div>
@@ -312,7 +319,7 @@ export function AccountScreen() {
             </Link>
           ))}
           {user?.role !== "customer" && (
-            <Link className="account-tile" href={"/" + user?.role}>
+            <Link className="account-tile" href={user?.role === "admin" ? OWNER_CONSOLE_PATH : "/seller"}>
               <Storefront size={29} />
               <h2>{user?.role === "admin" ? "Admin" : "Seller"} workspace</h2>
               <p className="muted">Manage your side of the shop.</p>

@@ -15,6 +15,7 @@ import {
 } from "@phosphor-icons/react";
 import { useStore, api } from "@/components/shop/Store";
 import { useTheme, setTheme as applyTheme } from "@/lib/client/theme";
+import { OWNER_CONSOLE_PATH } from "@/lib/owner-routes";
 export function SiteHeader() {
   const { user, cart, language, switchLanguage } = useStore(),
     router = useRouter(),
@@ -182,7 +183,7 @@ export function SiteHeader() {
             </button>
             <Link
               className="header-account"
-              href={user ? "/customer" : "/login"}
+              href={user?.role === "admin" ? OWNER_CONSOLE_PATH : user ? "/customer" : "/login"}
             >
               <UserCircle size={25} />
               <span>

@@ -39,7 +39,6 @@ export function SiteFooter() {
         <div>
           <h3>Behind the shop</h3>
           <Link href="/seller">Seller workspace</Link>
-          <Link href="/admin">Admin workspace</Link>
           <a className="android-download" href={androidApkUrl}>
             Get the shopper &amp; seller app <ArrowUpRight size={14} />
           </a>

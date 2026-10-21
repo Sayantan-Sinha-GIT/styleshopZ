@@ -172,7 +172,7 @@ export async function adminData(section: string) {
   if (section === "sellers")
     return {
       sellers: await query(
-        `SELECT s.*,u.name owner_name,u.email,(SELECT COUNT(*)::int FROM products WHERE seller_id=s.id) product_count FROM sellers s JOIN users u ON u.id=s.user_id ORDER BY s.created_at DESC LIMIT 1000`,
+        `SELECT s.*,u.name owner_name,u.email,(SELECT COUNT(*)::int FROM products WHERE seller_id=s.id) product_count FROM sellers s JOIN users u ON u.id=s.user_id WHERE u.deleted_at IS NULL ORDER BY s.created_at DESC LIMIT 1000`,
       ),
     };
   if (section === "orders")
@@ -217,7 +217,7 @@ export async function adminData(section: string) {
       ),
     };
   const [stats] = await query(
-    `SELECT (SELECT COUNT(*)::int FROM users WHERE deleted_at IS NULL) users,(SELECT COUNT(*)::int FROM products WHERE status='live' AND deleted_at IS NULL) products,(SELECT COUNT(*)::int FROM orders WHERE status NOT IN('cancelled','awaiting_payment')) orders,(SELECT COALESCE(SUM(o.total_paise-COALESCE((SELECT SUM(r.amount_paise) FROM returns r JOIN order_items i ON i.id=r.order_item_id WHERE i.order_id=o.id AND r.status='refunded'),0)),0)::bigint FROM orders o WHERE o.status='delivered') delivered_paise,(SELECT COUNT(*)::int FROM support_tickets WHERE status IN('open','in_progress')) tickets,(SELECT COUNT(*)::int FROM sellers WHERE status='pending') pending_sellers`,
+    `SELECT (SELECT COUNT(*)::int FROM users WHERE deleted_at IS NULL) users,(SELECT COUNT(*)::int FROM products WHERE status='live' AND deleted_at IS NULL) products,(SELECT COUNT(*)::int FROM orders WHERE status NOT IN('cancelled','awaiting_payment')) orders,(SELECT COALESCE(SUM(o.total_paise-COALESCE((SELECT SUM(r.amount_paise) FROM returns r JOIN order_items i ON i.id=r.order_item_id WHERE i.order_id=o.id AND r.status='refunded'),0)),0)::bigint FROM orders o WHERE o.status='delivered') delivered_paise,(SELECT COUNT(*)::int FROM support_tickets WHERE status IN('open','in_progress')) tickets,(SELECT COUNT(*)::int FROM sellers s JOIN users u ON u.id=s.user_id WHERE s.status='pending' AND u.deleted_at IS NULL) pending_sellers`,
   );
   return { stats };
 }
@@ -231,7 +231,7 @@ export async function adminMutation(section: string, b: any) {
         "Invalid seller status.",
       );
       const [s] = await q(
-        "UPDATE sellers SET status=$2,updated_at=NOW() WHERE id=$1 RETURNING *",
+        "UPDATE sellers SET status=$2,updated_at=NOW() WHERE id=$1 AND user_id IN (SELECT id FROM users WHERE deleted_at IS NULL) RETURNING *",
         [uuid(b.sellerId), status],
       );
       assert(s, "Seller not found.", 404);

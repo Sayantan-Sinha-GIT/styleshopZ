@@ -10,6 +10,7 @@ import { Background } from "@/components/chrome/Background";
 import { PageShell } from "@/components/chrome/PageShell";
 import "./globals.css";
 import "./storefront.css";
+import "./owner-console.css";
 const body = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-body",

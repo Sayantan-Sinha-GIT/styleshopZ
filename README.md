@@ -4,8 +4,9 @@ An Indian marketplace demonstration with a responsive Next.js website, a native 
 
 Website: https://styleshopz.srimantasutapa123.workers.dev
 Shopper and seller Android APK: https://github.com/Sayantan-Sinha-GIT/styleshopZ/releases/download/flutter-v1.1.0/styleshopz-flutter-1.1.0.apk
+Owner-only Android APK: [releases/styleshopz-admin-1.5.0.apk](releases/styleshopz-admin-1.5.0.apk)
 
-The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it.
+The Capacitor APK is for owner/admin control only. Shoppers and sellers should not download it. Its dedicated sign-in URL is not linked from the public storefront; the owner role and password, rather than an obscure URL, enforce access. Credentials and signing keys are excluded from Git.
 
 ## What works
 
@@ -17,7 +18,7 @@ The Capacitor APK is for owner/admin control only. Shoppers and sellers should n
 - Server-priced checkout with expiring stock reservations, idempotent orders, coupons, demo payment and simulated cash on delivery.
 - Order tracking, cancellation, downloadable invoices, purchase-gated reviews and return requests with proof uploads.
 - Seller onboarding and approval, catalogue editing, CSV drafts, stock management and sequential fulfilment with tracking.
-- Admin moderation, users, sellers, orders, returns, coupons, deals, banners, categories, support replies and append-only audit records.
+- Admin moderation, users, sellers, orders, returns, coupons, deals, banners, categories, support replies and append-only audit records in a compact phone-friendly owner console.
 - A Gemini shopping assistant with Groq fallback for products, offers, orders, cart actions and policy questions. Mutations require a signed, single-use confirmation.
 - The Flutter app has native navigation, catalogue search, customer email/Google sign-in, a bag, Ola-assisted addresses, demo checkout, orders and the shopping assistant. Sellers can manage their shop, listings, photos, inventory and simulated fulfilment. Its source and build instructions are in [flutter_app](flutter_app/README.md).
 
@@ -51,7 +52,7 @@ Integration tests require the configured prototype database and a running app. T
 
 GitHub Actions verifies dependencies, rules, TypeScript and the Cloudflare build on pushes and pull requests. Deployment is performed through authenticated Wrangler; the workflow does not store deployment credentials.
 
-The current shopper and seller APK is built from `flutter_app` and distributed through GitHub Releases. The Capacitor project in `android` builds a separate owner-only admin APK. Signing keys and Firebase client configuration stay outside the repository. See SETUP_GUIDE.md.
+The current shopper and seller APK is built from `flutter_app` and distributed through GitHub Releases. The Capacitor project in `android` builds a separate owner-only admin APK, checked into `releases/` for public download. The owner password, signing keys and private service configuration stay outside the repository. See SETUP_GUIDE.md.
 
 Generated image prompts and asset origins are recorded in IMAGE_PROMPTS.txt and embedded in raster metadata.
 

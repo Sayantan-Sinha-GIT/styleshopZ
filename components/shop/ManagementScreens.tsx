@@ -6,6 +6,7 @@ import {
   Plus,
   ArrowRight,
   ArrowClockwise,
+  CaretDown,
 } from "@phosphor-icons/react";
 import {
   useData,
@@ -23,6 +24,7 @@ import {
   type Item,
 } from "./Store";
 import { SupportWorkspace } from "./SupportScreens";
+import { OwnerBar } from "./OwnerBar";
 
 const nextStatus: Record<string, string> = {
   placed: "packed",
@@ -768,25 +770,25 @@ export function ShipmentTable({
         <tbody>
           {items.map((i) => (
             <tr key={i.id}>
-              <td>
+              <td data-label="Order & product">
                 <strong>{i.variant_snapshot.title}</strong>
                 <span className="muted">
                   Order {i.order_id.slice(0, 8)} · Qty {i.quantity} ·{" "}
                   {money(i.unit_price_paise * i.quantity)}
                 </span>
               </td>
-              <td>
+              <td data-label="Destination">
                 {i.address_snapshot?.name}
                 <br />
                 {i.address_snapshot?.city} {i.address_snapshot?.pincode}
               </td>
-              <td>
+              <td data-label="State">
                 {statusName(i.status)}
                 {i.tracking_id && (
                   <small style={{ display: "block" }}>{i.tracking_id}</small>
                 )}
               </td>
-              <td>
+              <td data-label="Next step">
                 {nextStatus[i.status] && (
                   <div className="stack" style={{ gap: 8 }}>
                     {i.status === "packed" && (
@@ -838,22 +840,46 @@ export function ShipmentTable({
   );
 }
 export function AdminScreen() {
+  const { logout, user } = useStore();
   return (
-    <div className="page">
-      <AuthGate role="admin">
-        <AdminWorkspace />
-      </AuthGate>
+    <div className="owner-surface">
+      <OwnerBar onSignOut={user?.role === "admin" ? logout : undefined} />
+      <div className="page admin-console">
+        <AuthGate role="admin">
+          <AdminWorkspace />
+        </AuthGate>
+      </div>
     </div>
   );
 }
+const adminSections = ["overview", "users", "sellers", "moderation", "promotions", "orders", "support", "audit"] as const;
+const adminDescriptions: Record<string, string> = {
+  overview: "The shop's current activity and work awaiting review.",
+  users: "Accounts and their access state.",
+  sellers: "Shop approvals and seller verification.",
+  moderation: "Catalogue visibility and reported reviews.",
+  promotions: "Coupons, deals, banners and departments.",
+  orders: "Orders, fulfilment and return decisions.",
+  support: "Customer conversations needing a response.",
+  audit: "A record of privileged changes.",
+};
 function AdminWorkspace() {
   const [tab, setTab] = useState("overview"),
+    [menuOpen, setMenuOpen] = useState(false),
+    [visible, setVisible] = useState(30),
     [orderId, setOrderId] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState("");
   const d = useData(tab === "support" ? null : "admin/" + tab),
     detail = useData(orderId ? "orders/" + orderId : null),
     { setNotice } = useStore();
+  const switchTab = (section: string) => {
+    setTab(section);
+    setMenuOpen(false);
+    setVisible(30);
+    setOrderId("");
+    setError("");
+  };
   const mutate = async (section: string, b: Item) => {
     setBusy(b.id || b.sellerId || b.returnId || "form");
     setError("");
@@ -869,40 +895,38 @@ function AdminWorkspace() {
   };
   return (
     <>
-      <div className="page-title row between">
+      <div className="page-title row between admin-heading">
         <div>
-          <h1>Shop operations.</h1>
-          <p>Manage orders, sellers, products and customer support.</p>
+          <h1>{tab[0].toUpperCase() + tab.slice(1)}</h1>
+          <p>{adminDescriptions[tab]}</p>
         </div>
-        <button className="button quiet small" onClick={d.refresh}>
+        <button className="button quiet small" type="button" onClick={d.refresh} disabled={d.loading}>
           <ArrowClockwise size={17} />
-          Refresh
+          {d.loading ? "Refreshing…" : "Refresh"}
         </button>
       </div>
-      <div className="tabs">
-        {[
-          "overview",
-          "users",
-          "sellers",
-          "moderation",
-          "promotions",
-          "orders",
-          "support",
-          "audit",
-        ].map((t) => (
+      <div className="admin-section-picker" onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
+        <span>Section</span>
+        <button className="admin-current-section" type="button" aria-expanded={menuOpen} aria-controls="admin-section-menu" onClick={() => setMenuOpen(!menuOpen)}>
+          {tab[0].toUpperCase() + tab.slice(1)} <CaretDown size={18} aria-hidden="true" />
+        </button>
+        {menuOpen && <div id="admin-section-menu" className="admin-section-menu">
+          {adminSections.map((section) => <button key={section} type="button" className={tab === section ? "active" : ""} aria-current={tab === section ? "page" : undefined} onClick={() => switchTab(section)}>{section[0].toUpperCase() + section.slice(1)}</button>)}
+        </div>}
+      </div>
+      <nav className="tabs admin-tabs" aria-label="Owner sections">
+        {adminSections.map((t) => (
           <button
             className={t === tab ? "active" : ""}
             key={t}
-            onClick={() => {
-              setTab(t);
-              setOrderId("");
-              setError("");
-            }}
+            type="button"
+            aria-pressed={t === tab}
+            onClick={() => switchTab(t)}
           >
             {t[0].toUpperCase() + t.slice(1)}
           </button>
         ))}
-      </div>
+      </nav>
       <ErrorText error={error} />
       {tab === "support" ? (
         <SupportWorkspace />
@@ -912,7 +936,7 @@ function AdminWorkspace() {
             <>
               {tab === "overview" && (
                 <>
-                  <div className="stats">
+                  <div className="stats admin-stats">
                     {Object.entries(d.data.stats || {}).map(([k, v]) => (
                       <div className="stat" key={k}>
                         <strong>
@@ -921,20 +945,23 @@ function AdminWorkspace() {
                         <span>
                           {k === "delivered_paise"
                             ? "Delivered sales"
-                            : statusName(k)}
+                            : statusName(k).replace(/^./, (letter) => letter.toUpperCase())}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <section className="panel space-top">
-                    <h2>A demonstration, with real persistence.</h2>
-                    <p className="muted">
-                      Orders, stock, support, moderation and audit records
-                      persist in Neon. Demo payments and shipping never move
-                      money or parcels. Privileged changes are recorded in an
-                      append-only audit log.
-                    </p>
+                  <section className="admin-worklist" aria-label="Needs attention">
+                    <h2>Needs attention</h2>
+                    <button type="button" onClick={() => switchTab("sellers")}>
+                      <span>Seller approvals</span><strong>{d.data.stats?.pending_sellers ?? 0}</strong>
+                      <ArrowRight size={18} aria-hidden="true" />
+                    </button>
+                    <button type="button" onClick={() => switchTab("support")}>
+                      <span>Open support tickets</span><strong>{d.data.stats?.tickets ?? 0}</strong>
+                      <ArrowRight size={18} aria-hidden="true" />
+                    </button>
                   </section>
+                  <p className="admin-demo-note">Demo payments and delivery are simulated. Changes to the shop are recorded in the audit log.</p>
                 </>
               )}
               {tab === "users" && (
@@ -950,17 +977,18 @@ function AdminWorkspace() {
                       </tr>
                     </thead>
                     <tbody>
-                      {d.data.users?.map((u: Item) => (
+                      {d.data.users?.slice(0, visible).map((u: Item) => (
                         <tr key={u.id}>
-                          <td>{u.name}</td>
-                          <td>{u.email}</td>
-                          <td>{u.role}</td>
-                          <td>{date(u.created_at)}</td>
-                          <td>{u.deleted_at ? "Deleted" : "Active"}</td>
+                          <td data-label="Name">{u.name}</td>
+                          <td data-label="Email">{u.email}</td>
+                          <td data-label="Role">{u.role}</td>
+                          <td data-label="Joined">{date(u.created_at)}</td>
+                          <td data-label="State">{u.deleted_at ? "Deleted" : "Active"}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  {d.data.users?.length > visible && <button className="button quiet small admin-show-more" onClick={() => setVisible(visible + 30)}>Show more users ({visible} of {d.data.users.length})</button>}
                 </div>
               )}
               {tab === "sellers" && (
@@ -977,7 +1005,7 @@ function AdminWorkspace() {
                     <tbody>
                       {d.data.sellers?.map((s: Item) => (
                         <tr key={s.id}>
-                          <td>
+                          <td data-label="Shop & owner">
                             <strong>{s.shop_name}</strong>
                             {s.owner_name}
                             <br />
@@ -985,11 +1013,13 @@ function AdminWorkspace() {
                               {s.email} · {s.product_count} products
                             </span>
                           </td>
-                          <td>
+                          <td data-label="KYC">
                             {s.kyc_data?.businessType || "No details yet"}
                             <br />
                             {s.kyc_data?.pan || ""}
                             {s.kyc_data?.document && (
+                              <>
+                              <br />
                               <a
                                 href={s.kyc_data.document}
                                 className="text-link"
@@ -998,10 +1028,11 @@ function AdminWorkspace() {
                               >
                                 View uploaded document
                               </a>
+                              </>
                             )}
                           </td>
-                          <td>{s.status}</td>
-                          <td>
+                          <td data-label="Status">{s.status}</td>
+                          <td data-label="Actions">
                             {["approved", "suspended", "pending"]
                               .filter((v) => v !== s.status)
                               .map((status) => (
@@ -1044,12 +1075,12 @@ function AdminWorkspace() {
                         </tr>
                       </thead>
                       <tbody>
-                        {d.data.products?.map((p: Item) => (
+                        {d.data.products?.slice(0, visible).map((p: Item) => (
                           <tr key={p.id}>
-                            <td>{p.title}</td>
-                            <td>{p.shop_name}</td>
-                            <td>{p.status}</td>
-                            <td>
+                            <td data-label="Product">{p.title}</td>
+                            <td data-label="Shop">{p.shop_name}</td>
+                            <td data-label="Status">{p.status}</td>
+                            <td data-label="Actions">
                               <button
                                 className="button secondary small"
                                 disabled={busy === p.id}
@@ -1069,6 +1100,7 @@ function AdminWorkspace() {
                         ))}
                       </tbody>
                     </table>
+                    {d.data.products?.length > visible && <button className="button quiet small admin-show-more" onClick={() => setVisible(visible + 30)}>Show more products ({visible} of {d.data.products.length})</button>}
                   </div>
                   <div className="panel table-wrap space-top">
                     <h2>Reviews needing a look</h2>
@@ -1083,12 +1115,12 @@ function AdminWorkspace() {
                       <tbody>
                         {d.data.reviews?.map((r: Item) => (
                           <tr key={r.id}>
-                            <td>
+                            <td data-label="Product & review">
                               <strong>{r.title}</strong>
                               {r.text}
                             </td>
-                            <td>{r.status}</td>
-                            <td>
+                            <td data-label="Status">{r.status}</td>
+                            <td data-label="Decision">
                               {["approved", "rejected"].map((status) => (
                                 <button
                                   className="button secondary small"
@@ -1135,19 +1167,19 @@ function AdminWorkspace() {
                       <tbody>
                         {d.data.orders?.map((o: Item) => (
                           <tr key={o.id}>
-                            <td>
+                            <td data-label="Order">
                               {o.id.slice(0, 8)}
                               <br />
                               {date(o.created_at)}
                             </td>
-                            <td>
+                            <td data-label="Customer">
                               {o.customer_name}
                               <br />
                               {o.customer_email}
                             </td>
-                            <td>{money(o.total_paise)}</td>
-                            <td>{statusName(o.status)}</td>
-                            <td>
+                            <td data-label="Total">{money(o.total_paise)}</td>
+                            <td data-label="State">{statusName(o.status)}</td>
+                            <td data-label="Details">
                               <button
                                 className="button secondary small"
                                 onClick={() =>
@@ -1202,11 +1234,11 @@ function AdminWorkspace() {
                       <tbody>
                         {d.data.returns?.map((r: Item) => (
                           <tr key={r.id}>
-                            <td>
+                            <td data-label="Product & reason">
                               <strong>{r.variant_snapshot.title}</strong>
                               {r.reason}
                             </td>
-                            <td>
+                            <td data-label="Photos">
                               <div className="row">
                                 {r.photos?.map((url: string) => (
                                   <a
@@ -1229,9 +1261,9 @@ function AdminWorkspace() {
                                 ))}
                               </div>
                             </td>
-                            <td>{money(r.amount_paise)}</td>
-                            <td>{r.status}</td>
-                            <td>
+                            <td data-label="Amount">{money(r.amount_paise)}</td>
+                            <td data-label="Status">{r.status}</td>
+                            <td data-label="Decision">
                               {["requested", "pending"].includes(r.status) &&
                                 ["approve", "reject"].map((action) => (
                                   <button
@@ -1284,18 +1316,19 @@ function AdminWorkspace() {
                       </tr>
                     </thead>
                     <tbody>
-                      {d.data.logs?.map((l: Item) => (
+                      {d.data.logs?.slice(0, visible).map((l: Item) => (
                         <tr key={l.id}>
-                          <td>{date(l.created_at)}</td>
-                          <td>{l.actor_role}</td>
-                          <td>{l.action}</td>
-                          <td>
+                          <td data-label="When">{date(l.created_at)}</td>
+                          <td data-label="Role">{l.actor_role}</td>
+                          <td data-label="Action">{l.action}</td>
+                          <td data-label="Record">
                             {l.target_type} · {l.target_id?.slice(0, 8)}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  {d.data.logs?.length > visible && <button className="button quiet small admin-show-more" onClick={() => setVisible(visible + 30)}>Show more activity ({visible} of {d.data.logs.length})</button>}
                 </div>
               )}
             </>
@@ -1541,8 +1574,8 @@ function PromotionPanel({
             {(data[type === "category" ? "categories" : type + "s"] || []).map(
               (r: Item) => (
                 <tr key={r.id}>
-                  <td>{r.code || r.title || r.name}</td>
-                  <td>
+                  <td data-label="Name">{r.code || r.title || r.name}</td>
+                  <td data-label="Details">
                     {type === "coupon"
                       ? `${r.used_count} used · ${r.discount_type === "percent" ? r.discount_value + "%" : money(r.discount_value)}`
                       : type === "deal"
@@ -1555,7 +1588,7 @@ function PromotionPanel({
                             r.sort_order
                           : "Level " + r.level + " · " + r.slug}
                   </td>
-                  <td>
+                  <td data-label="Edit">
                     <button
                       className="button secondary small"
                       onClick={() => {

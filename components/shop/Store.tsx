@@ -8,6 +8,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { Capacitor } from "@capacitor/core";
+import { OWNER_LOGIN_PATH } from "@/lib/owner-routes";
 import {
   ShoppingBag,
   Heart,
@@ -331,7 +332,7 @@ export function AuthGate({
     return (
       <Empty
         title={role === "admin" ? "Owner access" : "Make yourself at home"}
-        link={
+        link={role === "admin" ? OWNER_LOGIN_PATH :
           "/login?next=" +
           encodeURIComponent(
             typeof window !== "undefined" ? location.pathname : "/",

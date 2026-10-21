@@ -60,16 +60,24 @@ async function dispatch(req: Request) {
   if (path === "payments/webhook" && m === "POST") return paymentWebhook(req);
   if (!["GET", "HEAD"].includes(m)) {
     const origin = req.headers.get("origin");
+    const fetchSite = req.headers.get("sec-fetch-site");
     assert(
       !origin || origin === url.origin,
       "This request came from another site.",
       403,
     );
+    assert(fetchSite !== "cross-site", "This request came from another site.", 403);
     assert(
       Number(req.headers.get("content-length") || 0) < 7500000,
       "Request is too large.",
       413,
     );
+    if (!["DELETE"].includes(m) && path !== "uploads")
+      assert(
+        req.headers.get("content-type")?.toLowerCase().startsWith("application/json"),
+        "Send JSON with application/json content type.",
+        415,
+      );
   }
   const b = ["GET", "HEAD", "DELETE"].includes(m)
     ? {}
@@ -102,6 +110,7 @@ async function dispatch(req: Request) {
       appUrl: process.env.NEXT_PUBLIC_APP_URL || url.origin,
     };
   if (path === "auth/login" && m === "POST") return authenticate(req, b, false);
+  if (path === "auth/owner-login" && m === "POST") return authenticate(req, b, false, true);
   if(path === 'auth/google' && m === 'POST')return googleAuthenticate(req,b);
   if(path === 'auth/verify-email' && m === 'POST')return emailVerification(req,b);
   if(path === 'auth/email-reset' && m === 'POST')return emailReset(req,b);

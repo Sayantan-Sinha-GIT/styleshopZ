@@ -7,7 +7,7 @@ import { cartItems, photo, notify } from "./catalog";
 import { demoEnabled } from "./commerce";
 import { emailReady, sendCode } from './identity';
 
-export async function authenticate(req: Request, b: any, signup: boolean) {
+export async function authenticate(req: Request, b: any, signup: boolean, ownerOnly = false) {
   const email = text(b.email, "Email", 5, 254).toLowerCase();
   assert(
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
@@ -19,6 +19,8 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
     5,
     900,
   );
+  if (ownerOnly)
+    await rate(`owner-login-ip:${req.headers.get("cf-connecting-ip") || "local"}`, 12, 900);
   assert(
     !email.endsWith("@shop.test") || demoEnabled(),
     "Sample logins are disabled on this deployment.",
@@ -71,7 +73,11 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
       u?.password_hash ||
         "$2b$10$7VhLQenLMqGKfEBaEqC.p.BwQBZ2WauLEmyROFu9NJiU5UrF1LkxS",
     );
-    assert(u && ok, "Email or password is incorrect.", 401);
+    assert(
+      u && ok && (ownerOnly ? u.role === "admin" : u.role !== "admin"),
+      "Email or password is incorrect.",
+      401,
+    );
     user = u;
   }
   let verificationSent=false;
@@ -89,7 +95,7 @@ export async function authenticate(req: Request, b: any, signup: boolean) {
     },
     {
       headers: {
-        "Set-Cookie": cookie(sessionToken(user)),
+        "Set-Cookie": cookie(sessionToken(user), false, user.role === "admin" ? 12 * 3600 : 7 * 86400),
         "Cache-Control": "no-store",
       },
     },

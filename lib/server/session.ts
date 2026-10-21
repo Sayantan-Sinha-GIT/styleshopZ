@@ -64,11 +64,11 @@ export async function requireUser(role?: string) {
   assert(!role || u.role === role, "You do not have access to this area.", 403);
   return u;
 }
-export function cookie(token: string, clear = false) {
-  return `styleshopz_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${clear ? 0 : 7 * 86400}${process.env.NODE_ENV === "production" ? "; Secure" : ""}`;
+export function cookie(token: string, clear = false, maxAge = 7 * 86400) {
+  return `styleshopz_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${clear ? 0 : maxAge}${process.env.NODE_ENV === "production" ? "; Secure" : ""}`;
 }
 export function sessionToken(user: any) {
-  return signToken({ sub: user.id, version: user.session_version ?? 0 });
+  return signToken({ sub: user.id, version: user.session_version ?? 0 }, user.role === "admin" ? 12 * 3600 : 7 * 86400);
 }
 export async function rate(
   key: string,

@@ -51,10 +51,10 @@ public class ReleaseConfigurationTest {
     }
 
     @Test
-    public void remoteShopUsesHttpsWithoutMixedContentOrWebDebugging() throws Exception {
+    public void remoteOwnerConsoleUsesHttpsWithoutMixedContentOrWebDebugging() throws Exception {
         JSONObject config = new JSONObject(asset("capacitor.config.json"));
         JSONObject server = config.getJSONObject("server");
-        assertEquals("https://styleshopz.srimantasutapa123.workers.dev", server.getString("url"));
+        assertEquals("https://styleshopz.srimantasutapa123.workers.dev/4632/admin/login", server.getString("url"));
         assertFalse(server.getBoolean("cleartext"));
         assertEquals("https", server.getString("androidScheme"));
         assertEquals("offline.html", server.getString("errorPath"));
@@ -66,8 +66,8 @@ public class ReleaseConfigurationTest {
     @Test
     public void offlineRecoveryIsBundledAndPointsBackToTheTrustedShop() throws Exception {
         String offline = asset("public/offline.html");
-        assertTrue(offline.contains("Try the shop again"));
-        assertTrue(offline.contains("https://styleshopz.srimantasutapa123.workers.dev"));
+        assertTrue(offline.contains("Try the owner console again"));
+        assertTrue(offline.contains("https://styleshopz.srimantasutapa123.workers.dev/4632/admin/login"));
         assertTrue(offline.contains("data:image/png;base64,"));
         assertFalse(offline.contains("<script"));
     }

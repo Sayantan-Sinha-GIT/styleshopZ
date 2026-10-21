@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/lib/client/theme";
 
 /**
@@ -12,8 +13,10 @@ import { useTheme } from "@/lib/client/theme";
 export function Background() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useTheme();
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname.startsWith("/4632/admin")) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -141,13 +144,13 @@ export function Background() {
       cancelAnimationFrame(raf);
       document.removeEventListener('visibilitychange', visibility);
     };
-  }, [theme]);
+  }, [theme, pathname]);
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 h-full w-full"
+      className="shop-background-canvas pointer-events-none fixed inset-0 z-0 h-full w-full"
     />
   );
 }

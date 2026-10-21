@@ -67,7 +67,7 @@ public class MainActivity extends BridgeActivity {
     if(networkConnected()){
       webView.clearCache(true);
       // Always enter the privileged workspace, including after an app upgrade.
-      webView.loadUrl("https://styleshopz.srimantasutapa123.workers.dev/admin");
+      webView.loadUrl("https://styleshopz.srimantasutapa123.workers.dev/4632/admin/login");
     }
     bridge.setWebViewClient(new BridgeWebViewClient(bridge){
       @Override @SuppressWarnings("deprecation") public void onReceivedError(WebView view,int code,String description,String failingUrl){showRecovery(view);}

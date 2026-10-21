@@ -1,4 +1,23 @@
-# styleshopZ 1.4.0 — prototype verification
+# styleshopZ 1.5.0 — owner console and security verification
+
+Verified 21 October 2026 against the live Cloudflare Worker, a real Neon test fixture set, headless Chrome at 390 px and 1365 px, and an Android 15 emulator running the signed owner APK. The public storefront signs in shoppers and sellers; owner email/password sign-in is at `/4632/admin/login`, and the old `/admin` page returns 404. The route is visible in public source, so role authorization, password validation and rate limiting remain the security boundary.
+
+| Release check | Result |
+| --- | --- |
+| Cloudflare production build, TypeScript and 35 Vitest tests | Passed |
+| Dependency audit | 0 vulnerabilities |
+| Live shopper/order, seller/admin, and discovery/location integrations | 24 + 11 + 5 passed |
+| Full live browser flows | 23 passed, no page errors |
+| Owner credential and request-security probes | 8 passed: owner-only login, seller exclusion, old URL 404, anonymous denial, security headers, cross-site and non-JSON denial |
+| Owner visual pass | Login and all eight sections viewed at phone and desktop widths; no horizontal overflow |
+| Android 15 native check | Installed 1.5.0, signed in with the owner account, visually inspected status-bar clearance, dashboard, menu and seller cards; 6 release instrumentation tests passed |
+| Signed admin APK secret scan | 0 private credentials in 533 APK entries; v2 signature verified |
+
+The Android pass exposed two issues after the first build: the system-native section selector opened a bright dialog, and the bundled offline screen led to the storefront. The selector now opens a dark in-page menu, and offline recovery returns to owner sign-in. The seller console also hides deleted QA sellers, keeping them in account/audit history without presenting them as active approvals. Large user, moderation and audit lists render 30 rows at a time with an explicit continuation control.
+
+The admin APK is `releases/styleshopz-admin-1.5.0.apk`, versionName 1.5.0, versionCode 8, SHA-256 `6d1881ad13e49225d804ab7a70bf82b018750a58125f71b2716ae938b7dc17ce`. The Flutter shopper/seller APK remains release 1.1.0. The owner APK is deliberately separate and should not be offered as the shopper download. External services and every future Android device cannot be exhaustively proven by this test run; checkout and fulfilment remain prototype simulations.
+
+## Previous release: 1.4.0
 
 Verified 19 October 2026 on the live Cloudflare Worker and an Android 15 emulator. This release adds a separate native Flutter seller workspace alongside the shopper app. The Capacitor APK is now labelled and presented as an owner-only admin console; shoppers and sellers should install the Flutter APK.
 
