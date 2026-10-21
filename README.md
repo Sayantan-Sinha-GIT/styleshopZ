@@ -61,3 +61,7 @@ The current shopper and seller APK is built from `flutter_app` and distributed t
 Generated image prompts and asset origins are recorded in IMAGE_PROMPTS.txt and embedded in raster metadata.
 
 Detailed coverage, fixes, APK metadata and testing limits are recorded in [TEST_REPORT.md](TEST_REPORT.md).
+
+## License
+
+The original styleshopZ source and documentation are available under the [MIT License](LICENSE). Bundled Flutter fonts retain their separate [Hanken Grotesk](flutter_app/assets/fonts/OFL-Hanken.txt) and [Big Shoulders](flutter_app/assets/fonts/OFL-BigShoulders.txt) SIL Open Font Licenses. Pre-existing catalogue photos whose original sources were not recorded are identified in [IMAGE_PROMPTS.txt](IMAGE_PROMPTS.txt); no MIT rights are claimed over those photos. Third-party dependencies retain their own licenses.
