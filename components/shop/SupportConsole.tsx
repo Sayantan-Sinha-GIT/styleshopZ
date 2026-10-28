@@ -205,7 +205,7 @@ export function SupportWorkspace() {
                 }}>
                   <textarea aria-label="Reply to ticket" placeholder={admin && internal ? "Write a private case note…" : "Write a reply…"} value={message} onChange={(event) => setMessage(event.target.value)} required minLength={2} maxLength={2000} disabled={busy} />
                   <EvidenceField disabled={busy} />
-                  {admin && <label className="support-internal-toggle"><input type="checkbox" checked={internal} onChange={(event) => setInternal(event.target.checked)} disabled={busy} /> Internal note — only the owner can see this</label>}
+                  {admin && <label className="support-internal-toggle"><input type="checkbox" checked={internal} onChange={(event) => setInternal(event.target.checked)} disabled={busy} /> Internal note: only the owner can see this</label>}
                   <button className="button" disabled={busy || !message.trim()}>{busy ? "Sending…" : admin && internal ? "Save note" : "Send reply"}</button>
                 </form> : <p className="small muted space-top">This conversation is {detail.data.ticket.status}. Reopen it to send another message.</p>}
                 <ErrorText error={error} />
