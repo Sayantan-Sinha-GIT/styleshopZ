@@ -8,6 +8,7 @@ import { MaskLines, HorizontalPan } from "@/components/fx/scroll";
 import { Magnetic, Marquee, OpenSheet, SpringLetters } from "@/components/fx/more";
 import { ProductCard, State, useData, useStore, api, type Item } from "./Store";
 import { getCategoryCover } from "@/lib/images";
+import { HeroChips, TrustStrip, DealBento } from "./HomeExtras";
 
 type Campaign = { id: string; name: string; query: string; image: string; alt: string; link: string };
 const fallbackCampaigns: Campaign[] = [
@@ -80,6 +81,7 @@ export function StorefrontHome() {
           {campaigns.map((c, i) => <img key={c.id} src={c.image} alt={i === activeIndex ? c.alt : ''} aria-hidden={i !== activeIndex} className={i === activeIndex ? 'active' : ''} fetchPriority={i === 0 ? 'high' : 'auto'}/>)}
         </div>
         <div className="orbit-caption" key={campaign.id}><Link href={campaign.link}><span>{campaign.name}</span><ArrowUpRight size={22}/></Link></div>
+        <HeroChips products={products.data?.products?.slice(2) || []}/>
         <div className="campaign-controls">
           <button aria-label="Previous collection" disabled={campaigns.length < 2} onClick={() => setActive(a => (a + campaigns.length - 1) % campaigns.length)}><CaretLeft size={18}/></button>
           {campaigns.map((c, i) => <button key={c.id} aria-label={`Show collection ${i + 1}`} aria-pressed={i === activeIndex} className="campaign-position" onClick={() => setActive(i)}><span/></button>)}
@@ -93,6 +95,8 @@ export function StorefrontHome() {
       </div>
     </section>
 
+    <TrustStrip/>
+    <DealBento deal={shelf[0]}/>
     <div className="market-ticker" aria-hidden="true"><Marquee seconds={55}><span>Search.</span><em>Discover.</em><span>Make it yours.</span><em>Repeat.</em></Marquee></div>
 
     <section className="storefront-wrap home-shelf" id="deals">
