@@ -3,7 +3,12 @@ import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incre
 
 // Serve the build-time page shells without re-rendering them in the Worker.
 // Products, account state and orders still load through uncached API requests.
-export default defineCloudflareConfig({
+const config = defineCloudflareConfig({
   incrementalCache: staticAssetsIncrementalCache,
   enableCacheInterception: true,
 });
+
+export default {
+  ...config,
+  buildCommand: "npm run build:next",
+};
